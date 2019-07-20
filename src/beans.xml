@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		 http://www.springframework.org/schema/aop 
+		 http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <bean
+            class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <value>classpath:jdbc.properties</value>
+        </property>
+        <property name="fileEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+    <bean id="dataSource" destroy-method="close"
+          class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName"
+                  value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+
+    </bean>
+    <!--
+        <context:annotation-config /> <context:component-scan
+        base-package="com.zcsy" /> <bean id="dataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close"> <property name="driverClassName"
+        value="com.mysql.jdbc.Driver" /> <property name="url"
+        value="jdbc:mysql://localhost:3306/spring" /> <property
+        name="username" value="root" /> <property name="password"
+        value="bjsxt" /> </bean>
+
+    <bean
+            class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <value>classpath:jdbc.properties</value>
+        </property>
+    </bean>   -->
+    <!--  <bean id="dataSource" destroy-method="close"
+                  class="org.apache.commons.dbcp.BasicDataSource">
+                <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://114.67.23.103:3306/emcc-tx" />
+                <property name="username" value="root"/>
+                <property name="password" value="huangzx!@#123." />
+            </bean>
+      <bean id="dataSource" destroy-method="close"
+    class="org.apache.commons.dbcp.BasicDataSource">
+  <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+  <property name="url" value="jdbc:mysql://sinowestar.vip:3306/emcc-cddx" />
+   <property name="username" value="pre"/>
+  <property name="password" value="Songge2@" />
+  </bean>
+  <bean id="dataSource" destroy-method="close"
+        class="org.apache.commons.dbcp.BasicDataSource">
+      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://bjdsm.top:3306/emcc?characterEncoding=UTF-8"/>
+      <property name="username" value="root"/>
+      <property name="password" value="Songge2@"/>
+  </bean>-->
+    <!-- 定义spring jdbc模板类Bean -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+          abstract="false" lazy-init="false" autowire="default">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+          abstract="false" lazy-init="false" autowire="default">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--  对时     -->
+    <bean name="taskJob9" class="com.cic.pas.thread.DuishiTask"/>
+
+    <bean id="methodInvokingJobDetail9"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="taskJob9"/>
+        </property>
+        <property name="targetMethod">
+            <value>executeSent</value>
+        </property>
+    </bean>
+    <bean id="cronTrigger9" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="methodInvokingJobDetail9"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0 0 1 * ? *</value>
+        </property>
+    </bean>
+
+    <!-- 定时任务
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref local="cronTrigger9" />
+            </list>
+        </property>
+    </bean>
+-->
+
+
+    <!--
+        <bean id="dataSource"
+        class="org.springframework.jndi.JndiObjectFactoryBean"> <property
+        name="jndiName"> <value>MYJNDI</value> </property> <property
+        name="resourceRef"> <value>false</value> </property> <property
+        name="jndiEnvironment"> <props> <prop
+        key="java.naming.provider.url">t3://127.0.0.1:7002</prop> <prop
+        key="java.naming.factory.initial">weblogic.jndi.WLInitialContextFactory</prop>
+        </props> </property> </bean>
+    -->
+
+
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <aop:config>
+        <aop:pointcut id="bussinessService"
+                      expression="execution(public * com.cic.pas..*.*(..))"/>
+        <aop:advisor pointcut-ref="bussinessService" advice-ref="txAdvice"/>
+    </aop:config>
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <!--
+            <tx:attributes> <tx:method name="batchInsertRows"
+            propagation="REQUIRED"/> <tx:method
+            name="batchInsertRowsForDaysFreezing" propagation="REQUIRED"/>
+            <tx:method name="batchUpdateRowsForDaysFreezing"
+            propagation="REQUIRED"/> <tx:method
+            name="batchInsertRowsFormonthsFreezing" propagation="REQUIRED"/>
+            <tx:method name="batchUpdateRowsFormonthsFreezing"
+            propagation="REQUIRED"/> </tx:attributes>
+        -->
+    </tx:advice>
+
+</beans>

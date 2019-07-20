@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact name="newpre:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/newpre_jar</output-path>
+    <root id="root">
+      <element id="archive" name="newpre.jar">
+        <element id="module-output" name="newpre" />
+      </element>
+      <element id="directory" name="lib">
+        <element id="library" level="project" name="lib" />
+      </element>
+    </root>
+  </artifact>
+</component>
