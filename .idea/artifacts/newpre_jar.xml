@@ -5,9 +5,7 @@
       <element id="archive" name="newpre.jar">
         <element id="module-output" name="newpre" />
       </element>
-      <element id="directory" name="lib">
-        <element id="library" level="project" name="lib" />
-      </element>
+      <element id="directory" name="lib" />
     </root>
   </artifact>
 </component>
