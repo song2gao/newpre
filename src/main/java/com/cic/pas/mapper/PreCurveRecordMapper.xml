@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cic.pas.mapper.PreCurveRecordMapper" >
+  <select id="find" resultType="curve">
+  	select id id, mps_msa mpsMsa, equipment_codes equipmentCodes, 
+      point_codes pointCodes, curve_storage_time curveStorageTime, 
+      point1 point1, 
+      point2 point2, point3 point3, point4 point4, 
+      point5 point5, point6 point6, point7 point7, 
+      point8 point8, point9 point9, point10 point10, 
+      point11 point11, point12 point12, point13 point13, 
+      point14 point14, point15 point15, point16 point16, 
+      point17 point17, point18 point18, point19 point19, 
+      point20 point20, point21 point21, point22 point22, 
+      point23 point23, point24 point24, point25 point25, 
+      point26 point26, point27 point27, point28 point28, 
+      point29 point29, point30 point30, point31 point31, 
+      point32 point32, point33 point33, point34 point34, 
+      point35 point35, point36 point36, point37 point37, 
+      point38 point38, point39 point39, point40 point40, 
+      point41 point41, point42 point42, point43 point43, 
+      point44 point44, point45 point45, point46 point46, 
+      point47 point47, point48 point48, point49 point49, 
+      point50 point50, point51 point51, point52 point52, 
+      point53 point53, point54 point54, point55 point55, 
+      point56 point56, point57 point57, point58 point58, 
+      point59 point59, point60 point60, point61 point61, 
+      point62 point62, point63 point63, point64 point64, 
+      point65 point65, point66 point66, point67 point67, 
+      point68 point68, point69 point69, point70 point70, 
+      point71 point71, point72 point72, point73 point73, 
+      point74 point74, point75 point75, point76 point76, 
+      point77 point77, point78 point78, point79 point79, 
+      point80 point80, point81 point81, point82 point82, 
+      point83 point83, point84 point84, point85 point85, 
+      point86 point86, point87 point87, point88 point88, 
+      point89 point89, point90 point90, point91 point91, 
+      point92 point92, point93 point93, point94 point94, 
+      point95 point95, point96 point96
+      from pre_curve_record
+  </select>
+  <insert id="insert" parameterType="curve" >
+    insert into pre_curve_record (id, mps_msa, equipment_codes, 
+      point_codes, curve_storage_time, point1, 
+      point2, point3, point4, 
+      point5, point6, point7, 
+      point8, point9, point10, 
+      point11, point12, point13, 
+      point14, point15, point16, 
+      point17, point18, point19, 
+      point20, point21, point22, 
+      point23, point24, point25, 
+      point26, point27, point28, 
+      point29, point30, point31, 
+      point32, point33, point34, 
+      point35, point36, point37, 
+      point38, point39, point40, 
+      point41, point42, point43, 
+      point44, point45, point46, 
+      point47, point48, point49, 
+      point50, point51, point52, 
+      point53, point54, point55, 
+      point56, point57, point58, 
+      point59, point60, point61, 
+      point62, point63, point64, 
+      point65, point66, point67, 
+      point68, point69, point70, 
+      point71, point72, point73, 
+      point74, point75, point76, 
+      point77, point78, point79, 
+      point80, point81, point82, 
+      point83, point84, point85, 
+      point86, point87, point88, 
+      point89, point90, point91, 
+      point92, point93, point94, 
+      point95, point96)
+    values (#{id,jdbcType=VARCHAR}, #{mpsMsa,jdbcType=VARCHAR}, #{equipmentCodes,jdbcType=VARCHAR}, 
+      #{pointCodes,jdbcType=VARCHAR}, #{curveStorageTime,jdbcType=TIMESTAMP}, #{point1,jdbcType=DECIMAL}, 
+      #{point2,jdbcType=DECIMAL}, #{point3,jdbcType=DECIMAL}, #{point4,jdbcType=DECIMAL}, 
+      #{point5,jdbcType=DECIMAL}, #{point6,jdbcType=DECIMAL}, #{point7,jdbcType=DECIMAL}, 
+      #{point8,jdbcType=DECIMAL}, #{point9,jdbcType=DECIMAL}, #{point10,jdbcType=DECIMAL}, 
+      #{point11,jdbcType=DECIMAL}, #{point12,jdbcType=DECIMAL}, #{point13,jdbcType=DECIMAL}, 
+      #{point14,jdbcType=DECIMAL}, #{point15,jdbcType=DECIMAL}, #{point16,jdbcType=DECIMAL}, 
+      #{point17,jdbcType=DECIMAL}, #{point18,jdbcType=DECIMAL}, #{point19,jdbcType=DECIMAL}, 
+      #{point20,jdbcType=DECIMAL}, #{point21,jdbcType=DECIMAL}, #{point22,jdbcType=DECIMAL}, 
+      #{point23,jdbcType=DECIMAL}, #{point24,jdbcType=DECIMAL}, #{point25,jdbcType=DECIMAL}, 
+      #{point26,jdbcType=DECIMAL}, #{point27,jdbcType=DECIMAL}, #{point28,jdbcType=DECIMAL}, 
+      #{point29,jdbcType=DECIMAL}, #{point30,jdbcType=DECIMAL}, #{point31,jdbcType=DECIMAL}, 
+      #{point32,jdbcType=DECIMAL}, #{point33,jdbcType=DECIMAL}, #{point34,jdbcType=DECIMAL}, 
+      #{point35,jdbcType=DECIMAL}, #{point36,jdbcType=DECIMAL}, #{point37,jdbcType=DECIMAL}, 
+      #{point38,jdbcType=DECIMAL}, #{point39,jdbcType=DECIMAL}, #{point40,jdbcType=DECIMAL}, 
+      #{point41,jdbcType=DECIMAL}, #{point42,jdbcType=DECIMAL}, #{point43,jdbcType=DECIMAL}, 
+      #{point44,jdbcType=DECIMAL}, #{point45,jdbcType=DECIMAL}, #{point46,jdbcType=DECIMAL}, 
+      #{point47,jdbcType=DECIMAL}, #{point48,jdbcType=DECIMAL}, #{point49,jdbcType=DECIMAL}, 
+      #{point50,jdbcType=DECIMAL}, #{point51,jdbcType=DECIMAL}, #{point52,jdbcType=DECIMAL}, 
+      #{point53,jdbcType=DECIMAL}, #{point54,jdbcType=DECIMAL}, #{point55,jdbcType=DECIMAL}, 
+      #{point56,jdbcType=DECIMAL}, #{point57,jdbcType=DECIMAL}, #{point58,jdbcType=DECIMAL}, 
+      #{point59,jdbcType=DECIMAL}, #{point60,jdbcType=DECIMAL}, #{point61,jdbcType=DECIMAL}, 
+      #{point62,jdbcType=DECIMAL}, #{point63,jdbcType=DECIMAL}, #{point64,jdbcType=DECIMAL}, 
+      #{point65,jdbcType=DECIMAL}, #{point66,jdbcType=DECIMAL}, #{point67,jdbcType=DECIMAL}, 
+      #{point68,jdbcType=DECIMAL}, #{point69,jdbcType=DECIMAL}, #{point70,jdbcType=DECIMAL}, 
+      #{point71,jdbcType=DECIMAL}, #{point72,jdbcType=DECIMAL}, #{point73,jdbcType=DECIMAL}, 
+      #{point74,jdbcType=DECIMAL}, #{point75,jdbcType=DECIMAL}, #{point76,jdbcType=DECIMAL}, 
+      #{point77,jdbcType=DECIMAL}, #{point78,jdbcType=DECIMAL}, #{point79,jdbcType=DECIMAL}, 
+      #{point80,jdbcType=DECIMAL}, #{point81,jdbcType=DECIMAL}, #{point82,jdbcType=DECIMAL}, 
+      #{point83,jdbcType=DECIMAL}, #{point84,jdbcType=DECIMAL}, #{point85,jdbcType=DECIMAL}, 
+      #{point86,jdbcType=DECIMAL}, #{point87,jdbcType=DECIMAL}, #{point88,jdbcType=DECIMAL}, 
+      #{point89,jdbcType=DECIMAL}, #{point90,jdbcType=DECIMAL}, #{point91,jdbcType=DECIMAL}, 
+      #{point92,jdbcType=DECIMAL}, #{point93,jdbcType=DECIMAL}, #{point94,jdbcType=DECIMAL}, 
+      #{point95,jdbcType=DECIMAL}, #{point96,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="curve" >
+    insert into pre_curve_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mpsMsa != null" >
+        mps_msa,
+      </if>
+      <if test="equipmentCodes != null" >
+        equipment_codes,
+      </if>
+      <if test="pointCodes != null" >
+        point_codes,
+      </if>
+      <if test="curveStorageTime != null" >
+        curve_storage_time,
+      </if>
+      <if test="point1 != null" >
+        point1,
+      </if>
+      <if test="point2 != null" >
+        point2,
+      </if>
+      <if test="point3 != null" >
+        point3,
+      </if>
+      <if test="point4 != null" >
+        point4,
+      </if>
+      <if test="point5 != null" >
+        point5,
+      </if>
+      <if test="point6 != null" >
+        point6,
+      </if>
+      <if test="point7 != null" >
+        point7,
+      </if>
+      <if test="point8 != null" >
+        point8,
+      </if>
+      <if test="point9 != null" >
+        point9,
+      </if>
+      <if test="point10 != null" >
+        point10,
+      </if>
+      <if test="point11 != null" >
+        point11,
+      </if>
+      <if test="point12 != null" >
+        point12,
+      </if>
+      <if test="point13 != null" >
+        point13,
+      </if>
+      <if test="point14 != null" >
+        point14,
+      </if>
+      <if test="point15 != null" >
+        point15,
+      </if>
+      <if test="point16 != null" >
+        point16,
+      </if>
+      <if test="point17 != null" >
+        point17,
+      </if>
+      <if test="point18 != null" >
+        point18,
+      </if>
+      <if test="point19 != null" >
+        point19,
+      </if>
+      <if test="point20 != null" >
+        point20,
+      </if>
+      <if test="point21 != null" >
+        point21,
+      </if>
+      <if test="point22 != null" >
+        point22,
+      </if>
+      <if test="point23 != null" >
+        point23,
+      </if>
+      <if test="point24 != null" >
+        point24,
+      </if>
+      <if test="point25 != null" >
+        point25,
+      </if>
+      <if test="point26 != null" >
+        point26,
+      </if>
+      <if test="point27 != null" >
+        point27,
+      </if>
+      <if test="point28 != null" >
+        point28,
+      </if>
+      <if test="point29 != null" >
+        point29,
+      </if>
+      <if test="point30 != null" >
+        point30,
+      </if>
+      <if test="point31 != null" >
+        point31,
+      </if>
+      <if test="point32 != null" >
+        point32,
+      </if>
+      <if test="point33 != null" >
+        point33,
+      </if>
+      <if test="point34 != null" >
+        point34,
+      </if>
+      <if test="point35 != null" >
+        point35,
+      </if>
+      <if test="point36 != null" >
+        point36,
+      </if>
+      <if test="point37 != null" >
+        point37,
+      </if>
+      <if test="point38 != null" >
+        point38,
+      </if>
+      <if test="point39 != null" >
+        point39,
+      </if>
+      <if test="point40 != null" >
+        point40,
+      </if>
+      <if test="point41 != null" >
+        point41,
+      </if>
+      <if test="point42 != null" >
+        point42,
+      </if>
+      <if test="point43 != null" >
+        point43,
+      </if>
+      <if test="point44 != null" >
+        point44,
+      </if>
+      <if test="point45 != null" >
+        point45,
+      </if>
+      <if test="point46 != null" >
+        point46,
+      </if>
+      <if test="point47 != null" >
+        point47,
+      </if>
+      <if test="point48 != null" >
+        point48,
+      </if>
+      <if test="point49 != null" >
+        point49,
+      </if>
+      <if test="point50 != null" >
+        point50,
+      </if>
+      <if test="point51 != null" >
+        point51,
+      </if>
+      <if test="point52 != null" >
+        point52,
+      </if>
+      <if test="point53 != null" >
+        point53,
+      </if>
+      <if test="point54 != null" >
+        point54,
+      </if>
+      <if test="point55 != null" >
+        point55,
+      </if>
+      <if test="point56 != null" >
+        point56,
+      </if>
+      <if test="point57 != null" >
+        point57,
+      </if>
+      <if test="point58 != null" >
+        point58,
+      </if>
+      <if test="point59 != null" >
+        point59,
+      </if>
+      <if test="point60 != null" >
+        point60,
+      </if>
+      <if test="point61 != null" >
+        point61,
+      </if>
+      <if test="point62 != null" >
+        point62,
+      </if>
+      <if test="point63 != null" >
+        point63,
+      </if>
+      <if test="point64 != null" >
+        point64,
+      </if>
+      <if test="point65 != null" >
+        point65,
+      </if>
+      <if test="point66 != null" >
+        point66,
+      </if>
+      <if test="point67 != null" >
+        point67,
+      </if>
+      <if test="point68 != null" >
+        point68,
+      </if>
+      <if test="point69 != null" >
+        point69,
+      </if>
+      <if test="point70 != null" >
+        point70,
+      </if>
+      <if test="point71 != null" >
+        point71,
+      </if>
+      <if test="point72 != null" >
+        point72,
+      </if>
+      <if test="point73 != null" >
+        point73,
+      </if>
+      <if test="point74 != null" >
+        point74,
+      </if>
+      <if test="point75 != null" >
+        point75,
+      </if>
+      <if test="point76 != null" >
+        point76,
+      </if>
+      <if test="point77 != null" >
+        point77,
+      </if>
+      <if test="point78 != null" >
+        point78,
+      </if>
+      <if test="point79 != null" >
+        point79,
+      </if>
+      <if test="point80 != null" >
+        point80,
+      </if>
+      <if test="point81 != null" >
+        point81,
+      </if>
+      <if test="point82 != null" >
+        point82,
+      </if>
+      <if test="point83 != null" >
+        point83,
+      </if>
+      <if test="point84 != null" >
+        point84,
+      </if>
+      <if test="point85 != null" >
+        point85,
+      </if>
+      <if test="point86 != null" >
+        point86,
+      </if>
+      <if test="point87 != null" >
+        point87,
+      </if>
+      <if test="point88 != null" >
+        point88,
+      </if>
+      <if test="point89 != null" >
+        point89,
+      </if>
+      <if test="point90 != null" >
+        point90,
+      </if>
+      <if test="point91 != null" >
+        point91,
+      </if>
+      <if test="point92 != null" >
+        point92,
+      </if>
+      <if test="point93 != null" >
+        point93,
+      </if>
+      <if test="point94 != null" >
+        point94,
+      </if>
+      <if test="point95 != null" >
+        point95,
+      </if>
+      <if test="point96 != null" >
+        point96,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="mpsMsa != null" >
+        #{mpsMsa,jdbcType=VARCHAR},
+      </if>
+      <if test="equipmentCodes != null" >
+        #{equipmentCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="pointCodes != null" >
+        #{pointCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="curveStorageTime != null" >
+        #{curveStorageTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="point1 != null" >
+        #{point1,jdbcType=DECIMAL},
+      </if>
+      <if test="point2 != null" >
+        #{point2,jdbcType=DECIMAL},
+      </if>
+      <if test="point3 != null" >
+        #{point3,jdbcType=DECIMAL},
+      </if>
+      <if test="point4 != null" >
+        #{point4,jdbcType=DECIMAL},
+      </if>
+      <if test="point5 != null" >
+        #{point5,jdbcType=DECIMAL},
+      </if>
+      <if test="point6 != null" >
+        #{point6,jdbcType=DECIMAL},
+      </if>
+      <if test="point7 != null" >
+        #{point7,jdbcType=DECIMAL},
+      </if>
+      <if test="point8 != null" >
+        #{point8,jdbcType=DECIMAL},
+      </if>
+      <if test="point9 != null" >
+        #{point9,jdbcType=DECIMAL},
+      </if>
+      <if test="point10 != null" >
+        #{point10,jdbcType=DECIMAL},
+      </if>
+      <if test="point11 != null" >
+        #{point11,jdbcType=DECIMAL},
+      </if>
+      <if test="point12 != null" >
+        #{point12,jdbcType=DECIMAL},
+      </if>
+      <if test="point13 != null" >
+        #{point13,jdbcType=DECIMAL},
+      </if>
+      <if test="point14 != null" >
+        #{point14,jdbcType=DECIMAL},
+      </if>
+      <if test="point15 != null" >
+        #{point15,jdbcType=DECIMAL},
+      </if>
+      <if test="point16 != null" >
+        #{point16,jdbcType=DECIMAL},
+      </if>
+      <if test="point17 != null" >
+        #{point17,jdbcType=DECIMAL},
+      </if>
+      <if test="point18 != null" >
+        #{point18,jdbcType=DECIMAL},
+      </if>
+      <if test="point19 != null" >
+        #{point19,jdbcType=DECIMAL},
+      </if>
+      <if test="point20 != null" >
+        #{point20,jdbcType=DECIMAL},
+      </if>
+      <if test="point21 != null" >
+        #{point21,jdbcType=DECIMAL},
+      </if>
+      <if test="point22 != null" >
+        #{point22,jdbcType=DECIMAL},
+      </if>
+      <if test="point23 != null" >
+        #{point23,jdbcType=DECIMAL},
+      </if>
+      <if test="point24 != null" >
+        #{point24,jdbcType=DECIMAL},
+      </if>
+      <if test="point25 != null" >
+        #{point25,jdbcType=DECIMAL},
+      </if>
+      <if test="point26 != null" >
+        #{point26,jdbcType=DECIMAL},
+      </if>
+      <if test="point27 != null" >
+        #{point27,jdbcType=DECIMAL},
+      </if>
+      <if test="point28 != null" >
+        #{point28,jdbcType=DECIMAL},
+      </if>
+      <if test="point29 != null" >
+        #{point29,jdbcType=DECIMAL},
+      </if>
+      <if test="point30 != null" >
+        #{point30,jdbcType=DECIMAL},
+      </if>
+      <if test="point31 != null" >
+        #{point31,jdbcType=DECIMAL},
+      </if>
+      <if test="point32 != null" >
+        #{point32,jdbcType=DECIMAL},
+      </if>
+      <if test="point33 != null" >
+        #{point33,jdbcType=DECIMAL},
+      </if>
+      <if test="point34 != null" >
+        #{point34,jdbcType=DECIMAL},
+      </if>
+      <if test="point35 != null" >
+        #{point35,jdbcType=DECIMAL},
+      </if>
+      <if test="point36 != null" >
+        #{point36,jdbcType=DECIMAL},
+      </if>
+      <if test="point37 != null" >
+        #{point37,jdbcType=DECIMAL},
+      </if>
+      <if test="point38 != null" >
+        #{point38,jdbcType=DECIMAL},
+      </if>
+      <if test="point39 != null" >
+        #{point39,jdbcType=DECIMAL},
+      </if>
+      <if test="point40 != null" >
+        #{point40,jdbcType=DECIMAL},
+      </if>
+      <if test="point41 != null" >
+        #{point41,jdbcType=DECIMAL},
+      </if>
+      <if test="point42 != null" >
+        #{point42,jdbcType=DECIMAL},
+      </if>
+      <if test="point43 != null" >
+        #{point43,jdbcType=DECIMAL},
+      </if>
+      <if test="point44 != null" >
+        #{point44,jdbcType=DECIMAL},
+      </if>
+      <if test="point45 != null" >
+        #{point45,jdbcType=DECIMAL},
+      </if>
+      <if test="point46 != null" >
+        #{point46,jdbcType=DECIMAL},
+      </if>
+      <if test="point47 != null" >
+        #{point47,jdbcType=DECIMAL},
+      </if>
+      <if test="point48 != null" >
+        #{point48,jdbcType=DECIMAL},
+      </if>
+      <if test="point49 != null" >
+        #{point49,jdbcType=DECIMAL},
+      </if>
+      <if test="point50 != null" >
+        #{point50,jdbcType=DECIMAL},
+      </if>
+      <if test="point51 != null" >
+        #{point51,jdbcType=DECIMAL},
+      </if>
+      <if test="point52 != null" >
+        #{point52,jdbcType=DECIMAL},
+      </if>
+      <if test="point53 != null" >
+        #{point53,jdbcType=DECIMAL},
+      </if>
+      <if test="point54 != null" >
+        #{point54,jdbcType=DECIMAL},
+      </if>
+      <if test="point55 != null" >
+        #{point55,jdbcType=DECIMAL},
+      </if>
+      <if test="point56 != null" >
+        #{point56,jdbcType=DECIMAL},
+      </if>
+      <if test="point57 != null" >
+        #{point57,jdbcType=DECIMAL},
+      </if>
+      <if test="point58 != null" >
+        #{point58,jdbcType=DECIMAL},
+      </if>
+      <if test="point59 != null" >
+        #{point59,jdbcType=DECIMAL},
+      </if>
+      <if test="point60 != null" >
+        #{point60,jdbcType=DECIMAL},
+      </if>
+      <if test="point61 != null" >
+        #{point61,jdbcType=DECIMAL},
+      </if>
+      <if test="point62 != null" >
+        #{point62,jdbcType=DECIMAL},
+      </if>
+      <if test="point63 != null" >
+        #{point63,jdbcType=DECIMAL},
+      </if>
+      <if test="point64 != null" >
+        #{point64,jdbcType=DECIMAL},
+      </if>
+      <if test="point65 != null" >
+        #{point65,jdbcType=DECIMAL},
+      </if>
+      <if test="point66 != null" >
+        #{point66,jdbcType=DECIMAL},
+      </if>
+      <if test="point67 != null" >
+        #{point67,jdbcType=DECIMAL},
+      </if>
+      <if test="point68 != null" >
+        #{point68,jdbcType=DECIMAL},
+      </if>
+      <if test="point69 != null" >
+        #{point69,jdbcType=DECIMAL},
+      </if>
+      <if test="point70 != null" >
+        #{point70,jdbcType=DECIMAL},
+      </if>
+      <if test="point71 != null" >
+        #{point71,jdbcType=DECIMAL},
+      </if>
+      <if test="point72 != null" >
+        #{point72,jdbcType=DECIMAL},
+      </if>
+      <if test="point73 != null" >
+        #{point73,jdbcType=DECIMAL},
+      </if>
+      <if test="point74 != null" >
+        #{point74,jdbcType=DECIMAL},
+      </if>
+      <if test="point75 != null" >
+        #{point75,jdbcType=DECIMAL},
+      </if>
+      <if test="point76 != null" >
+        #{point76,jdbcType=DECIMAL},
+      </if>
+      <if test="point77 != null" >
+        #{point77,jdbcType=DECIMAL},
+      </if>
+      <if test="point78 != null" >
+        #{point78,jdbcType=DECIMAL},
+      </if>
+      <if test="point79 != null" >
+        #{point79,jdbcType=DECIMAL},
+      </if>
+      <if test="point80 != null" >
+        #{point80,jdbcType=DECIMAL},
+      </if>
+      <if test="point81 != null" >
+        #{point81,jdbcType=DECIMAL},
+      </if>
+      <if test="point82 != null" >
+        #{point82,jdbcType=DECIMAL},
+      </if>
+      <if test="point83 != null" >
+        #{point83,jdbcType=DECIMAL},
+      </if>
+      <if test="point84 != null" >
+        #{point84,jdbcType=DECIMAL},
+      </if>
+      <if test="point85 != null" >
+        #{point85,jdbcType=DECIMAL},
+      </if>
+      <if test="point86 != null" >
+        #{point86,jdbcType=DECIMAL},
+      </if>
+      <if test="point87 != null" >
+        #{point87,jdbcType=DECIMAL},
+      </if>
+      <if test="point88 != null" >
+        #{point88,jdbcType=DECIMAL},
+      </if>
+      <if test="point89 != null" >
+        #{point89,jdbcType=DECIMAL},
+      </if>
+      <if test="point90 != null" >
+        #{point90,jdbcType=DECIMAL},
+      </if>
+      <if test="point91 != null" >
+        #{point91,jdbcType=DECIMAL},
+      </if>
+      <if test="point92 != null" >
+        #{point92,jdbcType=DECIMAL},
+      </if>
+      <if test="point93 != null" >
+        #{point93,jdbcType=DECIMAL},
+      </if>
+      <if test="point94 != null" >
+        #{point94,jdbcType=DECIMAL},
+      </if>
+      <if test="point95 != null" >
+        #{point95,jdbcType=DECIMAL},
+      </if>
+      <if test="point96 != null" >
+        #{point96,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+</mapper>
