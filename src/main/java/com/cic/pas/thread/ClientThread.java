@@ -4,17 +4,14 @@ import java.net.SocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.mina.core.session.IoSession;
 
 import com.cic.pas.common.bean.MeterDevice;
-import com.cic.pas.common.bean.PointDevice;
 import com.cic.pas.common.bean.TerminalDevice;
 import com.cic.pas.common.util.CRC16M;
 import com.cic.pas.common.util.Util;
-import com.cic.pas.dao.BussinessConfig;
 import com.cic.pas.service.ConnectorContext;
 
 public class ClientThread extends Thread {
@@ -68,7 +65,6 @@ public class ClientThread extends Thread {
 							if (!isReviced) {
 								session.close(false);
 							}
-							
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							Thread.currentThread().interrupt();

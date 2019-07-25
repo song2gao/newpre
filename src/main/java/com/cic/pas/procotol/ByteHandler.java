@@ -53,15 +53,15 @@ public class ByteHandler extends IoHandlerAdapter {
     @Override
     public void messageReceived(IoSession session, Object message)
             throws Exception {
-//         String hexStr = CRC16M.getBufHexStr((byte[]) message);
-//         logger.info("\r\n"+session.getLocalAddress()+"RX:" + hexStr);
+         String hexStr = CRC16M.getBufHexStr((byte[]) message);
+         logger.info("\r\n"+session.getLocalAddress()+"RX:" + hexStr);
     }
 
     @Override
     public void messageSent(IoSession session, Object message) throws Exception {
-//		 String hexStr = CRC16M.getBufHexStr((byte[]) message);
-//		 logger.info("\r\n"+session.getLocalAddress()+"TX:" + hexStr + new
-//		 Date());
+		 String hexStr = CRC16M.getBufHexStr((byte[]) message);
+		 logger.info("\r\n"+session.getLocalAddress()+"TX:" + hexStr + new
+		 Date());
     }
 
     @Override

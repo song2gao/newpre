@@ -77,7 +77,6 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
 
         return false;// 处理成功，让父类进行接收下个包
     }
-
     public void checkMessage(IoSession session, String terminalCode, String ctdCode, int slaveId, int start, int len, byte[] bytes, String sendStr, String recStr) {
         int id = bytes[0];
         int function = bytes[1];

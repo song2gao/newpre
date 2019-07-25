@@ -332,22 +332,22 @@ public class Util {
     }
 
     /**
-     * @param code 16进制的字符串
+     * @param hex 16进制的字符串
      * @return byte[]
      * @throws Exception
      */
-    public static byte[] getByte(String code) throws Exception {
-        int length = code.length();
+    public static byte[] getByte(String hex) throws Exception {
+        int length = hex.length();
         //System.out.println("TCPTX:"+code);
         //System.out.println("OKok:" + length);
         if (length % 2 != 0) {
-            throw new Exception("发送字符应该为偶数!" + code);
+            throw new Exception("发送字符应该为偶数!" + hex);
         }
         byte[] result = new byte[length / 2];
         for (int i = 0; i < length / 2; i++) {
             // result[i] = (byte) Integer.parseInt(code.substring(i*2,i*2+2),
             // 16);
-            result[i] = (byte) Integer.parseInt(code
+            result[i] = (byte) Integer.parseInt(hex
                     .substring(i * 2, i * 2 + 2), 16);
 
         }

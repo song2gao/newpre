@@ -49,7 +49,7 @@ public class ClientConnectThread extends BaseThread {
                         logger.info(td.getName()+ "断开连接!");
                         while (!session.isConnected()) {
                             try {
-                                Thread.sleep(60000);
+                                Thread.sleep(6000);
                                 ConnectFuture future = socketConnector
                                         .connect();
                                 future.awaitUninterruptibly();// 等待连接创建成功
@@ -66,7 +66,7 @@ public class ClientConnectThread extends BaseThread {
                                     break;
                                 }
                             } catch (Exception ex) {
-                                logger.info("重连服务器登录失败,1分钟后再连接一次:"
+                                logger.info("重连服务器"+socketConnector.getDefaultRemoteAddress()+"失败,1分钟后再连接一次:"
                                         + ex.getMessage());
                             }
                         }

@@ -8,6 +8,7 @@ import java.util.List;
 import com.cic.pas.common.bean.MeterDevice;
 import com.cic.pas.common.bean.PointDevice;
 import com.cic.pas.common.bean.TerminalDevice;
+import com.cic.pas.common.util.CRC16M;
 import com.cic.pas.common.util.ModBusReadAndWrite;
 import com.cic.pas.common.util.ModBusUtil;
 import com.cic.pas.service.ConnectorContext;
@@ -24,6 +25,7 @@ public class GetDataThread extends BaseThread {
     IoSession session;
     ModBusReadAndWrite modRW = new ModBusReadAndWrite();
     int i = 0;
+    private byte[] firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
 
     public GetDataThread(TerminalDevice td, IoSession session) {
         this.td = td;
@@ -31,6 +33,10 @@ public class GetDataThread extends BaseThread {
         if (td.getNoticeAccord().equals("Byte3761")) {
             for (MeterDevice meter : td.getMeterList()) {
                 getSendBuff3761(meter);
+            }
+        } else if (td.getNoticeAccord().equals("ByteS7")) {
+            for (MeterDevice meter : td.getMeterList()) {
+                getSendBuffS7(meter);
             }
         } else {
             for (MeterDevice meter : td.getMeterList()) {
@@ -62,7 +68,7 @@ public class GetDataThread extends BaseThread {
                     session.setAttribute("ctdCode", ctdCode);
                     isReviced = false;
                     session.write(values);
-                    String terminal_id=session.getAttribute("terminal_id").toString();
+                    String terminal_id = session.getAttribute("terminal_id").toString();
                     BaseThread thread = ServerContext.threadMap
                             .get(terminal_id);
                     if (thread != null) {
@@ -284,5 +290,16 @@ public class GetDataThread extends BaseThread {
             String key = md.getCode() + ":" + pd.getStorageType() + ":" + pd.getModAddress();
             map.put(key, bytes);
         }
+    }
+
+    public void getSendBuffS7(MeterDevice md) {
+        session.write(firstHand);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        byte[] bytes = CRC16M.HexString2Buf("03 00 00 1F 02 F0 80 32 01 00 00 00 01 00 0E 00 00 04 01 12 0A 10 01 00 01 00 00 83 00 03 20");
+        map.put("1:1", bytes);
     }
 }
