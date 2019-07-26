@@ -4,6 +4,9 @@ import com.cic.pas.common.bean.Data;
 import com.cic.pas.common.util.CRC16M;
 import com.cic.pas.common.util.DataType;
 import com.cic.pas.common.util.Util;
+import com.cic.pas.service.ServerContext;
+import com.cic.pas.thread.BaseThread;
+import com.cic.pas.thread.GetDataThread;
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -31,15 +34,21 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
             } else {
                 byte[] bytes = new byte[size];
                 in.get(bytes, 0, size);
+                String terminal_id = session.getAttribute("terminal_id").toString();
                 String messageHex = CRC16M.getBufHexStr(bytes);
-                int end=Integer.parseInt(Util.bytesToValueRealOffset(bytes,size-2,DataType.TWO_BYTE_INT_UNSIGNED).toString());
-                if (bytes.length==22) {
-                    logger.info("一次握手成功\r\n报文："+messageHex);
+                int function = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 17, DataType.ONE_BYTE).toString());
+                if (bytes.length == 22) {
+                    logger.info("一次握手成功\r\n报文：" + messageHex);
                     session.write(secondHand);
-                } else if (bytes.length==27&&end==240) {
-                    logger.info("二次握手成功\r\n报文："+messageHex);
-                } else {
-                    analyticMessage(bytes);
+                } else if (bytes.length == 27 && function == 240) {//0xf0
+                    logger.info("二次握手成功\r\n报文：" + messageHex);
+                    int pduLength = Integer.parseInt(Util.bytesToValueRealOffset(bytes, bytes.length - 2, DataType.TWO_BYTE_INT_UNSIGNED).toString());
+                    GetDataThread thread = (GetDataThread) ServerContext.threadMap.get(terminal_id);
+                    if (thread != null) {
+                        thread.pduLength = pduLength;
+                    }
+                } else{
+                    analyticMessage(bytes,terminal_id);
                 }
                 if (in.remaining() > 0) {// 如果读取内容后还粘了包，就让父类再重读 一次，进行下一次解析
                     // in.flip();
@@ -49,7 +58,8 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
         }
         return false;// 处理成功，让父类进行接收下个包
     }
-    public void analyticMessage(byte[] message) {
+
+    public void analyticMessage(byte[] message,String terminal_id) {
         String messageHex = CRC16M.getBufHexStr(message);
         logger.info(messageHex);
     }

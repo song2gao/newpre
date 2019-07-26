@@ -733,122 +733,120 @@ public class Util {
 
     //Override
     public static Object bytesToValueRealOffset(byte[] data, int offset, int dataType) {
-        // offset *= 2;
+        switch (dataType) {
+            case DataType.BINARY:
+                return data[data.length - 1 - offset] & 0xff;
+            case DataType.ONE_BYTE:
+                return new Integer(data[offset]&0xff);
+            case DataType.TWO_BYTE_INT_UNSIGNED:
+                return new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+            case DataType.TWO_BYTE_INT_SIGNED:
+                return new Short((short) (((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff)));
+            case DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED:
+                return new Short((short) (((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+            case DataType.TWO_BYTE_BCD:
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < 2; i++) {
+                    sb.append(bcdNibbleToInt(data[offset + i], true));
+                    sb.append(bcdNibbleToInt(data[offset + i], false));
+                }
+                return new Short(Short.parseShort(sb.toString()));
+            case DataType.FOUR_BYTE_INT_UNSIGNED:
+                return new Long(((long) ((data[offset] & 0xff)) << 24) | ((long) ((data[offset + 1] & 0xff)) << 16)
+                        | ((long) ((data[offset + 2] & 0xff)) << 8) | ((data[offset + 3] & 0xff)));
+            case DataType.FOUR_BYTE_INT_SIGNED:
+                return new Integer(((data[offset] & 0xff) << 24) | ((data[offset + 1] & 0xff) << 16)
+                        | ((data[offset + 2] & 0xff) << 8) | (data[offset + 3] & 0xff));
+            case DataType.FOUR_BYTE_INT_UNSIGNED_SWAPPED:
+                return new Long(((long) ((data[offset + 2] & 0xff)) << 24) | ((long) ((data[offset + 3] & 0xff)) << 16)
+                        | ((long) ((data[offset] & 0xff)) << 8) | ((data[offset + 1] & 0xff)));
+            case DataType.FOUR_BYTE_INT_SIGNED_SWAPPED:
+                return new Integer(((data[offset + 2] & 0xff) << 24) | ((data[offset + 3] & 0xff) << 16)
+                        | ((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+            case DataType.FOUR_BYTE_FLOAT:
+                return new Float(Float.intBitsToFloat(((data[offset] & 0xff) << 24) | ((data[offset + 1] & 0xff) << 16)
+                        | ((data[offset + 2] & 0xff) << 8) | (data[offset + 3] & 0xff)));
+            case DataType.FOUR_BYTE_FLOAT_SWAPPED:
+                return new Float(Float.intBitsToFloat(((data[offset + 2] & 0xff) << 24) | ((data[offset + 3] & 0xff) << 16)
+                        | ((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff)));
+            case DataType.FOUR_BYTE_FLOAT_SWAPPED_ALL:
+                return new Float(Float.intBitsToFloat(((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
+                        | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+            case DataType.FOUR_BYTE_BCD:
+                sb = new StringBuffer();
+                for (int i = 0; i < 4; i++) {
+                    sb.append(bcdNibbleToInt(data[offset + i], true));
+                    sb.append(bcdNibbleToInt(data[offset + i], false));
+                }
+                return new Integer(Integer.parseInt(sb.toString()));
+            case DataType.EIGHT_BYTE_INT_UNSIGNED:
+                byte[] b9 = new byte[9];
+                System.arraycopy(data, offset, b9, 1, 8);
+                return new BigInteger(b9);
+            case DataType.EIGHT_BYTE_INT_SIGNED:
+                return new Long(((long) ((data[offset] & 0xff)) << 56) | ((long) ((data[offset + 1] & 0xff)) << 48)
+                        | ((long) ((data[offset + 2] & 0xff)) << 40) | ((long) ((data[offset + 3] & 0xff)) << 32)
+                        | ((long) ((data[offset + 4] & 0xff)) << 24) | ((long) ((data[offset + 5] & 0xff)) << 16)
+                        | ((long) ((data[offset + 6] & 0xff)) << 8) | ((data[offset + 7] & 0xff)));
+            case DataType.EIGHT_BYTE_INT_UNSIGNED_SWAPPED:
+                b9 = new byte[9];
+                b9[1] = data[offset + 6];
+                b9[2] = data[offset + 7];
+                b9[3] = data[offset + 4];
+                b9[4] = data[offset + 5];
+                b9[5] = data[offset + 2];
+                b9[6] = data[offset + 3];
+                b9[7] = data[offset];
+                b9[8] = data[offset + 1];
+                return new BigInteger(b9);
+            case DataType.EIGHT_BYTE_INT_SIGNED_SWAPPED:
+                return new Long(((long) ((data[offset + 6] & 0xff)) << 56) | ((long) ((data[offset + 7] & 0xff)) << 48)
+                        | ((long) ((data[offset + 4] & 0xff)) << 40) | ((long) ((data[offset + 5] & 0xff)) << 32)
+                        | ((long) ((data[offset + 2] & 0xff)) << 24) | ((long) ((data[offset + 3] & 0xff)) << 16)
+                        | ((long) ((data[offset] & 0xff)) << 8) | ((data[offset + 1] & 0xff)));
+            case DataType.EIGHT_BYTE_FLOAT:
+                return new Double(Double.longBitsToDouble(((long) ((data[offset] & 0xff)) << 56)
+                        | ((long) ((data[offset + 1] & 0xff)) << 48) | ((long) ((data[offset + 2] & 0xff)) << 40)
+                        | ((long) ((data[offset + 3] & 0xff)) << 32) | ((long) ((data[offset + 4] & 0xff)) << 24)
+                        | ((long) ((data[offset + 5] & 0xff)) << 16) | ((long) ((data[offset + 6] & 0xff)) << 8)
+                        | ((data[offset + 7] & 0xff))));
+            case DataType.EIGHT_BYTE_FLOAT_SWAPPED:
+                return new Double(Double.longBitsToDouble(((long) ((data[offset + 6] & 0xff)) << 56)
+                        | ((long) ((data[offset + 7] & 0xff)) << 48) | ((long) ((data[offset + 4] & 0xff)) << 40)
+                        | ((long) ((data[offset + 5] & 0xff)) << 32) | ((long) ((data[offset + 2] & 0xff)) << 24)
+                        | ((long) ((data[offset + 3] & 0xff)) << 16) | ((long) ((data[offset] & 0xff)) << 8)
+                        | ((data[offset + 1] & 0xff))));
+            case DataType.EIGHT_BYTE_FLOAT_SWAPPED_ALL:
+                float h = new Float(Float.intBitsToFloat(((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
+                        | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+                float l = new Float(Float.intBitsToFloat(((data[offset + 7] & 0xff) << 24) | ((data[offset + 6] & 0xff) << 16)
+                        | ((data[offset + 5] & 0xff) << 8) | (data[4] & 0xff)));
+                return h * 10000 + l;
+            case DataType.EIGHT_BYTE_FLOAT_SWAPPED_ALL_HIGHT_65536:
+                h = new Float(Float.intBitsToFloat(((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
+                        | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+                l = new Float(Float.intBitsToFloat(((data[offset + 7] & 0xff) << 24) | ((data[offset + 6] & 0xff) << 16)
+                        | ((data[offset + 5] & 0xff) << 8) | (data[4] & 0xff)));
+                return h * 65536 + l;
+            case DataType.SIX_BYTE_DATETIME:
+                int hour = new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+                int min = new Integer(((data[offset + 2] & 0xff) << 8) | (data[offset + 3] & 0xff));
+                int sec = new Integer(((data[offset + 4] & 0xff) << 8) | (data[offset + 5] & 0xff));
+                return hour + StringUtils.leftPad(min + "", 2, '0') + StringUtils.leftPad(sec + "", 2, '0');
 
-        // 2 bytes
-        if (dataType == DataType.BINARY) {
-            return data[data.length - 1 - offset] & 0xff;
-        } else if (dataType == DataType.TWO_BYTE_INT_UNSIGNED) {
-            return new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
-        } else if (dataType == DataType.TWO_BYTE_INT_SIGNED) {
-            return new Short((short) (((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff)));
-        } else if (dataType == DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED) {
-            return new Short((short) (((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
-        } else if (dataType == DataType.TWO_BYTE_BCD) {
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < 2; i++) {
-                sb.append(bcdNibbleToInt(data[offset + i], true));
-                sb.append(bcdNibbleToInt(data[offset + i], false));
-            }
-            return new Short(Short.parseShort(sb.toString()));
-        } else if (dataType == DataType.FOUR_BYTE_INT_UNSIGNED) {
-            return new Long(((long) ((data[offset] & 0xff)) << 24) | ((long) ((data[offset + 1] & 0xff)) << 16)
-                    | ((long) ((data[offset + 2] & 0xff)) << 8) | ((data[offset + 3] & 0xff)));
-        } else if (dataType == DataType.FOUR_BYTE_INT_SIGNED) {
-            return new Integer(((data[offset] & 0xff) << 24) | ((data[offset + 1] & 0xff) << 16)
-                    | ((data[offset + 2] & 0xff) << 8) | (data[offset + 3] & 0xff));
-        } else if (dataType == DataType.FOUR_BYTE_INT_UNSIGNED_SWAPPED) {
-            return new Long(((long) ((data[offset + 2] & 0xff)) << 24) | ((long) ((data[offset + 3] & 0xff)) << 16)
-                    | ((long) ((data[offset] & 0xff)) << 8) | ((data[offset + 1] & 0xff)));
-        } else if (dataType == DataType.FOUR_BYTE_INT_SIGNED_SWAPPED) {
-            return new Integer(((data[offset + 2] & 0xff) << 24) | ((data[offset + 3] & 0xff) << 16)
-                    | ((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
-        } else if (dataType == DataType.FOUR_BYTE_FLOAT) {
-            return new Float(Float.intBitsToFloat(((data[offset] & 0xff) << 24) | ((data[offset + 1] & 0xff) << 16)
-                    | ((data[offset + 2] & 0xff) << 8) | (data[offset + 3] & 0xff)));
-        } else if (dataType == DataType.FOUR_BYTE_FLOAT_SWAPPED) {
-            return new Float(Float.intBitsToFloat(((data[offset + 2] & 0xff) << 24) | ((data[offset + 3] & 0xff) << 16)
-                    | ((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff)));
-        } else if (dataType == DataType.FOUR_BYTE_FLOAT_SWAPPED_ALL) {
-            return new Float(Float.intBitsToFloat(((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
-                    | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
-        } else if (dataType == DataType.FOUR_BYTE_BCD) {
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < 4; i++) {
-                sb.append(bcdNibbleToInt(data[offset + i], true));
-                sb.append(bcdNibbleToInt(data[offset + i], false));
-            }
-            return new Integer(Integer.parseInt(sb.toString()));
-        } else if (dataType == DataType.EIGHT_BYTE_INT_UNSIGNED) {
-            byte[] b9 = new byte[9];
-            System.arraycopy(data, offset, b9, 1, 8);
-            return new BigInteger(b9);
-        } else if (dataType == DataType.EIGHT_BYTE_INT_SIGNED) {
-            return new Long(((long) ((data[offset] & 0xff)) << 56) | ((long) ((data[offset + 1] & 0xff)) << 48)
-                    | ((long) ((data[offset + 2] & 0xff)) << 40) | ((long) ((data[offset + 3] & 0xff)) << 32)
-                    | ((long) ((data[offset + 4] & 0xff)) << 24) | ((long) ((data[offset + 5] & 0xff)) << 16)
-                    | ((long) ((data[offset + 6] & 0xff)) << 8) | ((data[offset + 7] & 0xff)));
-        } else if (dataType == DataType.EIGHT_BYTE_INT_UNSIGNED_SWAPPED) {
-            byte[] b9 = new byte[9];
-            b9[1] = data[offset + 6];
-            b9[2] = data[offset + 7];
-            b9[3] = data[offset + 4];
-            b9[4] = data[offset + 5];
-            b9[5] = data[offset + 2];
-            b9[6] = data[offset + 3];
-            b9[7] = data[offset];
-            b9[8] = data[offset + 1];
-            return new BigInteger(b9);
-        } else if (dataType == DataType.EIGHT_BYTE_INT_SIGNED_SWAPPED) {
-            return new Long(((long) ((data[offset + 6] & 0xff)) << 56) | ((long) ((data[offset + 7] & 0xff)) << 48)
-                    | ((long) ((data[offset + 4] & 0xff)) << 40) | ((long) ((data[offset + 5] & 0xff)) << 32)
-                    | ((long) ((data[offset + 2] & 0xff)) << 24) | ((long) ((data[offset + 3] & 0xff)) << 16)
-                    | ((long) ((data[offset] & 0xff)) << 8) | ((data[offset + 1] & 0xff)));
-        } else if (dataType == DataType.EIGHT_BYTE_FLOAT) {
-            return new Double(Double.longBitsToDouble(((long) ((data[offset] & 0xff)) << 56)
-                    | ((long) ((data[offset + 1] & 0xff)) << 48) | ((long) ((data[offset + 2] & 0xff)) << 40)
-                    | ((long) ((data[offset + 3] & 0xff)) << 32) | ((long) ((data[offset + 4] & 0xff)) << 24)
-                    | ((long) ((data[offset + 5] & 0xff)) << 16) | ((long) ((data[offset + 6] & 0xff)) << 8)
-                    | ((data[offset + 7] & 0xff))));
-        } else if (dataType == DataType.EIGHT_BYTE_FLOAT_SWAPPED) {
-            return new Double(Double.longBitsToDouble(((long) ((data[offset + 6] & 0xff)) << 56)
-                    | ((long) ((data[offset + 7] & 0xff)) << 48) | ((long) ((data[offset + 4] & 0xff)) << 40)
-                    | ((long) ((data[offset + 5] & 0xff)) << 32) | ((long) ((data[offset + 2] & 0xff)) << 24)
-                    | ((long) ((data[offset + 3] & 0xff)) << 16) | ((long) ((data[offset] & 0xff)) << 8)
-                    | ((data[offset + 1] & 0xff))));
-        } else if (dataType == DataType.EIGHT_BYTE_FLOAT_SWAPPED_ALL) {
-            float h = new Float(Float.intBitsToFloat(((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
-                    | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
-            float l = new Float(Float.intBitsToFloat(((data[offset + 7] & 0xff) << 24) | ((data[offset + 6] & 0xff) << 16)
-                    | ((data[offset + 5] & 0xff) << 8) | (data[4] & 0xff)));
-            return h * 10000 + l;
-        } else if (dataType == DataType.EIGHT_BYTE_FLOAT_SWAPPED_ALL_HIGHT_65536) {
-            float h = new Float(Float.intBitsToFloat(((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
-                    | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
-            float l = new Float(Float.intBitsToFloat(((data[offset + 7] & 0xff) << 24) | ((data[offset + 6] & 0xff) << 16)
-                    | ((data[offset + 5] & 0xff) << 8) | (data[4] & 0xff)));
-            return h * 65536 + l;
-        } else if (dataType == DataType.SIX_BYTE_DATETIME) {
-            int hour = new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
-            int min = new Integer(((data[offset + 2] & 0xff) << 8) | (data[offset + 3] & 0xff));
-            int sec = new Integer(((data[offset + 4] & 0xff) << 8) | (data[offset + 5] & 0xff));
-            return hour + StringUtils.leftPad(min + "", 2, '0') + StringUtils.leftPad(sec + "", 2, '0');
-
-        } else if (dataType == DataType.TWO_BYTE_INT_UNSIGNED_240_15) {
-            int a = new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
-            if (a == 15) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }else if(dataType==DataType.SIX_BYTE_LONG){
-            Long high= new Long(((long) ((data[offset] & 0xff)) << 24) | ((long) ((data[offset + 1] & 0xff)) << 16)
-                    | ((long) ((data[offset + 2] & 0xff)) << 8) | ((data[offset + 3] & 0xff)));
-            Integer low=new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
-            return (high+low/1000);
-
+            case DataType.TWO_BYTE_INT_UNSIGNED_240_15:
+                int a = new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+                if (a == 15) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            case DataType.SIX_BYTE_LONG:
+                Long high = new Long(((long) ((data[offset] & 0xff)) << 24) | ((long) ((data[offset + 1] & 0xff)) << 16)
+                        | ((long) ((data[offset + 2] & 0xff)) << 8) | ((data[offset + 3] & 0xff)));
+                Integer low = new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+                return (high + low / 1000);
         }
-
         throw new RuntimeException("Unsupported data type: " + dataType);
     }
 
