@@ -4,9 +4,9 @@ import com.cic.pas.common.util.CRC16M;
 
 public class NewTest {
     public static void main(String[] args) {
-        String hexStr="030300000002";
-        byte[] sends=CRC16M.HexString2Buf(hexStr);
-        byte[] bytes=CRC16M.getSendBuf(sends);
-        System.out.println(CRC16M.getBufHexStr(bytes));
+        byte[] addressBytes=new byte[]{0,3,32};
+        int address = (addressBytes[0] << 16) + (addressBytes[1] << 8) + (addressBytes[2]);
+        System.out.println(address);
+        System.out.println((int)addressBytes[1]<<8);
     }
 }

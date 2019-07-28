@@ -102,6 +102,17 @@ public class Util {
     }
 
     /**
+     * 将字节转换2进制数组
+     */
+    public static final byte[] byteToBinaryArray(byte b) {
+        byte[] result = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            result[i] = (byte) (b >> i & 0x01);
+        }
+        return result;
+    }
+
+    /**
      * 将一个字节转换成16进制的字符串
      */
     public static final String toHex(byte b) {
@@ -737,7 +748,7 @@ public class Util {
             case DataType.BINARY:
                 return data[data.length - 1 - offset] & 0xff;
             case DataType.ONE_BYTE:
-                return new Integer(data[offset]&0xff);
+                return new Integer(data[offset] & 0xff);
             case DataType.TWO_BYTE_INT_UNSIGNED:
                 return new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
             case DataType.TWO_BYTE_INT_SIGNED:
@@ -850,6 +861,50 @@ public class Util {
         throw new RuntimeException("Unsupported data type: " + dataType);
     }
 
+    public static byte[] realValueToBytes(Double value, int dataType) {
+        byte[] result = null;
+        switch (dataType) {
+            case DataType.ONE_BYTE:
+                result = new byte[]{(byte) (value.shortValue() & 0xff)};
+                break;
+            case DataType.TWO_BYTE_INT_UNSIGNED:
+                byte high = (byte) (value.intValue() >> 8 & 0xff);
+                byte low = (byte) (value.intValue() & 0xff);
+                result = new byte[]{high, low};
+                break;
+            case DataType.TWO_BYTE_INT_SIGNED:
+                high = (byte) (value.shortValue() >> 8 & 0xff);
+                low = (byte) (value.shortValue() & 0xff);
+                result = new byte[]{high, low};
+                break;
+            case DataType.FOUR_BYTE_INT_SIGNED:
+                byte hh = (byte) (value.intValue() >> 24 & 0xff);
+                byte hl = (byte) (value.intValue() >> 16 & 0xff);
+                byte lh = (byte) (value.intValue() >> 8 & 0xff);
+                byte ll = (byte) (value.intValue()& 0xff);
+                result = new byte[]{hh, hl,lh,ll};
+                break;
+            case DataType.FOUR_BYTE_INT_UNSIGNED:
+                BigDecimal writeValue=new BigDecimal(value);
+                hh = (byte) (writeValue.longValue() >> 24 & 0xff);
+                hl = (byte) (writeValue.longValue() >> 16 & 0xff);
+                lh = (byte) (writeValue.longValue() >> 8 & 0xff);
+                ll = (byte) (writeValue.longValue() & 0xff);
+                result = new byte[]{hh, hl,lh,ll};
+                break;
+            case DataType.FOUR_BYTE_FLOAT:
+                int re = Float.floatToIntBits(value.floatValue());
+                hh = (byte) (re >> 24 & 0xff);
+                hl = (byte) (re >> 16 & 0xff);
+                lh = (byte) (re >> 8 & 0xff);
+                ll = (byte) (re & 0xff);
+                result = new byte[]{hh, hl,lh,ll};
+                break;
+
+        }
+        return result;
+    }
+
     public static short[] RealValueToShorts(Double value, int dataType, int length) {
         short[] values = new short[length];
         switch (dataType) {
@@ -956,6 +1011,7 @@ public class Util {
 //        int resultHigh=(high-1)*8;
 //        int resultLow=(int)(Math.log(low)/Math.log(2))+1;
 //        System.out.println(resultHigh+resultLow);
+        byteToBinaryArray((byte) 99);
     }
 
 }

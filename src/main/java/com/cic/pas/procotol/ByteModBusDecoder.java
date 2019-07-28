@@ -27,7 +27,7 @@ public class ByteModBusDecoder {
                         int lastlen = 0;
                         for (PointDevice pd : md.getPointDevice()) {
                             start += lastlen;
-                            int address = pd.getModAddress() + md.getIncrease();
+                            int address = pd.getModAddress().intValue() + md.getIncrease();
                             int pointAddress = ModBusUtil.getProtocolCodeAndAddress(address, pd.getIsPlcAddress());
                             if (pointAddress == start) {
                                 int pointlen = pd.getPointLen();
@@ -100,7 +100,6 @@ public class ByteModBusDecoder {
             }
         }
     }
-
     public void setSystemParams(String ctdCode, String mmpCode, BigDecimal value) {
         for (SystemParams param : BussinessConfig.systemParams) {
             if (param.getCalCode().equals(ctdCode) && param.getMmpCode().equals(mmpCode)) {
@@ -111,7 +110,6 @@ public class ByteModBusDecoder {
         }
 
     }
-
     public BigDecimal getPointValue(BigDecimal value, int point) {
         if (point == 0) {
             return value;
@@ -171,7 +169,7 @@ public class ByteModBusDecoder {
         }
     }
 
-    private boolean getOnlineStatus(MeterDevice md){
+    public static boolean getOnlineStatus(MeterDevice md){
         for(PointDevice pd:md.getPointDevice()){
             if(pd.getCode().equals("10000")){
                 if(pd.getValue().intValue()>0){

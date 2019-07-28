@@ -89,43 +89,43 @@ public final class BussinessConfig {
          * 年数据
          */
         yearlist = jdbcTemplate.query(
-                        "select euo_code, MMP_CODE,EUS_CODE,DATE_CODE,point1,point2,point3,"
-                                + "point4,point5,point6,point7,point8,point9,point10,point11,"
-                                + "point12,AVG_VALUE,SUM_VALUE,F_VALUE,G_VALUE,P_VALUE FROM "
-                                + "esmsp_sum_measur_organization_year where "
-                                + "DATE_CODE='"+DateUtils.getYear()+"';",
-                        new RowMapper() {
+                "select euo_code, MMP_CODE,EUS_CODE,DATE_CODE,point1,point2,point3,"
+                        + "point4,point5,point6,point7,point8,point9,point10,point11,"
+                        + "point12,AVG_VALUE,SUM_VALUE,F_VALUE,G_VALUE,P_VALUE FROM "
+                        + "esmsp_sum_measur_organization_year where "
+                        + "DATE_CODE='" + DateUtils.getYear() + "';",
+                new RowMapper() {
 
-                            @Override
-                            public EsmspSumMeasurOrganizationYear mapRow(
-                                    ResultSet rs, int index)
-                                    throws SQLException {
-                                // TODO Auto-generated method stub
-                                EsmspSumMeasurOrganizationYear year = new EsmspSumMeasurOrganizationYear();
-                                year.setEuoCode(rs.getString("euo_code"));
-                                year.setEusCode(rs.getString("eus_code"));
-                                year.setMmpCode(rs.getString("mmp_code"));
-                                year.setDateCode(rs.getString("date_code"));
-                                year.setPoint1(rs.getBigDecimal("point1"));
-                                year.setPoint2(rs.getBigDecimal("point2"));
-                                year.setPoint3(rs.getBigDecimal("point3"));
-                                year.setPoint4(rs.getBigDecimal("point4"));
-                                year.setPoint5(rs.getBigDecimal("point5"));
-                                year.setPoint6(rs.getBigDecimal("point6"));
-                                year.setPoint7(rs.getBigDecimal("point7"));
-                                year.setPoint8(rs.getBigDecimal("point8"));
-                                year.setPoint9(rs.getBigDecimal("point9"));
-                                year.setPoint10(rs.getBigDecimal("point10"));
-                                year.setPoint11(rs.getBigDecimal("point11"));
-                                year.setPoint12(rs.getBigDecimal("point12"));
-                                year.setSumValue(rs.getBigDecimal("sum_value"));
-                                year.setfValue(rs.getBigDecimal("f_value"));
-                                year.setpValue(rs.getBigDecimal("p_value"));
-                                year.setgValue(rs.getBigDecimal("g_value"));
-                                return year;
-                            }
+                    @Override
+                    public EsmspSumMeasurOrganizationYear mapRow(
+                            ResultSet rs, int index)
+                            throws SQLException {
+                        // TODO Auto-generated method stub
+                        EsmspSumMeasurOrganizationYear year = new EsmspSumMeasurOrganizationYear();
+                        year.setEuoCode(rs.getString("euo_code"));
+                        year.setEusCode(rs.getString("eus_code"));
+                        year.setMmpCode(rs.getString("mmp_code"));
+                        year.setDateCode(rs.getString("date_code"));
+                        year.setPoint1(rs.getBigDecimal("point1"));
+                        year.setPoint2(rs.getBigDecimal("point2"));
+                        year.setPoint3(rs.getBigDecimal("point3"));
+                        year.setPoint4(rs.getBigDecimal("point4"));
+                        year.setPoint5(rs.getBigDecimal("point5"));
+                        year.setPoint6(rs.getBigDecimal("point6"));
+                        year.setPoint7(rs.getBigDecimal("point7"));
+                        year.setPoint8(rs.getBigDecimal("point8"));
+                        year.setPoint9(rs.getBigDecimal("point9"));
+                        year.setPoint10(rs.getBigDecimal("point10"));
+                        year.setPoint11(rs.getBigDecimal("point11"));
+                        year.setPoint12(rs.getBigDecimal("point12"));
+                        year.setSumValue(rs.getBigDecimal("sum_value"));
+                        year.setfValue(rs.getBigDecimal("f_value"));
+                        year.setpValue(rs.getBigDecimal("p_value"));
+                        year.setgValue(rs.getBigDecimal("g_value"));
+                        return year;
+                    }
 
-                        });
+                });
         /**
          * 月数据
          */
@@ -138,7 +138,7 @@ public final class BussinessConfig {
                                 + "point26,point27,point28,point29,point30,point31,MIN_VALUE,"
                                 + "AVG_VALUE,SUM_VALUE,F_VALUE,G_VALUE,P_VALUE FROM "
                                 + "esmsp_sum_measur_organization_month where "
-                                + "DATE_CODE='"+DateUtils.getYearMonth1()+"';",
+                                + "DATE_CODE='" + DateUtils.getYearMonth1() + "';",
                         new RowMapper() {
                             @Override
                             public EsmspSumMeasurOrganizationMonth mapRow(
@@ -412,11 +412,11 @@ public final class BussinessConfig {
                                 }
                             });
             for (final TerminalDevice t : tList) {
-                String sql="select * from poms_calculate_terminal_device where CDT_TERMINAL_STATUS in(1,2) and cdt_assembleid = ?  ";
-                if(DBConfigDao.dbType.equals("Microsoft SQL Server")){
-                    sql+= "order by CAST(ctd_addr AS  INTEGER) ";
-                }else{
-                    sql+= "order by CAST(ctd_addr AS SIGNED INTEGER) ";
+                String sql = "select * from poms_calculate_terminal_device where CDT_TERMINAL_STATUS in(1,2) and cdt_assembleid = ?  ";
+                if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
+                    sql += "order by CAST(ctd_addr AS  INTEGER) ";
+                } else {
+                    sql += "order by CAST(ctd_addr AS SIGNED INTEGER) ";
                 }
                 List<MeterDevice> list = jdbcTemplate
                         .query(sql,
@@ -442,7 +442,7 @@ public final class BussinessConfig {
                                         p.setProduction_code(rs.getString("cdt_production_code"));
                                         p.setPcpcEnergyType(rs.getString("PCLC_ENERGY_TYPE"));
                                         // 实时
-                                        if (rs .getString("cdt_protocal_fun_code") != null
+                                        if (rs.getString("cdt_protocal_fun_code") != null
                                                 && !rs
                                                 .getString(
                                                         "cdt_protocal_fun_code")
@@ -480,14 +480,14 @@ public final class BussinessConfig {
                                         // 月冻结
                                         if (rs.getString("cdt_protocal_secmon_fun_code") != null
                                                 && !rs.getString(
-                                                        "cdt_protocal_secmon_fun_code")
+                                                "cdt_protocal_secmon_fun_code")
                                                 .isEmpty()) {
                                             String oldV = rs.getString("cdt_protocal_secmon_fun_code");
                                             String newVal = combinationFN(oldV);
                                             p.setMonthssFreezingFunCode(newVal);
                                         } else {
                                             p.setMonthssFreezingFunCode(rs
-                                                            .getString("cdt_protocal_secmon_fun_code"));
+                                                    .getString("cdt_protocal_secmon_fun_code"));
                                         }
                                         return p;
                                     }
@@ -495,12 +495,13 @@ public final class BussinessConfig {
 
                 for (final MeterDevice p : list) {
                     // final String ctd_id=p.getId();
-                    sql="select * from poms_modle_measur_point where ctm_id = ? and mmp_isuse=1 order by MMP_STORAGE_TYPE,";
-                    if(DBConfigDao.dbType.equals("Microsoft SQL Server")){
-                        sql+= "cast(MOD_ADDRESS as  integer) ";
-                    }else{
-                        sql+= "cast(MOD_ADDRESS as signed integer) ";
+                    sql = "select * from poms_modle_measur_point where ctm_id = ? and mmp_isuse=1 order by MMP_STORAGE_TYPE,";
+                    if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
+                        sql += "cast(MOD_ADDRESS as  integer) ";
+                    } else {
+                        sql += "cast(MOD_ADDRESS as signed integer) ";
                     }
+                    sql += ",mmp_type";
                     List<PointDevice> ls = jdbcTemplate
                             .query(
                                     sql,
@@ -516,7 +517,7 @@ public final class BussinessConfig {
                                             pd.setIsBit(rs.getInt("MMP_ISBIT"));
                                             pd.setStorageType(rs.getInt("MMP_STORAGE_TYPE"));
                                             pd.setModWFunction(rs.getInt("MMP_W_FUNCTION"));
-                                            pd.setModWAddress(rs.getInt("MOD_WADDRESS"));
+                                            pd.setModWAddress(rs.getBigDecimal("MOD_WADDRESS"));
                                             pd.setModWlength(rs.getInt("MMP_WLENGTH"));
                                             pd.setModWType(rs.getInt("MMP_W_TYPE"));
                                             pd.setModWFormular(rs.getString("MMP_W_FORMULAR"));
@@ -531,8 +532,7 @@ public final class BussinessConfig {
                                             pd.setIsPlcAddress(rs.getInt("mmp_isplc"));
                                             pd.setRwType(rs.getInt("MMP_RWTYPE"));
                                             pd.setModAddress(rs
-                                                    .getInt("mod_address"));
-                                            pd.setModWAddress(rs.getInt("mod_waddress"));
+                                                    .getBigDecimal("mod_address"));
                                             pd.setPointLen(rs
                                                     .getInt("mmp_length"));
                                             pd.setFormular(rs
@@ -561,12 +561,13 @@ public final class BussinessConfig {
                                             return pd;
                                         }
                                     });
-                    sql="select * from poms_device_measur_point where device_id = ?  order by MMP_STORAGE_TYPE,";
-                    if(DBConfigDao.dbType.equals("Microsoft SQL Server")){
-                        sql+= "cast(MOD_ADDRESS as  integer)";
-                    }else{
-                        sql+= "cast(MOD_ADDRESS as signed integer)";
+                    sql = "select * from poms_device_measur_point where device_id = ?  order by MMP_STORAGE_TYPE,";
+                    if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
+                        sql += "cast(MOD_ADDRESS as  integer)";
+                    } else {
+                        sql += "cast(MOD_ADDRESS as signed integer)";
                     }
+                    sql += ",mmp_type";
                     List<PointDevice> devicePoints = jdbcTemplate
                             .query(
                                     sql,
@@ -579,7 +580,7 @@ public final class BussinessConfig {
                                             pd.setId(rs.getString("id"));
                                             pd.setStorageType(rs.getInt("MMP_STORAGE_TYPE"));
                                             pd.setModWFunction(rs.getInt("MMP_W_FUNCTION"));
-                                            pd.setModWAddress(rs.getInt("MOD_WADDRESS"));
+                                            pd.setModWAddress(rs.getBigDecimal("MOD_WADDRESS"));
                                             pd.setModWlength(rs.getInt("MMP_WLENGTH"));
                                             pd.setModWType(rs.getInt("MMP_W_TYPE"));
                                             pd.setModWFormular(rs.getString("MMP_W_FORMULAR"));
@@ -595,8 +596,7 @@ public final class BussinessConfig {
                                             pd.setIsBit(rs.getInt("MMP_ISBIT"));
                                             pd.setRwType(rs.getInt("MMP_RWTYPE"));
                                             pd.setModAddress(rs
-                                                    .getInt("mod_address"));
-                                            pd.setModWAddress(rs.getInt("mod_waddress"));
+                                                    .getBigDecimal("mod_address"));
                                             pd.setPointLen(rs
                                                     .getInt("mmp_length"));
                                             pd.setFormular(rs
@@ -807,15 +807,20 @@ public final class BussinessConfig {
         return null;
     }
 
-    public static MeterDevice getMeterByTerIpAndCode(String ip, String code)
-            throws Exception {
-        TerminalDevice t = BussinessConfig.getTerminalByIP(ip);
-        for (MeterDevice meter : t.getMeterList()) {
-            if (meter.getCode().equals(code)) {
-                return meter;
+    public static MeterDevice getPointsByTerCodeAndMeterCode(String terminalCode, String ctdCode) {
+        MeterDevice meter = null;
+        for (TerminalDevice td : terminalList) {
+            if (td.getCode().equals(terminalCode)) {
+                for (MeterDevice md : td.getMeterList()) {
+                    if (md.getCode().equals(ctdCode)) {
+                        meter = md;
+                        break;
+                    }
+                }
+                break;
             }
         }
-        return null;
+        return meter;
     }
 
     public static MeterDevice getMeterByTerIpAndAddress(String ip, int address) {

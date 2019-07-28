@@ -2,11 +2,9 @@ package com.cic.socket;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
-import com.cic.domain.PomsCalculateTerminalDevice;
 import com.cic.pas.common.bean.MeterDevice;
 import com.cic.pas.common.bean.PointDevice;
 import com.cic.pas.common.net.ReturnMessage;

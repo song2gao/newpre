@@ -169,20 +169,20 @@ public class PointDevice implements Serializable {
     /**
      * modbus 地址
      **/
-    private int modAddress;
+    private BigDecimal modAddress;
 
-    public int getModWAddress() {
+    public BigDecimal getModWAddress() {
         return modWAddress;
     }
 
-    public void setModWAddress(int modWAddress) {
+    public void setModWAddress(BigDecimal modWAddress) {
         this.modWAddress = modWAddress;
     }
 
     /**
      * 写入地址
      */
-    private int modWAddress;
+    private BigDecimal modWAddress;
     /**
      * 写入FUNCTION
      */
@@ -233,11 +233,11 @@ public class PointDevice implements Serializable {
      */
     private String modWFormular;
 
-    public int getModAddress() {
+    public BigDecimal getModAddress() {
         return modAddress;
     }
 
-    public void setModAddress(int modAddress) {
+    public void setModAddress(BigDecimal modAddress) {
         this.modAddress = modAddress;
     }
 

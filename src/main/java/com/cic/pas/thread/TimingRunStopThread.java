@@ -50,7 +50,7 @@ public class TimingRunStopThread extends BaseThread {
             switch (p.getCode()) {
                 case "311":
                     this.pd = p;
-                    this.modWAddress = p.getModWAddress() + mdIncrease;
+                    this.modWAddress =p.getModWAddress().intValue() + mdIncrease;
                     this.wFunction = p.getModWFunction();
                     this.wType = p.getModWType();
                     this.wLength = p.getModWlength();

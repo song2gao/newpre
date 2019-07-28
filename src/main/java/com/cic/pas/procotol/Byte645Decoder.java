@@ -61,7 +61,7 @@ public class Byte645Decoder extends CumulativeProtocolDecoder{
                         int pointAddressLoc=Integer.parseInt(StringUtils.toSwapStr(StringUtils.toSubtract645(pointAddressRec)));
                         MeterDevice md =BussinessConfig.getMeterByTerIpAndAddress(ip,ctdAddressLoc);
                         for(PointDevice pd:md.getPointDevice()){
-                            if(pd.getModAddress()==pointAddressLoc){
+                            if(pd.getModAddress().intValue()==pointAddressLoc){
                                 pd.setValue(new BigDecimal(sb.toString()));
                                 logger.info(md.getName()+"==>"+pd.getName()+"==>"+pd.getValue());
                                 break;
