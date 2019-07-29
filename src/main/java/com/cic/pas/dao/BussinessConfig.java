@@ -398,6 +398,7 @@ public final class BussinessConfig {
                                     t.setPrimaryKey(rs.getString("id"));
                                     t.setCode(rs.getString("asstd_code"));
                                     t.setName(rs.getString("asstd_names"));
+                                    t.setDeviceModel(rs.getString("asstd_model"));
                                     t.setProduction(rs
                                             .getString("asstd_production"));
                                     t.setMSA(rs.getString("asstd_assemble_ip"));
