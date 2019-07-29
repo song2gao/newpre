@@ -53,7 +53,10 @@ public class TerminalDevice implements Serializable{
 
 	/**上次交互时间*/
 	private Date asstd_LastDate;
-
+	/**
+	 * 设备型号
+	 */
+	private String deviceModel;
 	/**
 	 * 采集器通讯状态
 	 */
@@ -273,5 +276,15 @@ public class TerminalDevice implements Serializable{
 		asstd_LastDate = asstdLastDate;
 	}
 
-	
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getDeviceModel() {
+		return deviceModel;
+	}
+
+	public void setDeviceModel(String deviceModel) {
+		this.deviceModel = deviceModel;
+	}
 }

@@ -326,6 +326,11 @@ public class GetDataThread extends BaseThread {
     }
 
     public void getSendBuffS7(MeterDevice meter) {
+        if(td.getDeviceModel().toLowerCase().equals("s7-200smart")){
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
+        }else if(td.getDeviceModel().toLowerCase().equals("s7-200")){
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 4d 57 c2 02 4d 57 c0 01 00");
+        }
         session.write(firstHand);
         while (pduLength == 0) {
             try {
