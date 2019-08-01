@@ -87,9 +87,11 @@ public class GetDataThread extends BaseThread {
                     int firstIndex = key.indexOf(":");
                     int lastIndex = key.lastIndexOf(":");
                     String ctdCode = key.substring(0, firstIndex);
+                    String type=key.substring(firstIndex+1,lastIndex);//寄存器类型
                     String address = key.substring(lastIndex + 1);
                     session.setAttribute("ctdCode", ctdCode);
                     session.setAttribute("readAddress", address);
+                    session.setAttribute("type", type);
                     isReviced = false;
                     session.write(values);
                     String terminal_id = session.getAttribute("terminal_id").toString();
@@ -330,6 +332,14 @@ public class GetDataThread extends BaseThread {
             firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
         }else if(td.getDeviceModel().toLowerCase().equals("s7-200")){
             firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 4d 57 c2 02 4d 57 c0 01 00");
+        }else if(td.getDeviceModel().toLowerCase().equals("s7-300")){
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 01 00 c2 02 01 00 c0 01 09");
+        }else if(td.getDeviceModel().toLowerCase().equals("s7-400")){
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 02 00 c2 02 02 00 c0 01 0a");
+        }else if(td.getDeviceModel().toLowerCase().equals("s7-1200")){
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 10 00 c2 02 03 01 c0 01 0a");
+        }else if(td.getDeviceModel().toLowerCase().equals("s7-1500")){
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 10 00 c2 02 03 01 c0 01 0a");
         }
         session.write(firstHand);
         while (pduLength == 0) {
@@ -340,7 +350,7 @@ public class GetDataThread extends BaseThread {
             }
         }
         List<PointDevice> points = meter.getPointDevice();
-        BigDecimal start = new BigDecimal(0);
+        BigDecimal start;
         BigDecimal lastAddress = new BigDecimal("0");
         int lastLen = 0;
         int len = 0;
@@ -352,7 +362,7 @@ public class GetDataThread extends BaseThread {
             PointDevice p = points.get(0);
             start = p.getModAddress().add(new BigDecimal(meter.getIncrease()));
             key = meter.getCode() + ":" + p.getStorageType() + ":" + start;
-            byte[] values = getS7Send(start, p.getPointLen(), p.getStorageType(), p.getMmpType());
+            byte[] values = getS7Send(start, p.getPointLen(), p.getStorageType(), p.getMmpType(),p.getDbIndex());
             map.put(key, values);
         } else {
             BigDecimal begin = new BigDecimal(0);
@@ -366,7 +376,7 @@ public class GetDataThread extends BaseThread {
                 } else {
                     if (getDataTypeReadInOneRequest(lastfunction, p.getStorageType(), lastAddress, p.getModAddress(), lastMmpType, p.getMmpType(), lastLen)) {
                         if (len >= pduLength) {
-                            byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType());
+                            byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType(),p.getDbIndex());
                             map.put(key, values);
                             key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
                             begin = address;
@@ -374,15 +384,15 @@ public class GetDataThread extends BaseThread {
                         } else {
                             len += curlen;
                             if (i == points.size() - 1) {
-                                byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType());
+                                byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType(),p.getDbIndex());
                                 map.put(key, values);
                             }
                         }
                     } else {
-                        byte[] values = getS7Send(begin, len, lastfunction, lastMmpType);
+                        byte[] values = getS7Send(begin, len, lastfunction, lastMmpType,p.getDbIndex());
                         map.put(key, values);
                         if (i == points.size() - 1) {
-                            byte[] last = getS7Send(address, curlen, p.getStorageType(), p.getMmpType());
+                            byte[] last = getS7Send(address, curlen, p.getStorageType(), p.getMmpType(),p.getDbIndex());
                             key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
                             map.put(key, last);
                         } else {
@@ -401,11 +411,11 @@ public class GetDataThread extends BaseThread {
         }
     }
 
-    private byte[] getS7Send(BigDecimal start, int length, int type, int mmpType) {
+    private byte[] getS7Send(BigDecimal start, int length, int type, int mmpType,int dbIndex) {
         S7ReadRequest send = new S7ReadRequest();
         send.setArea((byte) type);
         if (type == 132) {
-            send.setDbNumber(new byte[]{0, 1});
+            send.setDbNumber(new byte[]{(byte)(dbIndex>>8&0xff),(byte)(dbIndex&0xff) });
         } else {
             send.setDbNumber(new byte[]{0, 0});
         }
@@ -518,7 +528,8 @@ public class GetDataThread extends BaseThread {
         int totalLength=35+pd.getModWlength();
         request.setTotalLength(new byte[]{(byte)(totalLength>>8&0xff),(byte)(totalLength&0xff)});
         if (pd.getModWFunction() == 132) {
-            request.setDbNumber(new byte[]{0, 1});
+            int dbNumber=pd.getDbIndex();
+            request.setDbNumber(new byte[]{(byte)(dbNumber>>8&0xff),(byte)(dbNumber&0xff)});
         }
         int addressInt=pd.getModWAddress().intValue()*8;
         int addressPoint=pd.getModWAddress().subtract(new BigDecimal(pd.getModWAddress().intValue())).multiply(new BigDecimal("10")).intValue();

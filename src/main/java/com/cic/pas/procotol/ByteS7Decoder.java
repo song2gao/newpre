@@ -46,7 +46,6 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                 byte[] bytes = new byte[size];
                 in.get(bytes, 0, size);
                 String terminal_id = session.getAttribute("terminal_id").toString();
-                String messageHex = CRC16M.getBufHexStr(bytes);
                 int cotpFunction = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 5, DataType.ONE_BYTE).toString());
                 int function = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 19, DataType.ONE_BYTE).toString());
                 if (bytes.length == 22 && cotpFunction == 208) {
@@ -60,10 +59,7 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                         thread.pduLength = pduLength;
                     }
                 } else {
-                    String ctdCode = session.getAttribute("ctdCode").toString();
-                    int readType = Integer.parseInt(session.getAttribute("readType").toString());
-                    BigDecimal readAddress = new BigDecimal(session.getAttribute("readAddress").toString());
-                    analyticMessage(bytes, terminal_id, ctdCode, readType, readAddress, session);
+                    analyticMessage(bytes,terminal_id,session);
                 }
                 if (in.remaining() > 0) {// 如果读取内容后还粘了包，就让父类再重读 一次，进行下一次解析
                     // in.flip();
@@ -74,7 +70,11 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
         return false;// 处理成功，让父类进行接收下个包
     }
 
-    public void analyticMessage(byte[] message, String terminal_id, String ctdCode, int readType, BigDecimal readAddress,IoSession session) {
+    public void analyticMessage(byte[] message, String terminal_id,IoSession session) {
+        String ctdCode = session.getAttribute("ctdCode").toString();
+        int readType = Integer.parseInt(session.getAttribute("readType").toString());
+        int type=Integer.parseInt(session.getAttribute("type").toString());
+        BigDecimal readAddress = new BigDecimal(session.getAttribute("readAddress").toString());
         S7Response response = new S7Response();
         response.setResponseBytes(message);
         if (response.getReturnCode() == (byte) 0xff && response.getErrorClass() == 0 && response.getErrorCode() == 0) {
@@ -86,7 +86,7 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                     BigDecimal lastlen = new BigDecimal(0);
                     for (PointDevice pd : md.getPointDevice()) {
                         readAddress = readAddress.add(lastlen);
-                        if (pd.getModAddress().compareTo(readAddress) == 0) {
+                        if (pd.getModAddress().compareTo(readAddress) == 0&&pd.getStorageType()==type) {
                             BigDecimal pointlen = new BigDecimal(0);
                             if (i.intValue() + pointlen.intValue() > data.length) {
                                 break;

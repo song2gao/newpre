@@ -37,41 +37,6 @@ public class PointDevice implements Serializable {
     private String ctdName;
     private String ctmType;
     private String systemCode;
-
-    public Map getFormatMap() {
-        return formatMap;
-    }
-
-    public void setFormatMap(Map formatMap) {
-        this.formatMap = formatMap;
-    }
-
-    private Map formatMap;
-
-    public String getSystemCode() {
-        return systemCode;
-    }
-
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
-    }
-
-    public String getCtmType() {
-        return ctmType;
-    }
-
-    public void setCtmType(String ctmType) {
-        this.ctmType = ctmType;
-    }
-
-    public String getCtdName() {
-        return ctdName;
-    }
-
-    public void setCtdName(String ctdName) {
-        this.ctdName = ctdName;
-    }
-
     /**
      * 测点简称
      */
@@ -95,71 +60,20 @@ public class PointDevice implements Serializable {
      * @return
      */
     private int isCollect;//1 是  0 否
-
-    public int getIsCollect() {
-        return isCollect;
-    }
-
-    public void setIsCollect(int isCollect) {
-        this.isCollect = isCollect;
-    }
-
-    public int getIsPlcAddress() {
-        return isPlcAddress;
-    }
-
-    public void setIsPlcAddress(int isPlcAddress) {
-        this.isPlcAddress = isPlcAddress;
-    }
-
     /*是否为PLC地址*/
     private int isPlcAddress;// 1 是  0 否
     /***
      * 寄存器类型
      */
     private int storageType;
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public int getStorageType() {
-        return storageType;
-    }
-
-    public void setStorageType(int storageType) {
-        this.storageType = storageType;
-    }
-
-    public boolean isBoor() {
-        return boor;
-    }
-
-    public void setBoor(boolean boor) {
-        this.boor = boor;
-    }
-
+    /**
+     * DB 寄存器编号   s7协议时生效
+     */
+    private int dbIndex;
     /**
      * 测点读写类型 0 不允许写入  1允许写入
      */
     private int rwType;
-
-    public int getRwType() {
-        return rwType;
-    }
-
-    public void setRwType(int rwType) {
-        this.rwType = rwType;
-    }
-
-    public int getIsBit() {
-        return isBit;
-    }
-
-    public void setIsBit(int isBit) {
-        this.isBit = isBit;
-    }
-
     /*是否为位数据  1是   2否  */
     private int isBit;
     /**
@@ -170,15 +84,6 @@ public class PointDevice implements Serializable {
      * modbus 地址
      **/
     private BigDecimal modAddress;
-
-    public BigDecimal getModWAddress() {
-        return modWAddress;
-    }
-
-    public void setModWAddress(BigDecimal modWAddress) {
-        this.modWAddress = modWAddress;
-    }
-
     /**
      * 写入地址
      */
@@ -195,52 +100,10 @@ public class PointDevice implements Serializable {
      * 写入数据类型
      */
     private int modWType;
-
-    public int getModWFunction() {
-        return modWFunction;
-    }
-
-    public void setModWFunction(int modWFunction) {
-        this.modWFunction = modWFunction;
-    }
-
-    public int getModWlength() {
-        return modWlength;
-    }
-
-    public void setModWlength(int modWlength) {
-        this.modWlength = modWlength;
-    }
-
-    public int getModWType() {
-        return modWType;
-    }
-
-    public void setModWType(int modWType) {
-        this.modWType = modWType;
-    }
-
-    public String getModWFormular() {
-        return modWFormular;
-    }
-
-    public void setModWFormular(String modWFormular) {
-        this.modWFormular = modWFormular;
-    }
-
     /**
      * 写入数据格式化
      */
     private String modWFormular;
-
-    public BigDecimal getModAddress() {
-        return modAddress;
-    }
-
-    public void setModAddress(BigDecimal modAddress) {
-        this.modAddress = modAddress;
-    }
-
     /**
      * 测点数据字节数
      */
@@ -249,48 +112,6 @@ public class PointDevice implements Serializable {
     private int isCt = 0;
     //是否计算PT
     private int isPt = 0;
-
-    public int getIsCt() {
-        return isCt;
-    }
-
-    public void setIsCt(int isCt) {
-        this.isCt = isCt;
-    }
-
-    public int getIsPt() {
-        return isPt;
-    }
-
-    public void setIsPt(int isPt) {
-        this.isPt = isPt;
-    }
-
-    public int getPlcAddress() {
-        return plcAddress;
-    }
-
-    public void setPlcAddress(int plcAddress) {
-        this.plcAddress = plcAddress;
-    }
-
-    public int getPointLen() {
-        return pointLen;
-    }
-
-    public void setPointLen(int pointLen) {
-        this.pointLen = pointLen;
-    }
-
-    private int mmpType;//测点类型  0 只读 1可写
-
-    public int getMmpType() {
-        return mmpType;
-    }
-
-    public void setMmpType(int mmpType) {
-        this.mmpType = mmpType;
-    }
 
     /**
      * 存储周期
@@ -372,30 +193,12 @@ public class PointDevice implements Serializable {
     //测点值
     private BigDecimal value = new BigDecimal(0);
     private String showValue;
-
-    public String getShowValue() {
-        return showValue;
-    }
-
-    public void setShowValue(String showValue) {
-        this.showValue = showValue;
-    }
-
     private Double dayValue;
     private Double monthValue;
     /**
      * 测点编码
      */
     private String code;
-
-    public BigDecimal getLastPointValue() {
-        return lastPointValue;
-    }
-
-    public void setLastPointValue(BigDecimal lastPointValue) {
-        this.lastPointValue = lastPointValue;
-    }
-
     /**
      * 计量表计主键
      */
@@ -409,21 +212,6 @@ public class PointDevice implements Serializable {
 
     private int errorNum;
 
-    public int getErrorNum() {
-        return errorNum;
-    }
-
-    public void setErrorNum(int errorNum) {
-        this.errorNum = errorNum;
-    }
-
-    public int getIsCalculate() {
-        return isCalculate;
-    }
-
-    public void setIsCalculate(int isCalculate) {
-        this.isCalculate = isCalculate;
-    }
 
     /**
      * 采数时间
@@ -445,6 +233,215 @@ public class PointDevice implements Serializable {
     private int dianshu;
 
     private boolean boor = true;
+
+
+    public Map getFormatMap() {
+        return formatMap;
+    }
+
+    public void setFormatMap(Map formatMap) {
+        this.formatMap = formatMap;
+    }
+
+    private Map formatMap;
+
+    public String getSystemCode() {
+        return systemCode;
+    }
+
+    public void setSystemCode(String systemCode) {
+        this.systemCode = systemCode;
+    }
+
+    public String getCtmType() {
+        return ctmType;
+    }
+
+    public void setCtmType(String ctmType) {
+        this.ctmType = ctmType;
+    }
+
+    public String getCtdName() {
+        return ctdName;
+    }
+
+    public void setCtdName(String ctdName) {
+        this.ctdName = ctdName;
+    }
+
+    public int getIsCollect() {
+        return isCollect;
+    }
+
+    public void setIsCollect(int isCollect) {
+        this.isCollect = isCollect;
+    }
+
+    public int getIsPlcAddress() {
+        return isPlcAddress;
+    }
+
+    public void setIsPlcAddress(int isPlcAddress) {
+        this.isPlcAddress = isPlcAddress;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public int getStorageType() {
+        return storageType;
+    }
+
+    public void setStorageType(int storageType) {
+        this.storageType = storageType;
+    }
+
+    public boolean isBoor() {
+        return boor;
+    }
+
+    public void setBoor(boolean boor) {
+        this.boor = boor;
+    }
+
+    public int getRwType() {
+        return rwType;
+    }
+
+    public void setRwType(int rwType) {
+        this.rwType = rwType;
+    }
+
+    public int getIsBit() {
+        return isBit;
+    }
+
+    public void setIsBit(int isBit) {
+        this.isBit = isBit;
+    }
+
+    public BigDecimal getModWAddress() {
+        return modWAddress;
+    }
+
+    public void setModWAddress(BigDecimal modWAddress) {
+        this.modWAddress = modWAddress;
+    }
+
+    public int getModWFunction() {
+        return modWFunction;
+    }
+
+    public void setModWFunction(int modWFunction) {
+        this.modWFunction = modWFunction;
+    }
+
+    public int getModWlength() {
+        return modWlength;
+    }
+
+    public void setModWlength(int modWlength) {
+        this.modWlength = modWlength;
+    }
+
+    public int getModWType() {
+        return modWType;
+    }
+
+    public void setModWType(int modWType) {
+        this.modWType = modWType;
+    }
+
+    public String getModWFormular() {
+        return modWFormular;
+    }
+
+    public void setModWFormular(String modWFormular) {
+        this.modWFormular = modWFormular;
+    }
+
+    public BigDecimal getModAddress() {
+        return modAddress;
+    }
+
+    public void setModAddress(BigDecimal modAddress) {
+        this.modAddress = modAddress;
+    }
+
+    public int getIsCt() {
+        return isCt;
+    }
+
+    public void setIsCt(int isCt) {
+        this.isCt = isCt;
+    }
+
+    public int getIsPt() {
+        return isPt;
+    }
+
+    public void setIsPt(int isPt) {
+        this.isPt = isPt;
+    }
+
+    public int getPlcAddress() {
+        return plcAddress;
+    }
+
+    public void setPlcAddress(int plcAddress) {
+        this.plcAddress = plcAddress;
+    }
+
+    public int getPointLen() {
+        return pointLen;
+    }
+
+    public void setPointLen(int pointLen) {
+        this.pointLen = pointLen;
+    }
+
+    private int mmpType;//测点类型  0 只读 1可写
+
+    public int getMmpType() {
+        return mmpType;
+    }
+
+    public void setMmpType(int mmpType) {
+        this.mmpType = mmpType;
+    }
+
+    public String getShowValue() {
+        return showValue;
+    }
+
+    public void setShowValue(String showValue) {
+        this.showValue = showValue;
+    }
+
+    public BigDecimal getLastPointValue() {
+        return lastPointValue;
+    }
+
+    public void setLastPointValue(BigDecimal lastPointValue) {
+        this.lastPointValue = lastPointValue;
+    }
+
+    public int getErrorNum() {
+        return errorNum;
+    }
+
+    public void setErrorNum(int errorNum) {
+        this.errorNum = errorNum;
+    }
+
+    public int getIsCalculate() {
+        return isCalculate;
+    }
+
+    public void setIsCalculate(int isCalculate) {
+        this.isCalculate = isCalculate;
+    }
 
     public String getId() {
         return id;
@@ -871,5 +868,13 @@ public class PointDevice implements Serializable {
 
     public void setMmpAlarmStatus(int mmpAlarmStatus) {
         this.mmpAlarmStatus = mmpAlarmStatus;
+    }
+
+    public int getDbIndex() {
+        return dbIndex;
+    }
+
+    public void setDbIndex(int dbIndex) {
+        this.dbIndex = dbIndex;
     }
 }

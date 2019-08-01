@@ -548,7 +548,7 @@ public class S7Response {
      * 0x87 - Access error
      */
     public void setErrorClass(byte errorClass) {
-        this.errorClass=errorClass;
+        this.errorClass = errorClass;
         switch (errorClass) {
             case (byte) 0x00:
                 setErrorClassStr("无错误");
@@ -747,11 +747,11 @@ public class S7Response {
             responseDataLength[0] = bytes[23];
             responseDataLength[1] = bytes[24];
             int length = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 23, DataType.TWO_BYTE_INT_UNSIGNED).toString());
-            if ((int) transportSize == 3) {
-                responseData = new byte[length];
-            } else {
-                responseData = new byte[length / 8];
-            }
+//            if ((int) transportSize == 3) {
+            responseData = new byte[length];
+//            } else {
+//                responseData = new byte[length / 8];
+//            }
             for (int i = 25; i < bytes.length; i++) {
                 responseData[i - 25] = bytes[i];
             }

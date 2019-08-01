@@ -1,361 +1,431 @@
-2019-07-30 00:00:00  [ datainsert:15310401 ] - [ INFO ]  准备生成插入数据Tue Jul 30 00:00:00 CST 2019
-2019-07-30 00:00:00  [ datainsert:15310656 ] - [ INFO ]  批量执行插入月数据成功SQL>......
-2019-07-30 00:00:24  [ NioProcessor-15:15334925 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:00:51  [ NioProcessor-15:15361926 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:01:00  [ datainsert:15370664 ] - [ INFO ]  插入数据完成Tue Jul 30 00:01:00 CST 2019,用时:60263
-2019-07-30 00:01:00  [ datainsert:15370665 ] - [ INFO ]  当前时间：Mon Jul 29 00:00:00 CST 2019,线程等待：840000
-2019-07-30 00:01:18  [ NioProcessor-15:15388932 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:01:45  [ NioProcessor-15:15415935 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:02:12  [ NioProcessor-15:15442936 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:02:39  [ NioProcessor-15:15469941 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:03:06  [ NioProcessor-15:15496944 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:03:33  [ NioProcessor-15:15523946 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:04:00  [ NioProcessor-15:15550949 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:04:27  [ NioProcessor-15:15577951 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:04:54  [ NioProcessor-15:15604954 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:05:21  [ NioProcessor-15:15631958 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:05:48  [ NioProcessor-15:15658960 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:06:15  [ NioProcessor-15:15685964 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:06:42  [ NioProcessor-15:15712966 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:07:09  [ NioProcessor-15:15739969 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:07:36  [ NioProcessor-15:15766970 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:08:03  [ NioProcessor-15:15793973 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:08:30  [ NioProcessor-15:15820979 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:08:57  [ NioProcessor-15:15847980 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:09:24  [ NioProcessor-15:15874981 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:09:51  [ NioProcessor-15:15901982 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:10:18  [ NioProcessor-15:15928982 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:10:45  [ NioProcessor-15:15955986 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:11:12  [ NioProcessor-15:15982989 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:11:39  [ NioProcessor-15:16009994 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:12:06  [ NioProcessor-15:16036995 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:12:33  [ NioProcessor-15:16064001 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:13:00  [ NioProcessor-15:16091007 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:13:27  [ NioProcessor-15:16118009 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:13:54  [ NioProcessor-15:16145011 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:14:21  [ NioProcessor-15:16172018 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:14:48  [ NioProcessor-15:16199020 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:15:00  [ datainsert:16210666 ] - [ INFO ]  准备生成插入数据Tue Jul 30 00:15:00 CST 2019
-2019-07-30 00:15:15  [ NioProcessor-15:16226024 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:15:42  [ NioProcessor-15:16253026 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:16:00  [ datainsert:16270666 ] - [ INFO ]  插入数据完成Tue Jul 30 00:16:00 CST 2019,用时:60000
-2019-07-30 00:16:00  [ datainsert:16270666 ] - [ INFO ]  当前时间：Tue Jul 30 00:15:00 CST 2019,线程等待：840000
-2019-07-30 00:16:09  [ NioProcessor-15:16280029 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:16:36  [ NioProcessor-15:16307032 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:17:03  [ NioProcessor-15:16334038 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:17:30  [ NioProcessor-15:16361040 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:17:57  [ NioProcessor-15:16388048 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:18:24  [ NioProcessor-15:16415049 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:18:51  [ NioProcessor-15:16442055 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:19:18  [ NioProcessor-15:16469060 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:19:45  [ NioProcessor-15:16496065 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:20:12  [ NioProcessor-15:16523067 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:20:39  [ NioProcessor-15:16550070 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:21:06  [ NioProcessor-15:16577071 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:21:33  [ NioProcessor-15:16604074 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:22:00  [ NioProcessor-15:16631077 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:22:27  [ NioProcessor-15:16658081 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:22:54  [ NioProcessor-15:16685083 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:23:21  [ NioProcessor-15:16712084 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:23:48  [ NioProcessor-15:16739085 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:24:15  [ NioProcessor-15:16766087 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:24:42  [ NioProcessor-15:16793089 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:25:09  [ NioProcessor-15:16820091 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:25:36  [ NioProcessor-15:16847093 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:26:03  [ NioProcessor-15:16874096 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:26:30  [ NioProcessor-15:16901097 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:26:57  [ NioProcessor-15:16928098 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:27:24  [ NioProcessor-15:16955100 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:27:51  [ NioProcessor-15:16982102 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:28:18  [ NioProcessor-15:17009105 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:28:45  [ NioProcessor-15:17036107 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:29:12  [ NioProcessor-15:17063110 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:29:39  [ NioProcessor-15:17090119 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:30:00  [ datainsert:17110668 ] - [ INFO ]  准备生成插入数据Tue Jul 30 00:30:00 CST 2019
-2019-07-30 00:30:06  [ NioProcessor-15:17117124 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:30:33  [ NioProcessor-15:17144127 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:31:00  [ datainsert:17170670 ] - [ INFO ]  插入数据完成Tue Jul 30 00:31:00 CST 2019,用时:60002
-2019-07-30 00:31:00  [ datainsert:17170670 ] - [ INFO ]  当前时间：Tue Jul 30 00:30:00 CST 2019,线程等待：840000
-2019-07-30 00:31:00  [ NioProcessor-15:17171130 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:31:27  [ NioProcessor-15:17198135 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:31:54  [ NioProcessor-15:17225136 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:32:21  [ NioProcessor-15:17252139 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:32:48  [ NioProcessor-15:17279142 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:33:15  [ NioProcessor-15:17306144 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:33:42  [ NioProcessor-15:17333146 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:34:09  [ NioProcessor-15:17360150 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:34:36  [ NioProcessor-15:17387150 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:35:03  [ NioProcessor-15:17414151 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:35:30  [ NioProcessor-15:17441151 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:35:57  [ NioProcessor-15:17468152 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:36:24  [ NioProcessor-15:17495155 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:36:51  [ NioProcessor-15:17522158 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:37:18  [ NioProcessor-15:17549161 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:37:45  [ NioProcessor-15:17576164 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:38:12  [ NioProcessor-15:17603169 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:38:39  [ NioProcessor-15:17630173 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:39:06  [ NioProcessor-15:17657175 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:39:33  [ NioProcessor-15:17684181 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:40:00  [ NioProcessor-15:17711185 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:40:27  [ NioProcessor-15:17738189 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:40:54  [ NioProcessor-15:17765190 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:41:21  [ NioProcessor-15:17792192 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:41:48  [ NioProcessor-15:17819194 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:42:15  [ NioProcessor-15:17846194 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:42:42  [ NioProcessor-15:17873196 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:43:09  [ NioProcessor-15:17900202 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:43:36  [ NioProcessor-15:17927206 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:44:03  [ NioProcessor-15:17954208 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:44:30  [ NioProcessor-15:17981210 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:44:57  [ NioProcessor-15:18008213 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:45:00  [ datainsert:18010672 ] - [ INFO ]  准备生成插入数据Tue Jul 30 00:45:00 CST 2019
-2019-07-30 00:45:24  [ NioProcessor-15:18035215 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:45:51  [ NioProcessor-15:18062216 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:46:00  [ datainsert:18070672 ] - [ INFO ]  插入数据完成Tue Jul 30 00:46:00 CST 2019,用时:60000
-2019-07-30 00:46:00  [ datainsert:18070672 ] - [ INFO ]  当前时间：Tue Jul 30 00:45:00 CST 2019,线程等待：840000
-2019-07-30 00:46:18  [ NioProcessor-15:18089217 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:46:45  [ NioProcessor-15:18116219 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:47:12  [ NioProcessor-15:18143220 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:47:39  [ NioProcessor-15:18170222 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:48:06  [ NioProcessor-15:18197226 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:48:33  [ NioProcessor-15:18224231 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:49:00  [ NioProcessor-15:18251232 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:49:27  [ NioProcessor-15:18278239 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:49:54  [ NioProcessor-15:18305244 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:50:21  [ NioProcessor-15:18332247 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:50:48  [ NioProcessor-15:18359252 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:51:15  [ NioProcessor-15:18386256 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:51:42  [ NioProcessor-15:18413264 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:52:09  [ NioProcessor-15:18440268 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:52:36  [ NioProcessor-15:18467271 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:53:03  [ NioProcessor-15:18494274 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:53:31  [ NioProcessor-15:18521277 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:53:58  [ NioProcessor-15:18548282 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:54:25  [ NioProcessor-15:18575282 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:54:52  [ NioProcessor-15:18602282 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:55:19  [ NioProcessor-15:18629283 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:55:46  [ NioProcessor-15:18656288 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:56:13  [ NioProcessor-15:18683289 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:56:40  [ NioProcessor-15:18710289 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:57:07  [ NioProcessor-15:18737298 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:57:34  [ NioProcessor-15:18764301 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:58:01  [ NioProcessor-15:18791307 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:58:28  [ NioProcessor-15:18818313 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:58:55  [ NioProcessor-15:18845318 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:59:22  [ NioProcessor-15:18872319 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 00:59:49  [ NioProcessor-15:18899320 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:00:00  [ datainsert:18910672 ] - [ INFO ]  准备生成插入数据Tue Jul 30 01:00:00 CST 2019
-2019-07-30 01:00:16  [ NioProcessor-15:18926322 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:00:43  [ NioProcessor-15:18953323 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:01:00  [ datainsert:18970673 ] - [ INFO ]  插入数据完成Tue Jul 30 01:01:00 CST 2019,用时:60001
-2019-07-30 01:01:00  [ datainsert:18970673 ] - [ INFO ]  当前时间：Tue Jul 30 01:00:00 CST 2019,线程等待：840000
-2019-07-30 01:01:10  [ NioProcessor-15:18980325 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:01:37  [ NioProcessor-15:19007326 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:02:04  [ NioProcessor-15:19034328 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:02:31  [ NioProcessor-15:19061331 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:02:58  [ NioProcessor-15:19088332 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:03:25  [ NioProcessor-15:19115340 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:03:52  [ NioProcessor-15:19142341 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:04:19  [ NioProcessor-15:19169344 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:04:46  [ NioProcessor-15:19196350 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:05:13  [ NioProcessor-15:19223353 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:05:40  [ NioProcessor-15:19250361 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:06:07  [ NioProcessor-15:19277363 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:06:34  [ NioProcessor-15:19304367 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:07:01  [ NioProcessor-15:19331368 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:07:28  [ NioProcessor-15:19358371 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:07:55  [ NioProcessor-15:19385379 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:08:22  [ NioProcessor-15:19412379 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:08:49  [ NioProcessor-15:19439385 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:09:16  [ NioProcessor-15:19466385 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:09:43  [ NioProcessor-15:19493388 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:10:10  [ NioProcessor-15:19520391 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:10:37  [ NioProcessor-15:19547396 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:11:04  [ NioProcessor-15:19574402 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:11:31  [ NioProcessor-15:19601405 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:11:58  [ NioProcessor-15:19628407 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:12:25  [ NioProcessor-15:19655407 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:12:52  [ NioProcessor-15:19682410 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:13:19  [ NioProcessor-15:19709414 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:13:46  [ NioProcessor-15:19736416 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:14:13  [ NioProcessor-15:19763419 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:14:40  [ NioProcessor-15:19790421 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:15:00  [ datainsert:19810674 ] - [ INFO ]  准备生成插入数据Tue Jul 30 01:15:00 CST 2019
-2019-07-30 01:15:07  [ NioProcessor-15:19817427 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:15:34  [ NioProcessor-15:19844449 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:16:00  [ datainsert:19870675 ] - [ INFO ]  插入数据完成Tue Jul 30 01:16:00 CST 2019,用时:60001
-2019-07-30 01:16:00  [ datainsert:19870675 ] - [ INFO ]  当前时间：Tue Jul 30 01:15:00 CST 2019,线程等待：840000
-2019-07-30 01:16:01  [ NioProcessor-15:19871451 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:16:28  [ NioProcessor-15:19898451 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:16:55  [ NioProcessor-15:19925455 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:17:22  [ NioProcessor-15:19952455 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:17:49  [ NioProcessor-15:19979459 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:18:16  [ NioProcessor-15:20006460 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:18:43  [ NioProcessor-15:20033463 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:19:10  [ NioProcessor-15:20060464 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:19:37  [ NioProcessor-15:20087468 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:20:04  [ NioProcessor-15:20114471 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:20:31  [ NioProcessor-15:20141475 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:20:58  [ NioProcessor-15:20168476 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:21:25  [ NioProcessor-15:20195480 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:21:52  [ NioProcessor-15:20222483 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:22:19  [ NioProcessor-15:20249486 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:22:46  [ NioProcessor-15:20276487 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:23:13  [ NioProcessor-15:20303487 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:23:40  [ NioProcessor-15:20330495 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:24:07  [ NioProcessor-15:20357501 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:24:34  [ NioProcessor-15:20384503 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:25:01  [ NioProcessor-15:20411504 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:25:28  [ NioProcessor-15:20438511 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:25:55  [ NioProcessor-15:20465512 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:26:22  [ NioProcessor-15:20492513 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:26:49  [ NioProcessor-15:20519517 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:27:16  [ NioProcessor-15:20546521 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:27:43  [ NioProcessor-15:20573521 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:28:10  [ NioProcessor-15:20600522 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:28:37  [ NioProcessor-15:20627523 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:29:04  [ NioProcessor-15:20654524 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:29:31  [ NioProcessor-15:20681524 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:29:58  [ NioProcessor-15:20708527 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:30:00  [ datainsert:20710676 ] - [ INFO ]  准备生成插入数据Tue Jul 30 01:30:00 CST 2019
-2019-07-30 01:30:25  [ NioProcessor-15:20735541 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:30:52  [ NioProcessor-15:20762541 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:31:00  [ datainsert:20770677 ] - [ INFO ]  插入数据完成Tue Jul 30 01:31:00 CST 2019,用时:60001
-2019-07-30 01:31:00  [ datainsert:20770678 ] - [ INFO ]  当前时间：Tue Jul 30 01:30:00 CST 2019,线程等待：840000
-2019-07-30 01:31:19  [ NioProcessor-15:20789548 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:31:46  [ NioProcessor-15:20816549 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:32:13  [ NioProcessor-15:20843550 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:32:40  [ NioProcessor-15:20870552 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:33:07  [ NioProcessor-15:20897553 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:33:34  [ NioProcessor-15:20924554 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:34:01  [ NioProcessor-15:20951556 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:34:28  [ NioProcessor-15:20978560 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:34:55  [ NioProcessor-15:21005560 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:35:22  [ NioProcessor-15:21032563 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:35:49  [ NioProcessor-15:21059565 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:36:16  [ NioProcessor-15:21086567 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:36:43  [ NioProcessor-15:21113579 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:37:10  [ NioProcessor-15:21140579 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:37:37  [ NioProcessor-15:21167584 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:38:04  [ NioProcessor-15:21194586 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:38:31  [ NioProcessor-15:21221588 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:38:58  [ NioProcessor-15:21248588 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:39:25  [ NioProcessor-15:21275593 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:39:52  [ NioProcessor-15:21302594 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:40:19  [ NioProcessor-15:21329597 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:40:46  [ NioProcessor-15:21356598 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:41:13  [ NioProcessor-15:21383599 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:41:40  [ NioProcessor-15:21410601 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:42:07  [ NioProcessor-15:21437603 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:42:34  [ NioProcessor-15:21464611 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:43:01  [ NioProcessor-15:21491614 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:43:28  [ NioProcessor-15:21518618 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:43:55  [ NioProcessor-15:21545643 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:44:22  [ NioProcessor-15:21572651 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:44:49  [ NioProcessor-15:21599651 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:45:00  [ datainsert:21610678 ] - [ INFO ]  准备生成插入数据Tue Jul 30 01:45:00 CST 2019
-2019-07-30 01:45:16  [ NioProcessor-15:21626658 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:45:43  [ NioProcessor-15:21653661 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:46:00  [ datainsert:21670679 ] - [ INFO ]  插入数据完成Tue Jul 30 01:46:00 CST 2019,用时:60001
-2019-07-30 01:46:00  [ datainsert:21670679 ] - [ INFO ]  当前时间：Tue Jul 30 01:45:00 CST 2019,线程等待：840000
-2019-07-30 01:46:10  [ NioProcessor-15:21680662 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:46:37  [ NioProcessor-15:21707667 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:47:04  [ NioProcessor-15:21734667 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:47:31  [ NioProcessor-15:21761670 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:47:58  [ NioProcessor-15:21788670 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:48:25  [ NioProcessor-15:21815672 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:48:52  [ NioProcessor-15:21842674 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:49:19  [ NioProcessor-15:21869675 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:49:46  [ NioProcessor-15:21896676 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:50:13  [ NioProcessor-15:21923683 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:50:40  [ NioProcessor-15:21950684 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:51:07  [ NioProcessor-15:21977686 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:51:34  [ NioProcessor-15:22004688 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:52:01  [ NioProcessor-15:22031691 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:52:28  [ NioProcessor-15:22058696 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:52:55  [ NioProcessor-15:22085698 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:53:22  [ NioProcessor-15:22112699 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:53:49  [ NioProcessor-15:22139703 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:54:16  [ NioProcessor-15:22166704 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:54:43  [ NioProcessor-15:22193711 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:55:10  [ NioProcessor-15:22220712 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:55:37  [ NioProcessor-15:22247712 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:56:04  [ NioProcessor-15:22274714 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:56:31  [ NioProcessor-15:22301716 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:56:58  [ NioProcessor-15:22328718 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:57:25  [ NioProcessor-15:22355720 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:57:52  [ NioProcessor-15:22382723 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:58:19  [ NioProcessor-15:22409723 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:58:46  [ NioProcessor-15:22436724 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:59:13  [ NioProcessor-15:22463733 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 01:59:40  [ NioProcessor-15:22490737 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:00:00  [ datainsert:22510679 ] - [ INFO ]  准备生成插入数据Tue Jul 30 02:00:00 CST 2019
-2019-07-30 02:00:07  [ NioProcessor-15:22517740 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:00:34  [ NioProcessor-15:22544741 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:01:00  [ datainsert:22570680 ] - [ INFO ]  插入数据完成Tue Jul 30 02:01:00 CST 2019,用时:60001
-2019-07-30 02:01:00  [ datainsert:22570680 ] - [ INFO ]  当前时间：Tue Jul 30 02:00:00 CST 2019,线程等待：840000
-2019-07-30 02:01:01  [ NioProcessor-15:22571743 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:01:28  [ NioProcessor-15:22598743 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:01:55  [ NioProcessor-15:22625746 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:02:22  [ NioProcessor-15:22652747 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:02:49  [ NioProcessor-15:22679750 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:03:16  [ NioProcessor-15:22706759 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:03:43  [ NioProcessor-15:22733764 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:04:10  [ NioProcessor-15:22760764 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:04:37  [ NioProcessor-15:22787768 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:05:04  [ NioProcessor-15:22814774 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:05:31  [ NioProcessor-15:22841779 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:05:58  [ NioProcessor-15:22868780 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:06:25  [ NioProcessor-15:22895782 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:06:52  [ NioProcessor-15:22922789 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:07:19  [ NioProcessor-15:22949791 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:07:46  [ NioProcessor-15:22976792 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:08:13  [ NioProcessor-15:23003796 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:08:40  [ NioProcessor-15:23030797 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:09:07  [ NioProcessor-15:23057801 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:09:34  [ NioProcessor-15:23084803 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:10:01  [ NioProcessor-15:23111807 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:10:28  [ NioProcessor-15:23138808 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:10:55  [ NioProcessor-15:23165812 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:11:22  [ NioProcessor-15:23192813 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:11:49  [ NioProcessor-15:23219816 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:12:16  [ NioProcessor-15:23246827 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:12:43  [ NioProcessor-15:23273832 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:13:10  [ NioProcessor-15:23300834 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:13:37  [ NioProcessor-15:23327839 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:14:04  [ NioProcessor-15:23354841 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:14:31  [ NioProcessor-15:23381842 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:14:58  [ NioProcessor-15:23408846 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:15:00  [ datainsert:23410680 ] - [ INFO ]  准备生成插入数据Tue Jul 30 02:15:00 CST 2019
-2019-07-30 02:15:25  [ NioProcessor-15:23435847 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:15:52  [ NioProcessor-15:23462849 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:16:00  [ datainsert:23470681 ] - [ INFO ]  插入数据完成Tue Jul 30 02:16:00 CST 2019,用时:60001
-2019-07-30 02:16:00  [ datainsert:23470681 ] - [ INFO ]  当前时间：Tue Jul 30 02:15:00 CST 2019,线程等待：840000
-2019-07-30 02:16:19  [ NioProcessor-15:23489855 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:16:46  [ NioProcessor-15:23516858 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:17:13  [ NioProcessor-15:23543860 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:17:40  [ NioProcessor-15:23570864 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:18:07  [ NioProcessor-15:23597866 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:18:34  [ NioProcessor-15:23624871 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:19:01  [ NioProcessor-15:23651872 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:19:28  [ NioProcessor-15:23678878 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:19:55  [ NioProcessor-15:23705879 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:20:22  [ NioProcessor-15:23732880 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:20:49  [ NioProcessor-15:23759881 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:21:16  [ NioProcessor-15:23786882 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:21:43  [ NioProcessor-15:23813889 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:22:10  [ NioProcessor-15:23840893 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:22:37  [ NioProcessor-15:23867895 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:23:04  [ NioProcessor-15:23894896 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:23:31  [ NioProcessor-15:23921898 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:23:58  [ NioProcessor-15:23948900 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:24:25  [ NioProcessor-15:23975905 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:24:52  [ NioProcessor-15:24002907 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:25:19  [ NioProcessor-15:24029907 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:25:46  [ NioProcessor-15:24056913 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:26:13  [ NioProcessor-15:24083913 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:26:40  [ NioProcessor-15:24110914 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:27:07  [ NioProcessor-15:24137916 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:27:34  [ NioProcessor-15:24164919 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:28:01  [ NioProcessor-15:24191920 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
-2019-07-30 02:28:28  [ NioProcessor-15:24218923 ] - [ INFO ]  重连服务器192.168.1.10/192.168.1.10:102失败,1分钟后再连接一次:Failed to get the session.
+2019-08-01 10:19:02  [ NioProcessor-12:87353170 ] - [ INFO ]  -客户端与服务端连接[空闲] - reader idle
+2019-08-01 10:19:02  [ NioProcessor-12:87353187 ] - [ INFO ]  排污1断开连接!
+2019-08-01 10:19:08  [ NioProcessor-13:87359204 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 10:19:17  [ NioProcessor-12:87368429 ] - [ INFO ]  断线重连[192.168.1.188:102]成功
+2019-08-01 10:29:51  [ datainsert:88002699 ] - [ INFO ]  当前时间：Thu Aug 01 10:29:51 CST 2019,线程等待：9000
+2019-08-01 10:30:00  [ datainsert:88011700 ] - [ INFO ]  准备生成插入数据Thu Aug 01 10:30:00 CST 2019
+2019-08-01 10:31:00  [ datainsert:88071703 ] - [ INFO ]  插入数据完成Thu Aug 01 10:31:00 CST 2019,用时:60003
+2019-08-01 10:31:00  [ datainsert:88071703 ] - [ INFO ]  当前时间：Thu Aug 01 10:30:00 CST 2019,线程等待：840000
+2019-08-01 10:45:00  [ datainsert:88911704 ] - [ INFO ]  准备生成插入数据Thu Aug 01 10:45:00 CST 2019
+2019-08-01 10:46:00  [ datainsert:88971705 ] - [ INFO ]  插入数据完成Thu Aug 01 10:46:00 CST 2019,用时:60001
+2019-08-01 10:46:00  [ datainsert:88971706 ] - [ INFO ]  当前时间：Thu Aug 01 10:45:00 CST 2019,线程等待：840000
+2019-08-01 11:00:00  [ datainsert:89811707 ] - [ INFO ]  准备生成插入数据Thu Aug 01 11:00:00 CST 2019
+2019-08-01 11:01:00  [ datainsert:89871708 ] - [ INFO ]  插入数据完成Thu Aug 01 11:01:00 CST 2019,用时:60001
+2019-08-01 11:01:00  [ datainsert:89871708 ] - [ INFO ]  当前时间：Thu Aug 01 11:00:00 CST 2019,线程等待：840000
+2019-08-01 11:15:00  [ datainsert:90711708 ] - [ INFO ]  准备生成插入数据Thu Aug 01 11:15:00 CST 2019
+2019-08-01 11:16:00  [ datainsert:90771709 ] - [ INFO ]  插入数据完成Thu Aug 01 11:16:00 CST 2019,用时:60001
+2019-08-01 11:16:00  [ datainsert:90771710 ] - [ INFO ]  当前时间：Thu Aug 01 11:15:00 CST 2019,线程等待：840000
+2019-08-01 11:24:20  [ NioProcessor-13:91271668 ] - [ INFO ]  排污1断开连接!
+2019-08-01 11:36:04  [ NioProcessor-13:91975742 ] - [ INFO ]  断线重连[192.168.1.188:102]成功
+2019-08-01 11:36:04  [ NioProcessor-14:91975742 ] - [ INFO ]  采集器排污1(连接服务端192.168.1.188/192.168.1.188:102):成功
+2019-08-01 11:38:55  [ NioProcessor-14:92146082 ] - [ INFO ]  排污1断开连接!
+2019-08-01 11:39:17  [ NioProcessor-15:92168731 ] - [ INFO ]  采集器排污1(连接服务端192.168.1.188/192.168.1.188:102):成功
+2019-08-01 11:39:17  [ NioProcessor-14:92168731 ] - [ INFO ]  断线重连[192.168.1.188:102]成功
+2019-08-01 11:41:55  [ datainsert:92326423 ] - [ INFO ]  当前时间：Thu Aug 01 11:41:55 CST 2019,线程等待：185000
+2019-08-01 11:45:00  [ datainsert:92511424 ] - [ INFO ]  准备生成插入数据Thu Aug 01 11:45:00 CST 2019
+2019-08-01 11:46:00  [ datainsert:92571426 ] - [ INFO ]  插入数据完成Thu Aug 01 11:46:00 CST 2019,用时:60002
+2019-08-01 11:46:00  [ datainsert:92571426 ] - [ INFO ]  当前时间：Thu Aug 01 11:45:00 CST 2019,线程等待：840000
+2019-08-01 12:00:00  [ datainsert:93411426 ] - [ INFO ]  准备生成插入数据Thu Aug 01 12:00:00 CST 2019
+2019-08-01 12:01:00  [ datainsert:93471428 ] - [ INFO ]  插入数据完成Thu Aug 01 12:01:00 CST 2019,用时:60002
+2019-08-01 12:01:00  [ datainsert:93471429 ] - [ INFO ]  当前时间：Thu Aug 01 12:00:00 CST 2019,线程等待：840000
+2019-08-01 12:01:59  [ main:1 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 12:01:59 CST 2019]; root of context hierarchy
+2019-08-01 12:01:59  [ main:111 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 12:02:00  [ main:924 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 12:02:03  [ main:3979 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 12:02:13  [ main:14032 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 12:02:13  [ main:14032 ] - [ INFO ]  日志记录启动开始
+2019-08-01 12:02:13  [ main:14036 ] - [ INFO ]  日志记录启动结束
+2019-08-01 12:02:14  [ main:15000 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 12:02:14  [ datainsert:15103 ] - [ INFO ]  数据存储线程启动
+2019-08-01 12:02:14  [ datainsert:15104 ] - [ INFO ]  当前时间：Thu Aug 01 12:02:14 CST 2019,线程等待：766000
+2019-08-01 12:02:14  [ NioProcessor-12:15123 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 12:02:14  [ NioProcessor-12:15721 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:02:20  [ NioProcessor-13:21731 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 12:02:21  [ NioProcessor-13:22271 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:03:31  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 12:03:31 CST 2019]; root of context hierarchy
+2019-08-01 12:03:31  [ main:109 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 12:03:32  [ main:784 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 12:03:34  [ main:3367 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 12:03:44  [ main:13378 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 12:03:44  [ main:13378 ] - [ INFO ]  日志记录启动开始
+2019-08-01 12:03:44  [ main:13382 ] - [ INFO ]  日志记录启动结束
+2019-08-01 12:03:45  [ main:13962 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 12:03:45  [ datainsert:14008 ] - [ INFO ]  数据存储线程启动
+2019-08-01 12:03:45  [ datainsert:14009 ] - [ INFO ]  当前时间：Thu Aug 01 12:03:45 CST 2019,线程等待：675000
+2019-08-01 12:03:45  [ NioProcessor-12:14033 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 12:06:23  [ NioProcessor-12:171519 ] - [ INFO ]  -客户端与服务端连接[空闲] - reader idle
+2019-08-01 12:06:23  [ NioProcessor-12:171520 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:06:29  [ NioProcessor-13:177534 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 12:06:29  [ NioProcessor-13:178075 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:06:35  [ NioProcessor-14:184084 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 12:06:36  [ NioProcessor-14:184627 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:06:38  [ NioProcessor-12:186691 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:06:42  [ NioProcessor-14:190630 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:06:42  [ NioProcessor-15:190630 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:06:42  [ NioProcessor-15:191163 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:06:44  [ NioProcessor-13:193095 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:06:48  [ NioProcessor-11:197171 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:06:48  [ NioProcessor-15:197172 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:06:49  [ NioProcessor-11:197701 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:06:55  [ NioProcessor-12:203710 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:06:55  [ NioProcessor-11:203710 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:06:55  [ NioProcessor-12:204243 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:07:01  [ NioProcessor-12:210251 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:07:01  [ NioProcessor-13:210252 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:07:02  [ NioProcessor-13:210781 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:07:08  [ NioProcessor-14:216791 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:07:08  [ NioProcessor-13:216792 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:07:08  [ NioProcessor-14:217334 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:07:14  [ NioProcessor-14:223342 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:07:14  [ NioProcessor-15:223343 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:07:15  [ NioProcessor-15:223884 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:07:21  [ NioProcessor-11:229892 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:07:21  [ NioProcessor-15:229893 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:07:22  [ NioProcessor-11:230413 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:07:28  [ NioProcessor-11:236423 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:07:28  [ NioProcessor-12:236423 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:07:28  [ NioProcessor-12:236951 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:07:34  [ NioProcessor-13:242962 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:07:34  [ NioProcessor-12:242962 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:07:35  [ NioProcessor-13:243503 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:07:41  [ NioProcessor-13:249511 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:07:41  [ NioProcessor-14:249511 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:07:41  [ NioProcessor-14:250041 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:07:47  [ NioProcessor-14:256051 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:07:47  [ NioProcessor-15:256051 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:07:48  [ NioProcessor-15:256583 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:07:54  [ NioProcessor-11:262590 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:07:54  [ NioProcessor-15:262590 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:07:54  [ NioProcessor-11:263122 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:08:00  [ NioProcessor-11:269133 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:08:00  [ NioProcessor-12:269133 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:08:01  [ NioProcessor-12:269673 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:08:07  [ NioProcessor-13:275682 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:08:07  [ NioProcessor-12:275682 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:08:07  [ NioProcessor-13:276212 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:08:13  [ NioProcessor-14:282221 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:08:13  [ NioProcessor-13:282222 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:08:14  [ NioProcessor-14:282752 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:08:20  [ NioProcessor-15:288766 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:08:20  [ NioProcessor-14:288766 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:08:20  [ NioProcessor-15:289301 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:08:26  [ NioProcessor-15:295322 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:08:26  [ NioProcessor-11:295322 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:08:27  [ NioProcessor-11:295862 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:08:33  [ NioProcessor-12:301873 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:08:33  [ NioProcessor-11:301873 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:08:34  [ NioProcessor-12:302401 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:08:40  [ NioProcessor-13:308412 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:08:40  [ NioProcessor-12:308412 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:08:40  [ NioProcessor-13:308942 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:18:54  [ NioProcessor-14:922450 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:18:54  [ NioProcessor-13:922450 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:18:55  [ NioProcessor-14:923472 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:19:01  [ NioProcessor-14:929480 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:19:01  [ NioProcessor-15:929480 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:19:01  [ NioProcessor-15:930010 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:19:07  [ NioProcessor-11:936021 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:19:07  [ NioProcessor-15:936021 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:19:08  [ NioProcessor-11:936550 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:19:14  [ NioProcessor-11:942560 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:19:14  [ NioProcessor-12:942560 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:19:14  [ NioProcessor-12:943091 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:19:20  [ NioProcessor-12:949100 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:19:20  [ NioProcessor-13:949100 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:20:46  [ NioProcessor-13:1034568 ] - [ INFO ]  -客户端与服务端连接[空闲] - reader idle
+2019-08-01 12:20:46  [ NioProcessor-13:1034569 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:20:52  [ NioProcessor-13:1040582 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:20:52  [ NioProcessor-14:1040582 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:24:56  [ NioProcessor-14:1285029 ] - [ INFO ]  -客户端与服务端连接[空闲] - reader idle
+2019-08-01 12:24:56  [ NioProcessor-14:1285031 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:25:02  [ NioProcessor-14:1291041 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 12:25:02  [ NioProcessor-15:1291041 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 12:25:48  [ datainsert:1337158 ] - [ INFO ]  当前时间：Thu Aug 01 12:25:48 CST 2019,线程等待：252000
+2019-08-01 12:25:48  [ NioProcessor-15:1337160 ] - [ INFO ]  排污1断开连接!
+2019-08-01 12:28:20  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 12:28:20 CST 2019]; root of context hierarchy
+2019-08-01 12:28:21  [ main:126 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 12:28:21  [ main:783 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 12:28:24  [ main:3431 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 12:28:34  [ main:13445 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 12:28:34  [ main:13445 ] - [ INFO ]  日志记录启动开始
+2019-08-01 12:28:34  [ main:13452 ] - [ INFO ]  日志记录启动结束
+2019-08-01 12:28:34  [ main:13941 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 12:28:34  [ datainsert:13978 ] - [ INFO ]  数据存储线程启动
+2019-08-01 12:28:34  [ datainsert:13979 ] - [ INFO ]  当前时间：Thu Aug 01 12:28:34 CST 2019,线程等待：86000
+2019-08-01 12:28:34  [ NioProcessor-12:13995 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 12:28:48  [ NioProcessor-12:27476 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:30:38  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:30:38 CST 2019]; root of context hierarchy
+2019-08-01 13:30:38  [ main:138 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:30:39  [ main:932 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:30:42  [ main:4554 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:30:52  [ main:14567 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:30:52  [ main:14567 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:30:52  [ main:14570 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:30:53  [ main:15141 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:30:53  [ datainsert:15188 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:30:53  [ datainsert:15189 ] - [ INFO ]  准备生成插入数据Thu Aug 01 13:30:53 CST 2019
+2019-08-01 13:30:53  [ NioProcessor-12:15212 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 13:31:13  [ Thread-6:34900 ] - [ INFO ]  命令是：CollectStatus
+2019-08-01 13:31:16  [ Thread-7:38262 ] - [ INFO ]  命令是：CollectStatus
+2019-08-01 13:31:19  [ Thread-8:40911 ] - [ INFO ]  命令是：MeterStatus
+2019-08-01 13:31:21  [ Thread-9:43101 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:31:53  [ datainsert:75224 ] - [ INFO ]  插入数据完成Thu Aug 01 13:31:53 CST 2019,用时:60036
+2019-08-01 13:31:53  [ datainsert:75226 ] - [ INFO ]  当前时间：Thu Aug 01 13:30:53 CST 2019,线程等待：787000
+2019-08-01 13:31:55  [ Thread-10:76897 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:31:56  [ Thread-11:78358 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:31:57  [ Thread-12:79371 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:32:49  [ Thread-13:131493 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:41:31  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:41:31 CST 2019]; root of context hierarchy
+2019-08-01 13:41:31  [ main:118 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:41:32  [ main:820 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:41:35  [ main:3735 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:41:45  [ main:13747 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:41:45  [ main:13748 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:41:45  [ main:13753 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:41:46  [ main:14456 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:41:46  [ datainsert:14556 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:41:46  [ datainsert:14556 ] - [ INFO ]  当前时间：Thu Aug 01 13:41:46 CST 2019,线程等待：194000
+2019-08-01 13:41:46  [ NioProcessor-12:14587 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 13:41:47  [ NioProcessor-12:15456 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:41:53  [ NioProcessor-13:21485 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 13:41:53  [ NioProcessor-13:22053 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:41:59  [ NioProcessor-14:28063 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 13:42:00  [ NioProcessor-14:28623 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:42:02  [ NioProcessor-12:30678 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:42:06  [ NioProcessor-15:34633 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:42:06  [ NioProcessor-14:34634 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:42:07  [ NioProcessor-15:35193 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:42:08  [ NioProcessor-13:37091 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:42:13  [ NioProcessor-11:41218 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:42:13  [ NioProcessor-15:41218 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:42:13  [ NioProcessor-11:41784 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:42:20  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:42:20 CST 2019]; root of context hierarchy
+2019-08-01 13:42:20  [ main:109 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:42:21  [ main:827 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:42:24  [ main:3974 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:42:34  [ main:13986 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:42:34  [ main:13986 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:42:34  [ main:13991 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:42:35  [ main:14947 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:42:35  [ datainsert:15063 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:42:35  [ datainsert:15065 ] - [ INFO ]  当前时间：Thu Aug 01 13:42:35 CST 2019,线程等待：145000
+2019-08-01 13:42:35  [ NioProcessor-12:15095 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 13:42:36  [ NioProcessor-12:15826 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:42:42  [ NioProcessor-13:21839 ] - [ INFO ]  采集器排污1(连接服务端/192.168.2.120:102):成功
+2019-08-01 13:42:42  [ NioProcessor-12:21967 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:42:42  [ NioProcessor-13:22406 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:42:48  [ NioProcessor-13:28417 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:42:48  [ NioProcessor-14:28417 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:42:49  [ NioProcessor-14:28976 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:42:55  [ NioProcessor-14:34986 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:42:55  [ NioProcessor-15:34986 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:42:55  [ NioProcessor-15:35546 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:43:01  [ NioProcessor-11:41557 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:43:01  [ NioProcessor-15:41557 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:43:02  [ NioProcessor-11:42117 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:43:08  [ NioProcessor-11:48131 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:43:08  [ NioProcessor-12:48131 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:43:09  [ NioProcessor-12:48696 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:43:15  [ NioProcessor-12:54707 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:43:15  [ NioProcessor-13:54707 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:43:15  [ NioProcessor-13:55265 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:43:21  [ NioProcessor-13:61278 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:43:21  [ NioProcessor-14:61278 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:43:22  [ NioProcessor-14:61836 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:43:28  [ NioProcessor-14:67847 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:43:28  [ NioProcessor-15:67847 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:43:28  [ NioProcessor-15:68407 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:43:34  [ NioProcessor-11:74418 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:43:34  [ NioProcessor-15:74418 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:43:35  [ NioProcessor-11:75007 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:43:41  [ NioProcessor-11:81017 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:43:41  [ NioProcessor-12:81017 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:43:42  [ NioProcessor-12:81577 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:43:48  [ NioProcessor-13:87586 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:43:48  [ NioProcessor-12:87586 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:43:48  [ NioProcessor-13:88153 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:43:54  [ NioProcessor-13:94156 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:43:54  [ NioProcessor-14:94156 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:43:55  [ NioProcessor-14:94716 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:44:01  [ NioProcessor-15:100726 ] - [ INFO ]  采集器排污1(连接服务端192.168.2.120/192.168.2.120:102):成功
+2019-08-01 13:44:01  [ NioProcessor-14:100726 ] - [ INFO ]  断线重连[192.168.2.120:102]成功
+2019-08-01 13:44:01  [ NioProcessor-15:101286 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:44:30  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@50b494a6: startup date [Thu Aug 01 13:44:30 CST 2019]; root of context hierarchy
+2019-08-01 13:44:31  [ main:113 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:44:31  [ main:736 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:44:35  [ main:4060 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:44:45  [ main:14072 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:44:45  [ main:14073 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:44:45  [ main:14078 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:44:45  [ main:14742 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:44:45  [ datainsert:14793 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:44:45  [ datainsert:14794 ] - [ INFO ]  当前时间：Thu Aug 01 13:44:45 CST 2019,线程等待：15000
+2019-08-01 13:44:45  [ NioProcessor-12:14817 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:44:46  [ NioProcessor-12:15385 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:44:52  [ NioProcessor-13:21390 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:44:52  [ NioProcessor-13:21948 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:44:58  [ NioProcessor-14:27950 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:44:59  [ NioProcessor-14:28507 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:45:00  [ datainsert:29795 ] - [ INFO ]  准备生成插入数据Thu Aug 01 13:45:00 CST 2019
+2019-08-01 13:45:01  [ NioProcessor-12:30627 ] - [ INFO ]  断线重连[192.168.1.188:102]成功
+2019-08-01 13:45:08  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:45:08 CST 2019]; root of context hierarchy
+2019-08-01 13:45:08  [ main:128 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:45:09  [ main:961 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:45:12  [ main:3857 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:45:22  [ main:13867 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:45:22  [ main:13868 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:45:22  [ main:13871 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:45:22  [ main:14583 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:45:23  [ datainsert:14645 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:45:23  [ datainsert:14646 ] - [ INFO ]  准备生成插入数据Thu Aug 01 13:45:23 CST 2019
+2019-08-01 13:45:23  [ NioProcessor-12:14672 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:45:23  [ NioProcessor-12:15235 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:45:29  [ NioProcessor-13:21239 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:45:30  [ NioProcessor-13:21795 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:45:36  [ NioProcessor-14:27798 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:45:36  [ NioProcessor-14:28354 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:45:38  [ NioProcessor-12:30456 ] - [ INFO ]  断线重连[192.168.1.188:102]成功
+2019-08-01 13:46:31  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:46:31 CST 2019]; root of context hierarchy
+2019-08-01 13:46:31  [ main:111 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:46:31  [ main:831 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:46:35  [ main:3848 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:46:45  [ main:13859 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:46:45  [ main:13860 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:46:45  [ main:13864 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:46:45  [ main:14716 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:46:45  [ datainsert:14783 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:46:45  [ datainsert:14784 ] - [ INFO ]  当前时间：Thu Aug 01 13:46:45 CST 2019,线程等待：795000
+2019-08-01 13:46:45  [ NioProcessor-12:14803 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:46:46  [ NioProcessor-12:15373 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:46:52  [ NioProcessor-13:21378 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:46:53  [ NioProcessor-13:21934 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:46:59  [ NioProcessor-14:27937 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:46:59  [ NioProcessor-14:28494 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:47:01  [ NioProcessor-12:30610 ] - [ INFO ]  断线重连[192.168.1.188:102]成功
+2019-08-01 13:48:16  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:48:16 CST 2019]; root of context hierarchy
+2019-08-01 13:48:16  [ main:148 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:48:17  [ main:989 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:48:20  [ main:4352 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:48:30  [ main:14362 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:48:30  [ main:14363 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:48:30  [ main:14368 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:48:31  [ main:15126 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:48:31  [ datainsert:15195 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:48:31  [ datainsert:15196 ] - [ INFO ]  当前时间：Thu Aug 01 13:48:31 CST 2019,线程等待：689000
+2019-08-01 13:48:31  [ NioProcessor-12:15217 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:48:31  [ NioProcessor-12:15784 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:49:17  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:49:17 CST 2019]; root of context hierarchy
+2019-08-01 13:49:17  [ main:110 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:49:18  [ main:906 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:49:21  [ main:4489 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:49:31  [ main:14508 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:49:31  [ main:14509 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:49:31  [ main:14523 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:49:32  [ main:15122 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:49:32  [ datainsert:15168 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:49:32  [ datainsert:15169 ] - [ INFO ]  当前时间：Thu Aug 01 13:49:32 CST 2019,线程等待：628000
+2019-08-01 13:49:32  [ NioProcessor-12:15191 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:49:45  [ NioProcessor-12:28679 ] - [ INFO ]  排污1断开连接!
+2019-08-01 13:50:14  [ NioProcessor-13:57765 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:50:46  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:50:46 CST 2019]; root of context hierarchy
+2019-08-01 13:50:46  [ main:106 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:50:46  [ main:765 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:50:51  [ main:5542 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:51:01  [ main:15559 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:51:01  [ main:15559 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:51:01  [ main:15562 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:51:02  [ main:16321 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:51:02  [ datainsert:16415 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:51:02  [ datainsert:16416 ] - [ INFO ]  当前时间：Thu Aug 01 13:51:02 CST 2019,线程等待：538000
+2019-08-01 13:51:02  [ NioProcessor-12:16444 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:53:01  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:53:01 CST 2019]; root of context hierarchy
+2019-08-01 13:53:02  [ main:140 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:53:02  [ main:944 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:53:06  [ main:4283 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:53:16  [ main:14295 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:53:16  [ main:14295 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:53:16  [ main:14299 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:55:25  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 13:55:25 CST 2019]; root of context hierarchy
+2019-08-01 13:55:25  [ main:137 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:55:26  [ main:800 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:55:28  [ main:3687 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:55:38  [ main:13701 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:55:38  [ main:13702 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:55:38  [ main:13706 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:57:36  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@50b494a6: startup date [Thu Aug 01 13:57:36 CST 2019]; root of context hierarchy
+2019-08-01 13:57:36  [ main:173 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 13:57:37  [ main:935 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 13:57:40  [ main:4100 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 13:57:50  [ main:14110 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 13:57:50  [ main:14111 ] - [ INFO ]  日志记录启动开始
+2019-08-01 13:57:50  [ main:14115 ] - [ INFO ]  日志记录启动结束
+2019-08-01 13:57:55  [ main:18630 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 13:57:55  [ datainsert:18691 ] - [ INFO ]  数据存储线程启动
+2019-08-01 13:57:55  [ datainsert:18691 ] - [ INFO ]  当前时间：Thu Aug 01 13:57:55 CST 2019,线程等待：125000
+2019-08-01 13:57:55  [ NioProcessor-12:18718 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 13:58:12  [ Thread-6:35978 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:58:18  [ Thread-7:41925 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:58:19  [ Thread-8:42765 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:58:20  [ Thread-9:43967 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:58:21  [ Thread-10:44654 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:58:28  [ Thread-11:51824 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:58:29  [ Thread-12:52628 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:58:29  [ Thread-13:53048 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 13:58:29  [ Thread-14:53316 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:00:01  [ datainsert:144429 ] - [ INFO ]  准备生成插入数据Thu Aug 01 14:00:01 CST 2019
+2019-08-01 14:01:05  [ datainsert:208964 ] - [ INFO ]  插入数据完成Thu Aug 01 14:01:05 CST 2019,用时:64537
+2019-08-01 14:01:05  [ datainsert:208965 ] - [ INFO ]  当前时间：Thu Aug 01 14:00:01 CST 2019,线程等待：835000
+2019-08-01 14:01:46  [ Thread-5:249741 ] - [ INFO ]  <<=[采集器:排污1][表计A1楼排污1]=>>超时
+2019-08-01 14:02:14  [ Thread-5:277797 ] - [ INFO ]  <<=[采集器:排污1][表计A1楼排污1]=>>超时
+2019-08-01 14:03:15  [ Thread-5:338949 ] - [ INFO ]  <<=[采集器:排污1][表计A1楼排污1]=>>超时
+2019-08-01 14:16:00  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 14:16:00 CST 2019]; root of context hierarchy
+2019-08-01 14:16:00  [ main:117 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 14:16:01  [ main:751 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 14:16:04  [ main:3983 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 14:16:14  [ main:14004 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 14:16:14  [ main:14005 ] - [ INFO ]  日志记录启动开始
+2019-08-01 14:16:14  [ main:14016 ] - [ INFO ]  日志记录启动结束
+2019-08-01 14:16:15  [ main:14690 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 14:16:15  [ datainsert:14735 ] - [ INFO ]  数据存储线程启动
+2019-08-01 14:16:15  [ datainsert:14735 ] - [ INFO ]  当前时间：Thu Aug 01 14:16:15 CST 2019,线程等待：825000
+2019-08-01 14:16:15  [ NioProcessor-12:14754 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 14:16:28  [ Thread-6:27530 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:16:30  [ Thread-7:30136 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:30:00  [ datainsert:839736 ] - [ INFO ]  准备生成插入数据Thu Aug 01 14:30:00 CST 2019
+2019-08-01 14:31:00  [ datainsert:899777 ] - [ INFO ]  插入数据完成Thu Aug 01 14:31:00 CST 2019,用时:60041
+2019-08-01 14:31:00  [ datainsert:899778 ] - [ INFO ]  当前时间：Thu Aug 01 14:30:00 CST 2019,线程等待：840000
+2019-08-01 14:45:00  [ datainsert:1739782 ] - [ INFO ]  准备生成插入数据Thu Aug 01 14:45:00 CST 2019
+2019-08-01 14:46:00  [ datainsert:1799783 ] - [ INFO ]  插入数据完成Thu Aug 01 14:46:00 CST 2019,用时:60001
+2019-08-01 14:46:00  [ datainsert:1799783 ] - [ INFO ]  当前时间：Thu Aug 01 14:45:00 CST 2019,线程等待：840000
+2019-08-01 14:57:20  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Thu Aug 01 14:57:20 CST 2019]; root of context hierarchy
+2019-08-01 14:57:20  [ main:122 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
+2019-08-01 14:57:21  [ main:888 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
+2019-08-01 14:57:24  [ main:3669 ] - [ INFO ]  数据库访问服务启动
+2019-08-01 14:57:34  [ main:13680 ] - [ INFO ]  属性配置文件加载完成
+2019-08-01 14:57:34  [ main:13680 ] - [ INFO ]  日志记录启动开始
+2019-08-01 14:57:34  [ main:13683 ] - [ INFO ]  日志记录启动结束
+2019-08-01 14:57:34  [ main:14323 ] - [ INFO ]  创建通道,端口:4001
+2019-08-01 14:57:34  [ datainsert:14355 ] - [ INFO ]  数据存储线程启动
+2019-08-01 14:57:34  [ datainsert:14355 ] - [ INFO ]  当前时间：Thu Aug 01 14:57:34 CST 2019,线程等待：146000
+2019-08-01 14:57:34  [ NioProcessor-12:14373 ] - [ INFO ]  采集器排污1(连接服务端/192.168.1.188:102):成功
+2019-08-01 14:57:45  [ Thread-6:24892 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:46  [ Thread-7:25943 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:47  [ Thread-8:27223 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:48  [ Thread-9:27690 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:48  [ Thread-10:28177 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:49  [ Thread-11:28664 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:49  [ Thread-12:28933 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:49  [ Thread-13:29115 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:49  [ Thread-14:29281 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:49  [ Thread-15:29445 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:50  [ Thread-16:29611 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:50  [ Thread-17:29792 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:50  [ Thread-18:29966 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:50  [ Thread-19:30154 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:50  [ Thread-20:30297 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:50  [ Thread-21:30467 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:51  [ Thread-22:30622 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 14:57:53  [ Thread-23:33463 ] - [ INFO ]  命令是：MeterDataByCtdCode
+2019-08-01 15:00:00  [ datainsert:160356 ] - [ INFO ]  准备生成插入数据Thu Aug 01 15:00:00 CST 2019
+2019-08-01 15:01:00  [ datainsert:220360 ] - [ INFO ]  插入数据完成Thu Aug 01 15:01:00 CST 2019,用时:60004
+2019-08-01 15:01:00  [ datainsert:220360 ] - [ INFO ]  当前时间：Thu Aug 01 15:00:00 CST 2019,线程等待：840000

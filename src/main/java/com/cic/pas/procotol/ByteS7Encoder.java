@@ -23,11 +23,7 @@ public class ByteS7Encoder extends ProtocolEncoderAdapter {
             S7ReadRequest readRequest = new S7ReadRequest();
             readRequest.setSendBytes(a);
             String readType = readRequest.getTransportSize() + "";
-            byte[] addressBytes = readRequest.getAddress();
-            int address = (addressBytes[0] << 16) + (addressBytes[1] << 8) + (addressBytes[2]);
-            String readAddress = address + "";
             session.setAttribute("readType", readType);
-//            session.setAttribute("readAddress", readAddress);
         }
         buff.put(a);
         buff.flip();
