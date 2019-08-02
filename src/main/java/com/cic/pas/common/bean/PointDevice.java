@@ -12,6 +12,7 @@ import com.cic.domain.PomsCalculateAlterRecord;
 import com.cic.pas.application.DBVisitService;
 import com.cic.pas.common.util.StringUtils;
 import com.cic.pas.common.util.Util;
+import com.cic.pas.dao.BussinessConfig;
 
 /**
  * @author wz
@@ -479,7 +480,6 @@ public class PointDevice implements Serializable {
                 e.printStackTrace();
             }
             this.value = value;
-
         } else {
             try {
                 if (value.compareTo(getMax_value()) == 1 && time != null) {
@@ -498,9 +498,37 @@ public class PointDevice implements Serializable {
             previousValue = this.value;
             this.value = value;
         }
+        setSystemData();
+    }
+    private void setSystemData(){
+        boolean isFind=false;
+        for(PomsEnergyUsingSystem system:BussinessConfig.systemList){
+            if(isFind){
+                break;
+            }
+            for(PomsEnergyUsingFacilities facilities:system.getFacilitiyList()){
+                if(isFind){
+                    break;
+                }
+                for(PomsEnergyUsingFacilitiesModelPoint point:facilities.getPointList()){
+                    if(point.getMeasurModelCode().equals(getCtmType())&&point.getMeasurMmpCode().equals(getCode())){
+                        point.setValue(getValue());
+                        setAlarmData(value);
+                        setAlarmData(facilities, point);
+                        isFind=true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void setAlarmData(PomsEnergyUsingFacilities facilities, PomsEnergyUsingFacilitiesModelPoint point) {
         boolean isAlarmFlag = false;
         BigDecimal setAlarmValue = null;
-        if (mmpIsAlarm == 1) {
+        Double up_line=point.getUpValue().doubleValue();
+        Double down_line=point.getDownValue().doubleValue();
+        if (point.getIsAlarm() == 1) {
             if (mmpAlarmStatus == 1) {//正在报警   判断报警是否恢复
                 if (alarmType == 1) { // 开关量
                     if (value.intValue() == 0) {// 开关量报警恢复
@@ -518,7 +546,7 @@ public class PointDevice implements Serializable {
                     }
                 }
             } else {// 正常状态   判断是否超限
-                if (mmpIsAlarm == 1) {
+                if (point.getIsAlarm() == 1) {
                     if (isBit == 1) {//开关量
                         if (value.intValue() == 1) {// 开关量报警
                             alarmType = 1;
@@ -543,10 +571,11 @@ public class PointDevice implements Serializable {
         if (isAlarmFlag) {
             String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             PomsCalculateAlterRecord record = new PomsCalculateAlterRecord();
-            record.setCtdCodes(ctdCode);
-            record.setCtdName(ctdName);
-            record.setMmpCodes(code);
-            record.setMmpName(name);
+            record.setSystemCode(facilities.getSystemCode());
+            record.setEusCodes(facilities.getFacilitiesCode());
+            record.setEusName(facilities.getFacilitiesName());
+            record.setMmpCodes(point.getMmpCode());
+            record.setMmpName(point.getMmpName());
             mmpAlarmStatus = mmpAlarmStatus == 0 ? 1 : 0;
             record.setAlterLevel(mmpAlarmStatus);
             record.setAlterType(alarmType);
@@ -556,6 +585,14 @@ public class PointDevice implements Serializable {
             DBVisitService.batchInsertAlarm(record);
             isAlarmFlag = false;
         }
+    }
+
+    /**
+     * 生成报警数据
+     * @param value
+     */
+    private void setAlarmData(BigDecimal value) {
+
     }
 
     public String getMeterId() {

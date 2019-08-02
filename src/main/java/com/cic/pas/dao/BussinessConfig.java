@@ -41,6 +41,7 @@ public final class BussinessConfig {
      * 只会有一个线程对TerminalDevice进行修改，其它只是读取  所以不做线程安全定义
      */
     public static List<TerminalDevice> terminalList = new ArrayList<TerminalDevice>();
+    public static List<PomsEnergyUsingSystem> systemList=new ArrayList<PomsEnergyUsingSystem>();
 
     public static List<TerminalDevice> terminalInfo = Collections
             .synchronizedList(new ArrayList<TerminalDevice>());
@@ -359,7 +360,57 @@ public final class BussinessConfig {
      * 加载用能系统及设备模型参数
      */
     private static void systemParams(){
-
+        systemList=jdbcTemplate.query("select * from poms_energy_using_system", new RowMapper<PomsEnergyUsingSystem>() {
+            @Override
+            public PomsEnergyUsingSystem mapRow(ResultSet rs, int i) throws SQLException {
+                PomsEnergyUsingSystem system=new PomsEnergyUsingSystem();
+                system.setId(rs.getInt("id"));
+                system.setEulId(rs.getString("eui_code"));
+                system.setEulName(rs.getString("eul_name"));
+                system.setSystemModelCode(rs.getString("SYSTEM_MODEL_CODE"));
+                system.setSystemModelName(rs.getString("SYSTEM_MODEL_NAME"));
+                system.setSystemCode("SYSTEM_CODE");
+                system.setSystemName("SYSTEM_NAME");
+                system.setSystemBackups("SYSTEM_BACKUPS");
+                return system;
+            }
+        });
+        for(PomsEnergyUsingSystem system:systemList){
+            List<PomsEnergyUsingFacilities> facilities=jdbcTemplate.query("select * from poms_energy_using_facilities where system_code=?",new Object[]{system.getSystemCode()}, new RowMapper<PomsEnergyUsingFacilities>() {
+                @Override
+                public PomsEnergyUsingFacilities mapRow(ResultSet rs, int i) throws SQLException {
+                    PomsEnergyUsingFacilities facility=new PomsEnergyUsingFacilities();
+                    facility.setId(rs.getInt("id"));
+                    facility.setSystemCode(rs.getString("SYSTEM_CODE"));
+                    facility.setFacilitiesModelCode(rs.getString("FACILITIES_MODEL_CODE"));
+                    facility.setFacilitiesCode(rs.getString("FACILITIES_CODE"));
+                    facility.setFacilitiesName(rs.getString("FACILITIES_NAME"));
+                    facility.setFacilitiesOffset(rs.getInt("FACILITIES_OFFSET"));
+                    facility.setFacilitiesBackups(rs.getString("FACILITIES_BACKUPS"));
+                    return facility;
+                }
+            });
+            for(PomsEnergyUsingFacilities facility:facilities){
+                List<PomsEnergyUsingFacilitiesModelPoint> points=jdbcTemplate.query("", new Object[]{facility.getFacilitiesModelCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
+                    @Override
+                    public PomsEnergyUsingFacilitiesModelPoint mapRow(ResultSet rs, int i) throws SQLException {
+                        PomsEnergyUsingFacilitiesModelPoint modelPoint=new PomsEnergyUsingFacilitiesModelPoint();
+                        modelPoint.setId(rs.getInt("id"));
+                        modelPoint.setFacilitiesModelCode(rs.getString("FACILITIES_MODEL_CODE"));
+                        modelPoint.setMmpCode(rs.getString("MMP_CODE"));
+                        modelPoint.setMmpName(rs.getString("MMP_NAME"));
+                        modelPoint.setMmpUnit(rs.getString("MMP_UNIT"));
+                        modelPoint.setMmpOrder(rs.getInt("MMP_ORDER"));
+                        modelPoint.setMmpType(rs.getInt("MMP_TYPE"));
+                        modelPoint.setMeasurModelCode(rs.getString("MEASUR_MODEL_CODE"));
+                        modelPoint.setMeasurMmpCode(rs.getString("MEASUR_MMP_CODE"));
+                        return modelPoint;
+                    }
+                });
+                facility.setPointList(points);
+            }
+            system.setFacilitiyList(facilities);
+        }
     }
     /**
      * 加载日月年数据

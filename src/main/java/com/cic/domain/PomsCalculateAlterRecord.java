@@ -3,7 +3,11 @@ package com.cic.domain;
 import java.math.BigDecimal;
 
 public class PomsCalculateAlterRecord {
-    private String ctdCodes;
+    private int id;
+
+    private String systemCode;
+
+    private String eusCodes;
 
     private String mmpCodes;
 
@@ -33,16 +37,32 @@ public class PomsCalculateAlterRecord {
 
     private Integer alterType;
 
-    private String ctdName;
+    private String eusName;
 
     private String mmpName;
 
-    public String getCtdCodes() {
-        return ctdCodes;
+    public int getId() {
+        return id;
     }
 
-    public void setCtdCodes(String ctdCodes) {
-        this.ctdCodes = ctdCodes == null ? null : ctdCodes.trim();
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getSystemCode() {
+        return systemCode;
+    }
+
+    public void setSystemCode(String systemCode) {
+        this.systemCode = systemCode;
+    }
+
+    public String getEusCodes() {
+        return eusCodes;
+    }
+
+    public void setEusCodes(String eusCodes) {
+        this.eusCodes = eusCodes;
     }
 
     public String getMmpCodes() {
@@ -77,12 +97,12 @@ public class PomsCalculateAlterRecord {
         this.alterType = alterType;
     }
 
-    public String getCtdName() {
-        return ctdName;
+    public String getEusName() {
+        return eusName;
     }
 
-    public void setCtdName(String ctdName) {
-        this.ctdName = ctdName == null ? null : ctdName.trim();
+    public void setEusName(String eusName) {
+        this.eusName = eusName;
     }
 
     public String getMmpName() {

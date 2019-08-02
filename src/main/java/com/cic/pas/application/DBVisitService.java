@@ -859,15 +859,15 @@ public class DBVisitService {
     public static void batchInsertAlarm(PomsCalculateAlterRecord record) {
         StringBuffer buff = new StringBuffer();
         buff.append("insert into poms_calculate_alter_record "
-                + "(CTD_CODES,CTD_NAME,MMP_CODES,MMP_NAME,ALTER_LEVEL,ALTER_TYPE,ALTER_VALUE,SET_VALUE,DATE_TIME"
+                + "(SYSTEM_CODE,EUS_CODES,EUS_NAME,MMP_CODES,MMP_NAME,ALTER_LEVEL,ALTER_TYPE,ALTER_VALUE,SET_VALUE,DATE_TIME"
                 + ")values");
-            buff.append("('" +record.getCtdCodes() + "','" + record.getCtdName()
+            buff.append("('" +record.getSystemCode()+"','"+record.getEusCodes() + "','" + record.getEusName()
                     + "','" + record.getMmpCodes() + "','" + record.getMmpName()
                     + "'," + record.getAlterLevel() + "," + record.getAlterType()
                     + "," + record.getAlterValue() + "," + record.getSetValue()+",'"
                     + record.getDateTime()+"')");
         DBConfigDao.jdbcTemplate.execute(buff.toString());
-        logger.info(record.getCtdName()+"===>"+record.getMmpName()+"报警信息插入成功");
+        logger.info(record.getEusName()+"===>"+record.getMmpName()+"报警信息插入成功");
     }
     private static List<EsmspSumMonth> makeCurrentMonthReport() {
         String dateCode = new SimpleDateFormat("yyyyMM").format(new Date());
