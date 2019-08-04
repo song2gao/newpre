@@ -29,11 +29,9 @@ public class Processer {
 
     @SuppressWarnings("static-access")
     public ReturnMessage executeSome(Object object) {
-
         ReturnMessage rm = new ReturnMessage();
         Message message = (Message) object;
         logger.info("命令是：" + message.getC());
-
         switch (message.getC()) {
             case PreSystemStatus:
                 synchronized (this) {
@@ -63,6 +61,9 @@ public class Processer {
                 break;
             case MeterData:
                 rm = getMeterData(message.getMap());
+                break;
+            case SystemData:
+                rm=getSystemData(message.getConfigMap());
                 break;
             case Disable:
                 break;
@@ -421,5 +422,28 @@ public class Processer {
 
     public static void main(String[] arsg) {
         System.out.println(Integer.parseInt("01000821", 16));
+    }
+    /**
+     * 方法名: getSystemData
+     * 描述: 得到用能系统数据
+     * 参数: [map]
+     * 返回值: com.cic.pas.common.net.ReturnMessage
+     * 作者:高嵩
+     * 创建时间: 2019/8/3 11:17
+    **/
+    public ReturnMessage getSystemData(Map<String,Object> map){
+        Object systemCodeObj=map.get("systemCode");
+        ReturnMessage rm=new ReturnMessage();
+        if(systemCodeObj!=null){
+            String systemCode=systemCodeObj.toString();
+            for(PomsEnergyUsingSystem system:BussinessConfig.systemList){
+                if(system.getSystemCode().equals(systemCode)){
+                    String json=JSON.toJSONString(system);
+                    rm.setObject(json);
+                    break;
+                }
+            }
+        }
+        return rm;
     }
 }

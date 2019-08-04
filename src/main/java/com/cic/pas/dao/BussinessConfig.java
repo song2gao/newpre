@@ -365,7 +365,8 @@ public final class BussinessConfig {
             public PomsEnergyUsingSystem mapRow(ResultSet rs, int i) throws SQLException {
                 PomsEnergyUsingSystem system=new PomsEnergyUsingSystem();
                 system.setId(rs.getInt("id"));
-                system.setEulId(rs.getString("eui_code"));
+                system.setEuiId(rs.getString("eui_id"));
+                system.setEulId(rs.getString("eul_id"));
                 system.setEulName(rs.getString("eul_name"));
                 system.setSystemModelCode(rs.getString("SYSTEM_MODEL_CODE"));
                 system.setSystemModelName(rs.getString("SYSTEM_MODEL_NAME"));

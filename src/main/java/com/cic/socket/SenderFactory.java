@@ -2,25 +2,13 @@ package com.cic.socket;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.cic.domain.PomsAssembledTerminalDevice;
 import com.cic.domain.PomsCalculateTerminalDevice;
 import com.cic.pas.common.bean.MeterDevice;
 import com.cic.pas.common.net.ReturnMessage;
-import com.cic.socket.sender.MeterDeviceCreateSender;
-import com.cic.socket.sender.MeterDeviceDeleteSender;
-import com.cic.socket.sender.MeterDeviceDetailSender;
-import com.cic.socket.sender.MeterDeviceDisableSender;
-import com.cic.socket.sender.MeterDeviceMeterDataSender;
-import com.cic.socket.sender.MeterDeviceNormalSender;
-import com.cic.socket.sender.MeterDeviceStatusSender;
-import com.cic.socket.sender.MeterDeviceTrialSender;
-import com.cic.socket.sender.MeterDeviceUpdateSender;
-import com.cic.socket.sender.RequestHistoryDataByCollect;
-import com.cic.socket.sender.RequestHistoryDataByMeter;
-import com.cic.socket.sender.TerminalDeviceDetailSender;
-import com.cic.socket.sender.TerminalDeviceStatusSender;
-import com.cic.socket.sender.TestSender;
+import com.cic.socket.sender.*;
 
 /**
  * 描述:此类为与前置机通信的接口工厂，根据不同的业务应用需求，创建不同的接口对象，进行调用接口方法并通信。
@@ -178,7 +166,18 @@ public class SenderFactory {
 		
 		return ts;
 	}
-	
+	/**
+	 * 方法名: getSystemDataSender
+	 * 描述: 得到用能系统实时数据
+	 * 参数: [map]
+	 * 返回值: com.cic.socket.SendingMessage
+	 * 作者:高嵩
+	 * 创建时间: 2019/8/3 11:41
+	 **/
+	public SendingMessage getSystemDataSender(Map<String,Object> map){
+		SendingMessage  ts = new SystemDataSender(serverIP,port,map);
+		return ts;
+	}
 	
 	public static void main(String[] args){
 		SenderFactory sf = new SenderFactory("192.168.9.17",7005);
