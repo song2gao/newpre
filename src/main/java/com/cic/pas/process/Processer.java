@@ -63,7 +63,7 @@ public class Processer {
                 rm = getMeterData(message.getMap());
                 break;
             case SystemData:
-                rm=getSystemData(message.getConfigMap());
+                rm = getSystemData(message.getConfigMap());
                 break;
             case Disable:
                 break;
@@ -213,8 +213,8 @@ public class Processer {
                 break;
             }
         }
-        JSONArray json = JSONArray.parseArray(JSON.toJSONString(pointlist));
-        rm.setObject(json.toString());
+        String json = JSON.toJSONString(pointlist);
+        rm.setObject(json);
         return rm;
     }
 
@@ -340,8 +340,8 @@ public class Processer {
             }
 
         }
-        JSONArray json = JSONArray.parseArray(JSON.toJSONString(terminalDevices));
-        rm.setObject(json.toString());
+        String json = JSON.toJSONString(terminalDevices);
+        rm.setObject(json);
         return rm;
     }
 
@@ -415,14 +415,15 @@ public class Processer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JSONArray json = JSONArray.parseArray(JSON.toJSONString(meterDevices));
-        rm.setObject(json.toString());
+        String json = JSON.toJSONString(meterDevices);
+        rm.setObject(json);
         return rm;
     }
 
     public static void main(String[] arsg) {
         System.out.println(Integer.parseInt("01000821", 16));
     }
+
     /**
      * 方法名: getSystemData
      * 描述: 得到用能系统数据
@@ -430,15 +431,15 @@ public class Processer {
      * 返回值: com.cic.pas.common.net.ReturnMessage
      * 作者:高嵩
      * 创建时间: 2019/8/3 11:17
-    **/
-    public ReturnMessage getSystemData(Map<String,Object> map){
-        Object systemCodeObj=map.get("systemCode");
-        ReturnMessage rm=new ReturnMessage();
-        if(systemCodeObj!=null){
-            String systemCode=systemCodeObj.toString();
-            for(PomsEnergyUsingSystem system:BussinessConfig.systemList){
-                if(system.getSystemCode().equals(systemCode)){
-                    String json=JSON.toJSONString(system);
+     **/
+    public ReturnMessage getSystemData(Map<String, Object> map) {
+        Object systemCodeObj = map.get("systemCode");
+        ReturnMessage rm = new ReturnMessage();
+        if (systemCodeObj != null) {
+            String systemCode = systemCodeObj.toString();
+            for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
+                if (system.getSystemCode().equals(systemCode)) {
+                    String json = JSON.toJSONString(system);
                     rm.setObject(json);
                     break;
                 }

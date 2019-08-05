@@ -370,9 +370,9 @@ public final class BussinessConfig {
                 system.setEulName(rs.getString("eul_name"));
                 system.setSystemModelCode(rs.getString("SYSTEM_MODEL_CODE"));
                 system.setSystemModelName(rs.getString("SYSTEM_MODEL_NAME"));
-                system.setSystemCode("SYSTEM_CODE");
-                system.setSystemName("SYSTEM_NAME");
-                system.setSystemBackups("SYSTEM_BACKUPS");
+                system.setSystemCode(rs.getString("SYSTEM_CODE"));
+                system.setSystemName(rs.getString("SYSTEM_NAME"));
+                system.setSystemBackups(rs.getString("SYSTEM_BACKUPS"));
                 return system;
             }
         });
@@ -384,6 +384,7 @@ public final class BussinessConfig {
                     facility.setId(rs.getInt("id"));
                     facility.setSystemCode(rs.getString("SYSTEM_CODE"));
                     facility.setFacilitiesModelCode(rs.getString("FACILITIES_MODEL_CODE"));
+                    facility.setPreModelCode(rs.getString("PRE_MODEL_CODE"));
                     facility.setFacilitiesCode(rs.getString("FACILITIES_CODE"));
                     facility.setFacilitiesName(rs.getString("FACILITIES_NAME"));
                     facility.setFacilitiesOffset(rs.getInt("FACILITIES_OFFSET"));
@@ -392,7 +393,7 @@ public final class BussinessConfig {
                 }
             });
             for(PomsEnergyUsingFacilities facility:facilities){
-                List<PomsEnergyUsingFacilitiesModelPoint> points=jdbcTemplate.query("", new Object[]{facility.getFacilitiesModelCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
+                List<PomsEnergyUsingFacilitiesModelPoint> points=jdbcTemplate.query("select * from poms_energy_using_facilities_model_point where FACILITIES_MODEL_CODE=?", new Object[]{facility.getFacilitiesModelCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
                     @Override
                     public PomsEnergyUsingFacilitiesModelPoint mapRow(ResultSet rs, int i) throws SQLException {
                         PomsEnergyUsingFacilitiesModelPoint modelPoint=new PomsEnergyUsingFacilitiesModelPoint();
@@ -403,7 +404,6 @@ public final class BussinessConfig {
                         modelPoint.setMmpUnit(rs.getString("MMP_UNIT"));
                         modelPoint.setMmpOrder(rs.getInt("MMP_ORDER"));
                         modelPoint.setMmpType(rs.getInt("MMP_TYPE"));
-                        modelPoint.setMeasurModelCode(rs.getString("MEASUR_MODEL_CODE"));
                         modelPoint.setMeasurMmpCode(rs.getString("MEASUR_MMP_CODE"));
                         return modelPoint;
                     }

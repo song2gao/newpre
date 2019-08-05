@@ -500,24 +500,26 @@ public class PointDevice implements Serializable {
         }
         setSystemData();
     }
-    private void setSystemData(){
-        boolean isFind=false;
-        for(PomsEnergyUsingSystem system:BussinessConfig.systemList){
-            if(isFind){
+
+    private void setSystemData() {
+        boolean isFind = false;
+        for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
+            if (isFind) {
                 break;
             }
-            for(PomsEnergyUsingFacilities facilities:system.getFacilitiyList()){
-                if(isFind){
-                    break;
-                }
-                for(PomsEnergyUsingFacilitiesModelPoint point:facilities.getPointList()){
-                    if(point.getMeasurModelCode().equals(getCtmType())&&point.getMeasurMmpCode().equals(getCode())){
-                        point.setValue(getValue());
-                        setAlarmData(value);
-                        setAlarmData(facilities, point);
-                        isFind=true;
-                        break;
+            for (PomsEnergyUsingFacilities facilities : system.getFacilitiyList()) {
+                if (facilities.getPreModelCode().equals(getCtmType())) {
+                    for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
+                        if (point.getMeasurMmpCode().equals(getCode())) {
+                            point.setValue(getValue());
+                            setAlarmData(value);
+                            setAlarmData(facilities, point);
+                            isFind = true;
+                            break;
+                        }
                     }
+                    isFind=true;
+                    break;
                 }
             }
         }
@@ -526,8 +528,8 @@ public class PointDevice implements Serializable {
     private void setAlarmData(PomsEnergyUsingFacilities facilities, PomsEnergyUsingFacilitiesModelPoint point) {
         boolean isAlarmFlag = false;
         BigDecimal setAlarmValue = null;
-        Double up_line=point.getUpValue().doubleValue();
-        Double down_line=point.getDownValue().doubleValue();
+        Double up_line = point.getUpValue().doubleValue();
+        Double down_line = point.getDownValue().doubleValue();
         if (point.getIsAlarm() == 1) {
             if (mmpAlarmStatus == 1) {//正在报警   判断报警是否恢复
                 if (alarmType == 1) { // 开关量
@@ -589,6 +591,7 @@ public class PointDevice implements Serializable {
 
     /**
      * 生成报警数据
+     *
      * @param value
      */
     private void setAlarmData(BigDecimal value) {
@@ -644,8 +647,8 @@ public class PointDevice implements Serializable {
     }
 
     public void setFormular(String formular) {
-        if(isBit==1) {
-            formatMap=new HashMap();
+        if (isBit == 1) {
+            formatMap = new HashMap();
             if (formular.indexOf(",") > 0) {
                 String[] keyValues = formular.split(",");
                 for (String keyValue : keyValues) {
@@ -655,8 +658,8 @@ public class PointDevice implements Serializable {
                     }
                 }
             }
-        }else{
-            formatMap=new HashMap();
+        } else {
+            formatMap = new HashMap();
         }
         this.formular = formular;
     }

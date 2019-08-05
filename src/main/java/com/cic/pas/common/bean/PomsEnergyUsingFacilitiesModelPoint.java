@@ -17,8 +17,6 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     private int mmpType;
 
-    private String measurModelCode;
-
     private String measurMmpCode;
 
     private BigDecimal value;
@@ -85,14 +83,6 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     public void setMmpType(int mmpType) {
         this.mmpType=mmpType;
-    }
-
-    public String getMeasurModelCode() {
-        return measurModelCode;
-    }
-
-    public void setMeasurModelCode(String measurModelCode) {
-        this.measurModelCode = measurModelCode == null ? null : measurModelCode.trim();
     }
 
     public String getMeasurMmpCode() {
