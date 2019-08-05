@@ -404,7 +404,10 @@ public final class BussinessConfig {
                         modelPoint.setMmpUnit(rs.getString("MMP_UNIT"));
                         modelPoint.setMmpOrder(rs.getInt("MMP_ORDER"));
                         modelPoint.setMmpType(rs.getInt("MMP_TYPE"));
-                        modelPoint.setMeasurMmpCode(rs.getString("MEASUR_MMP_CODE"));
+                        int preMmpCode=rs.getInt("MEASUR_MMP_CODE");
+                        int preMmpCodeOffset=rs.getInt("MMP_OFFSET");
+                        int newMmpCode=preMmpCode+facility.getFacilitiesOffset()+preMmpCodeOffset;
+                        modelPoint.setMeasurMmpCode(newMmpCode+"");
                         return modelPoint;
                     }
                 });

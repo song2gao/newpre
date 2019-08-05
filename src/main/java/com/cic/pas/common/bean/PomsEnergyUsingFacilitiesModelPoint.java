@@ -1,6 +1,7 @@
 package com.cic.pas.common.bean;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 public class PomsEnergyUsingFacilitiesModelPoint {
     private Integer id;
@@ -16,6 +17,12 @@ public class PomsEnergyUsingFacilitiesModelPoint {
     private int mmpOrder;
 
     private int mmpType;
+
+    private int isBit;
+
+    private Map formatMap;
+
+    private String meterCode;
 
     private String measurMmpCode;
 
@@ -131,5 +138,29 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     public void setIsAlarm(int isAlarm) {
         this.isAlarm = isAlarm;
+    }
+
+    public int getIsBit() {
+        return isBit;
+    }
+
+    public void setIsBit(int isBit) {
+        this.isBit = isBit;
+    }
+
+    public Map getFormatMap() {
+        return formatMap;
+    }
+
+    public void setFormatMap(Map formatMap) {
+        this.formatMap = formatMap;
+    }
+
+    public String getMeterCode() {
+        return meterCode;
+    }
+
+    public void setMeterCode(String meterCode) {
+        this.meterCode = meterCode;
     }
 }
