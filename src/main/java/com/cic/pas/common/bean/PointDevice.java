@@ -512,7 +512,9 @@ public class PointDevice implements Serializable {
                     for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
                         if (point.getMeasurMmpCode().equals(getCode())) {
                             point.setValue(getValue());
-                            setAlarmData(value);
+                            point.setIsBit(getIsBit());
+                            point.setFormatMap(getFormatMap());
+                            point.setRwType(getRwType());
                             setAlarmData(facilities, point);
                             isFind = true;
                             break;

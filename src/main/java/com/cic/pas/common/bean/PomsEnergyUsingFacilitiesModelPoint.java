@@ -20,7 +20,11 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     private int isBit;
 
+    private int rwType;
+
     private Map formatMap;
+
+    private String facilityCode;
 
     private String meterCode;
 
@@ -162,5 +166,21 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     public void setMeterCode(String meterCode) {
         this.meterCode = meterCode;
+    }
+
+    public int getRwType() {
+        return rwType;
+    }
+
+    public void setRwType(int rwType) {
+        this.rwType = rwType;
+    }
+
+    public String getFacilityCode() {
+        return facilityCode;
+    }
+
+    public void setFacilityCode(String facilityCode) {
+        this.facilityCode = facilityCode;
     }
 }
