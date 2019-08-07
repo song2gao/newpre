@@ -1,134 +1,28 @@
-2019-08-07 10:29:03  [ main:1 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Wed Aug 07 10:29:03 CST 2019]; root of context hierarchy
-2019-08-07 10:29:03  [ main:142 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
-2019-08-07 10:29:04  [ main:1268 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
-2019-08-07 10:29:09  [ main:5661 ] - [ INFO ]  数据库访问服务启动
-2019-08-07 10:29:19  [ main:15701 ] - [ INFO ]  属性配置文件加载完成
-2019-08-07 10:29:19  [ main:15703 ] - [ INFO ]  日志记录启动开始
-2019-08-07 10:29:19  [ main:15715 ] - [ INFO ]  日志记录启动结束
-2019-08-07 10:29:20  [ main:16862 ] - [ INFO ]  创建通道,端口:4001
-2019-08-07 10:29:20  [ NioProcessor-7:16875 ] - [ INFO ]  采集器A1楼机房PLC(连接服务端/192.168.1.4:502):成功
-2019-08-07 10:29:20  [ datainsert:16884 ] - [ INFO ]  数据存储线程启动
-2019-08-07 10:29:20  [ datainsert:16884 ] - [ INFO ]  当前时间：Wed Aug 07 10:29:20 CST 2019,线程等待：40000
-2019-08-07 10:30:00  [ datainsert:56885 ] - [ INFO ]  准备生成插入数据Wed Aug 07 10:30:00 CST 2019
-2019-08-07 10:30:00  [ datainsert:56971 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
-2019-08-07 10:36:39  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Wed Aug 07 10:36:39 CST 2019]; root of context hierarchy
-2019-08-07 10:36:39  [ main:128 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
-2019-08-07 10:36:40  [ main:996 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
-2019-08-07 10:36:45  [ main:5846 ] - [ INFO ]  数据库访问服务启动
-2019-08-07 10:36:55  [ main:15858 ] - [ INFO ]  属性配置文件加载完成
-2019-08-07 10:36:55  [ main:15859 ] - [ INFO ]  日志记录启动开始
-2019-08-07 10:36:55  [ main:15863 ] - [ INFO ]  日志记录启动结束
-2019-08-07 10:36:56  [ main:16841 ] - [ INFO ]  创建通道,端口:4001
-2019-08-07 10:36:56  [ NioProcessor-7:16852 ] - [ INFO ]  采集器A1楼机房PLC(连接服务端/192.168.1.4:502):成功
-2019-08-07 10:36:56  [ datainsert:16860 ] - [ INFO ]  数据存储线程启动
-2019-08-07 10:36:56  [ datainsert:16860 ] - [ INFO ]  当前时间：Wed Aug 07 10:36:56 CST 2019,线程等待：484000
-2019-08-07 10:37:11  [ NioProcessor-7:32548 ] - [ INFO ]  A1楼机房PLC断开连接!
-2019-08-07 10:38:43  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Wed Aug 07 10:38:43 CST 2019]; root of context hierarchy
-2019-08-07 10:38:43  [ main:110 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
-2019-08-07 10:38:43  [ main:955 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
-2019-08-07 10:38:50  [ main:7114 ] - [ INFO ]  数据库访问服务启动
-2019-08-07 10:39:00  [ main:17133 ] - [ INFO ]  属性配置文件加载完成
-2019-08-07 10:39:00  [ main:17134 ] - [ INFO ]  日志记录启动开始
-2019-08-07 10:39:00  [ main:17143 ] - [ INFO ]  日志记录启动结束
-2019-08-07 10:39:01  [ main:18170 ] - [ INFO ]  创建通道,端口:4001
-2019-08-07 10:39:01  [ NioProcessor-7:18182 ] - [ INFO ]  采集器A1楼机房PLC(连接服务端/192.168.1.4:502):成功
-2019-08-07 10:39:01  [ datainsert:18188 ] - [ INFO ]  数据存储线程启动
-2019-08-07 10:39:01  [ datainsert:18188 ] - [ INFO ]  当前时间：Wed Aug 07 10:39:01 CST 2019,线程等待：359000
-2019-08-07 10:39:33  [ NioProcessor-7:50796 ] - [ INFO ]  A1楼机房PLC断开连接!
-2019-08-07 10:39:39  [ NioProcessor-8:56801 ] - [ INFO ]  采集器A1楼机房PLC(连接服务端/192.168.1.4:502):成功
-2019-08-07 10:39:39  [ NioProcessor-7:56806 ] - [ INFO ]  断线重连[SC-201907221346:502]成功
-2019-08-07 10:43:25  [ NioProcessor-8:282063 ] - [ INFO ]  A1楼机房PLC断开连接!
-2019-08-07 10:43:32  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Wed Aug 07 10:43:32 CST 2019]; root of context hierarchy
-2019-08-07 10:43:32  [ main:111 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
-2019-08-07 10:43:33  [ main:805 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
-2019-08-07 10:43:37  [ main:5415 ] - [ INFO ]  数据库访问服务启动
-2019-08-07 10:43:47  [ main:15435 ] - [ INFO ]  属性配置文件加载完成
-2019-08-07 10:43:47  [ main:15436 ] - [ INFO ]  日志记录启动开始
-2019-08-07 10:43:47  [ main:15445 ] - [ INFO ]  日志记录启动结束
-2019-08-07 10:43:48  [ main:16466 ] - [ INFO ]  创建通道,端口:4001
-2019-08-07 10:43:48  [ NioProcessor-7:16473 ] - [ INFO ]  采集器A1楼机房PLC(连接服务端/192.168.1.4:502):成功
-2019-08-07 10:43:48  [ datainsert:16486 ] - [ INFO ]  数据存储线程启动
-2019-08-07 10:43:48  [ datainsert:16487 ] - [ INFO ]  当前时间：Wed Aug 07 10:43:48 CST 2019,线程等待：72000
-2019-08-07 16:11:34  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Wed Aug 07 16:11:34 CST 2019]; root of context hierarchy
-2019-08-07 16:11:34  [ main:173 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
-2019-08-07 16:11:36  [ main:1607 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
-2019-08-07 16:11:41  [ main:7085 ] - [ INFO ]  数据库访问服务启动
-2019-08-07 16:11:51  [ main:17098 ] - [ INFO ]  属性配置文件加载完成
-2019-08-07 16:11:51  [ main:17100 ] - [ INFO ]  日志记录启动开始
-2019-08-07 16:11:51  [ main:17106 ] - [ INFO ]  日志记录启动结束
-2019-08-07 16:11:54  [ main:20125 ] - [ INFO ]  创建通道,端口:4001
-2019-08-07 16:11:54  [ datainsert:20240 ] - [ INFO ]  数据存储线程启动
-2019-08-07 16:11:54  [ datainsert:20241 ] - [ INFO ]  当前时间：Wed Aug 07 16:11:54 CST 2019,线程等待：186000
-2019-08-07 16:11:54  [ NioProcessor-7:20274 ] - [ INFO ]  采集器A1楼机房PLC(连接服务端/192.168.1.4:502):成功
-2019-08-07 16:15:00  [ datainsert:206252 ] - [ INFO ]  准备生成插入数据Wed Aug 07 16:15:00 CST 2019
-2019-08-07 16:15:01  [ datainsert:206367 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
-2019-08-07 16:15:10  [ Thread-6:216119 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:15:21  [ Thread-7:227117 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:15:28  [ Thread-8:233626 ] - [ INFO ]  命令是：Update
-2019-08-07 16:15:38  [ Thread-9:243429 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:15:50  [ Thread-10:255892 ] - [ INFO ]  命令是：Update
-2019-08-07 16:16:01  [ datainsert:266418 ] - [ INFO ]  插入数据完成Wed Aug 07 16:16:01 CST 2019,用时:60166
-2019-08-07 16:16:01  [ datainsert:266418 ] - [ INFO ]  当前时间：Wed Aug 07 16:15:00 CST 2019,线程等待：839000
-2019-08-07 16:16:05  [ Thread-11:270996 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:16:31  [ Thread-12:296671 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:16:46  [ Thread-13:311462 ] - [ INFO ]  命令是：Update
-2019-08-07 16:16:46  [ Thread-14:311590 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:20:36  [ Thread-15:542254 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:21:44  [ Thread-16:610271 ] - [ INFO ]  命令是：Update
-2019-08-07 16:23:03  [ Thread-17:688945 ] - [ INFO ]  命令是：Update
-2019-08-07 16:23:19  [ Thread-18:704957 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:23:54  [ Thread-19:739384 ] - [ INFO ]  命令是：Update
-2019-08-07 16:24:23  [ Thread-20:769027 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:26:33  [ Thread-21:898803 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:26:46  [ Thread-22:912085 ] - [ INFO ]  命令是：Update
-2019-08-07 16:27:00  [ Thread-23:926197 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:28:29  [ Thread-24:1014883 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:28:40  [ Thread-25:1026277 ] - [ INFO ]  命令是：Update
-2019-08-07 16:28:41  [ Thread-26:1026338 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:28:51  [ Thread-27:1036530 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:29:28  [ Thread-28:1073788 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:30:00  [ datainsert:1105419 ] - [ INFO ]  准备生成插入数据Wed Aug 07 16:30:00 CST 2019
-2019-08-07 16:30:00  [ datainsert:1105501 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
-2019-08-07 16:31:00  [ datainsert:1165526 ] - [ INFO ]  插入数据完成Wed Aug 07 16:31:00 CST 2019,用时:60107
-2019-08-07 16:31:00  [ datainsert:1165527 ] - [ INFO ]  当前时间：Wed Aug 07 16:30:00 CST 2019,线程等待：840000
-2019-08-07 16:33:23  [ Thread-29:1308557 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:45:00  [ datainsert:2005534 ] - [ INFO ]  准备生成插入数据Wed Aug 07 16:45:00 CST 2019
-2019-08-07 16:45:00  [ datainsert:2005625 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
-2019-08-07 16:45:41  [ Thread-30:2046695 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:46:00  [ datainsert:2065653 ] - [ INFO ]  插入数据完成Wed Aug 07 16:46:00 CST 2019,用时:60119
-2019-08-07 16:46:00  [ datainsert:2065653 ] - [ INFO ]  当前时间：Wed Aug 07 16:45:00 CST 2019,线程等待：840000
-2019-08-07 16:46:34  [ Thread-31:2100105 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:48:11  [ Thread-32:2197184 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:49:32  [ Thread-33:2277753 ] - [ INFO ]  命令是：SystemData
-2019-08-07 16:55:00  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Wed Aug 07 16:55:00 CST 2019]; root of context hierarchy
-2019-08-07 16:55:00  [ main:159 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
-2019-08-07 16:55:01  [ main:1152 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
-2019-08-07 16:55:07  [ main:7100 ] - [ INFO ]  数据库访问服务启动
-2019-08-07 16:55:17  [ main:17118 ] - [ INFO ]  属性配置文件加载完成
-2019-08-07 16:55:17  [ main:17119 ] - [ INFO ]  日志记录启动开始
-2019-08-07 16:55:17  [ main:17124 ] - [ INFO ]  日志记录启动结束
-2019-08-07 16:55:18  [ main:18164 ] - [ INFO ]  创建通道,端口:4001
-2019-08-07 16:55:18  [ NioProcessor-7:18172 ] - [ INFO ]  采集器A1楼机房PLC(连接服务端/192.168.1.4:502):成功
-2019-08-07 16:55:18  [ datainsert:18192 ] - [ INFO ]  数据存储线程启动
-2019-08-07 16:55:18  [ datainsert:18193 ] - [ INFO ]  当前时间：Wed Aug 07 16:55:18 CST 2019,线程等待：282000
-2019-08-07 17:00:00  [ datainsert:300193 ] - [ INFO ]  准备生成插入数据Wed Aug 07 17:00:00 CST 2019
-2019-08-07 17:00:00  [ datainsert:300262 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
-2019-08-07 17:01:00  [ datainsert:360277 ] - [ INFO ]  插入数据完成Wed Aug 07 17:01:00 CST 2019,用时:60084
-2019-08-07 17:01:00  [ datainsert:360278 ] - [ INFO ]  当前时间：Wed Aug 07 17:00:00 CST 2019,线程等待：840000
-2019-08-07 17:09:39  [ Thread-6:878619 ] - [ INFO ]  命令是：SystemData
-2019-08-07 17:11:56  [ Thread-7:1016322 ] - [ INFO ]  命令是：SystemData
-2019-08-07 17:15:00  [ datainsert:1200278 ] - [ INFO ]  准备生成插入数据Wed Aug 07 17:15:00 CST 2019
-2019-08-07 17:15:00  [ datainsert:1200323 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
-2019-08-07 17:16:00  [ datainsert:1260334 ] - [ INFO ]  插入数据完成Wed Aug 07 17:16:00 CST 2019,用时:60056
-2019-08-07 17:16:00  [ datainsert:1260335 ] - [ INFO ]  当前时间：Wed Aug 07 17:15:00 CST 2019,线程等待：840000
-2019-08-07 17:34:24  [ main:0 ] - [ INFO ]  Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@6ebc05a6: startup date [Wed Aug 07 17:34:24 CST 2019]; root of context hierarchy
-2019-08-07 17:34:24  [ main:145 ] - [ INFO ]  Loading XML bean definitions from class path resource [beans.xml]
-2019-08-07 17:34:25  [ main:1081 ] - [ INFO ]  Loading properties file from class path resource [jdbc.properties]
-2019-08-07 17:34:32  [ main:8265 ] - [ INFO ]  数据库访问服务启动
-2019-08-07 17:34:42  [ main:18289 ] - [ INFO ]  属性配置文件加载完成
-2019-08-07 17:34:42  [ main:18290 ] - [ INFO ]  日志记录启动开始
-2019-08-07 17:34:42  [ main:18296 ] - [ INFO ]  日志记录启动结束
-2019-08-07 17:34:44  [ main:19890 ] - [ INFO ]  创建通道,端口:4001
-2019-08-07 17:34:44  [ datainsert:19989 ] - [ INFO ]  数据存储线程启动
-2019-08-07 17:34:44  [ datainsert:19990 ] - [ INFO ]  当前时间：Wed Aug 07 17:34:44 CST 2019,线程等待：616000
-2019-08-07 17:34:44  [ NioProcessor-7:20012 ] - [ INFO ]  采集器A1楼机房PLC(连接服务端/192.168.1.4:502):成功
+2019-08-08 00:00:00  [ datainsert:7103075 ] - [ INFO ]  准备生成插入数据Thu Aug 08 00:00:00 CST 2019
+2019-08-08 00:00:01  [ datainsert:7103484 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
+2019-08-08 00:00:01  [ datainsert:7103522 ] - [ INFO ]  批量执行插入日数据0-31条数据成功,共31条数据<SQL>......
+2019-08-08 00:00:01  [ datainsert:7103617 ] - [ INFO ]  批量执行插入月数据成功SQL>......
+2019-08-08 00:01:01  [ datainsert:7163631 ] - [ INFO ]  插入数据完成Thu Aug 08 00:01:01 CST 2019,用时:60556
+2019-08-08 00:01:01  [ datainsert:7163631 ] - [ INFO ]  当前时间：Wed Aug 07 00:00:00 CST 2019,线程等待：839000
+2019-08-08 00:15:00  [ datainsert:8002632 ] - [ INFO ]  准备生成插入数据Thu Aug 08 00:15:00 CST 2019
+2019-08-08 00:15:00  [ datainsert:8003056 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
+2019-08-08 00:16:00  [ datainsert:8063075 ] - [ INFO ]  插入数据完成Thu Aug 08 00:16:00 CST 2019,用时:60443
+2019-08-08 00:16:00  [ datainsert:8063075 ] - [ INFO ]  当前时间：Thu Aug 08 00:15:00 CST 2019,线程等待：840000
+2019-08-08 00:30:00  [ datainsert:8903076 ] - [ INFO ]  准备生成插入数据Thu Aug 08 00:30:00 CST 2019
+2019-08-08 00:30:01  [ datainsert:8903461 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
+2019-08-08 00:31:01  [ datainsert:8963475 ] - [ INFO ]  插入数据完成Thu Aug 08 00:31:01 CST 2019,用时:60399
+2019-08-08 00:31:01  [ datainsert:8963476 ] - [ INFO ]  当前时间：Thu Aug 08 00:30:00 CST 2019,线程等待：839000
+2019-08-08 00:45:00  [ datainsert:9802477 ] - [ INFO ]  准备生成插入数据Thu Aug 08 00:45:00 CST 2019
+2019-08-08 00:45:00  [ datainsert:9802496 ] - [ INFO ]  Loading XML bean definitions from class path resource [org/springframework/jdbc/support/sql-error-codes.xml]
+2019-08-08 00:45:00  [ datainsert:9802560 ] - [ INFO ]  SQLErrorCodes loaded: [DB2, Derby, H2, HSQL, Informix, MS-SQL, MySQL, Oracle, PostgreSQL, Sybase]
+2019-08-08 00:45:00  [ datainsert:9802736 ] - [ INFO ]  org.springframework.dao.TransientDataAccessResourceException: StatementCallback; SQL [delete from esmsp_sum_measur_organization_day_temp]; Could not retrieve transation read-only status server; nested exception is java.sql.SQLException: Could not retrieve transation read-only status server
+2019-08-08 00:45:00  [ datainsert:9802741 ] - [ INFO ]  插入数据完成Thu Aug 08 00:45:00 CST 2019,用时:264
+2019-08-08 00:45:00  [ datainsert:9802741 ] - [ INFO ]  当前时间：Thu Aug 08 00:45:00 CST 2019,线程等待：900000
+2019-08-08 01:00:00  [ datainsert:10702741 ] - [ INFO ]  准备生成插入数据Thu Aug 08 01:00:00 CST 2019
+2019-08-08 01:00:00  [ datainsert:10703117 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
+2019-08-08 01:01:00  [ datainsert:10763138 ] - [ INFO ]  插入数据完成Thu Aug 08 01:01:00 CST 2019,用时:60397
+2019-08-08 01:01:00  [ datainsert:10763139 ] - [ INFO ]  当前时间：Thu Aug 08 01:00:00 CST 2019,线程等待：840000
+2019-08-08 01:15:00  [ datainsert:11603140 ] - [ INFO ]  准备生成插入数据Thu Aug 08 01:15:00 CST 2019
+2019-08-08 01:15:01  [ datainsert:11603510 ] - [ INFO ]  批量执行插入临时数据0-31条数据成功,共31条数据<SQL>......
+2019-08-08 01:16:01  [ datainsert:11663529 ] - [ INFO ]  插入数据完成Thu Aug 08 01:16:01 CST 2019,用时:60389
+2019-08-08 01:16:01  [ datainsert:11663529 ] - [ INFO ]  当前时间：Thu Aug 08 01:15:00 CST 2019,线程等待：839000

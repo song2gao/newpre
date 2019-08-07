@@ -25,6 +25,8 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     private String formatStr;
 
+    private Map<String,String> formatMap;
+
     private List<Option> options;
 
     private String facilityCode;
@@ -199,5 +201,13 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     public void setOptions(List<Option> options) {
         this.options = options;
+    }
+
+    public Map<String, String> getFormatMap() {
+        return formatMap;
+    }
+
+    public void setFormatMap(Map<String, String> formatMap) {
+        this.formatMap = formatMap;
     }
 }

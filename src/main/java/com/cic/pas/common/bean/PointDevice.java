@@ -236,6 +236,8 @@ public class PointDevice implements Serializable {
 
     private boolean boor = true;
 
+    private Map<String,String> formatMap=new HashMap<String,String>();
+
     private List<Option> options;
 
     public String getSystemCode() {
@@ -506,6 +508,7 @@ public class PointDevice implements Serializable {
                             point.setValue(getValue());
                             point.setIsBit(getIsBit());
                             point.setOptions(getOptions());
+                            point.setFormatMap(getFormatMap());
                             point.setRwType(getRwType());
                             point.setMeterCode(getCtdCode());
                             point.setFormatStr(getFormular());
@@ -654,6 +657,7 @@ public class PointDevice implements Serializable {
                         option.setKey(keyAndValue[0]);
                         option.setValue(keyAndValue[1]);
                         options.add(option);
+                        formatMap.put(keyAndValue[0],keyAndValue[1]);
                     }
                 }
             }
@@ -931,5 +935,13 @@ public class PointDevice implements Serializable {
 
     public void setOptions(List<Option> options) {
         this.options = options;
+    }
+
+    public Map<String, String> getFormatMap() {
+        return formatMap;
+    }
+
+    public void setFormatMap(Map<String, String> formatMap) {
+        this.formatMap = formatMap;
     }
 }
