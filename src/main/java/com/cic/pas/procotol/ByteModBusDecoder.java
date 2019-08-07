@@ -3,15 +3,13 @@ package com.cic.pas.procotol;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
-import com.cic.pas.common.bean.SystemParams;
+import com.cic.pas.common.bean.*;
 import com.cic.pas.common.util.ModBusUtil;
 import com.cic.pas.dao.BussinessConfig;
 import org.apache.log4j.Logger;
 
-import com.cic.pas.common.bean.MeterDevice;
-import com.cic.pas.common.bean.PointDevice;
-import com.cic.pas.common.bean.TerminalDevice;
 import com.cic.pas.common.util.Util;
 
 public class ByteModBusDecoder {
@@ -49,12 +47,14 @@ public class ByteModBusDecoder {
                                 String showValue = value + "";
                                 try {
                                     if (pd.getIsBit() == 1) {
-                                        try {
-                                            if (pd.getFormatMap() != null) {
-                                                showValue = pd.getFormatMap().get(value.intValue() + "").toString();
+                                        List<Option> options=pd.getOptions();
+                                        if ( options!= null&&options.size()>0) {
+                                            for(Option option:options){
+                                                if(option.getKey().equals(value.intValue()+"")){
+                                                    showValue = option.getValue();
+                                                    break;
+                                                }
                                             }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
                                         }
                                     } else {
                                         value = Util.manageData(value, pd

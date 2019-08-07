@@ -281,6 +281,7 @@ public final class BussinessConfig {
                                             }
                                             pd.setIsCollect(1);
                                             pd.setCtmType(p.getPcpcEnergyType());
+                                            pd.setPreType(p.getType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
                                             pd.setSystemCode(rs.getString("MMP_BACKUPS"));
                                             return pd;
@@ -404,6 +405,11 @@ public final class BussinessConfig {
                         modelPoint.setMmpUnit(rs.getString("MMP_UNIT"));
                         modelPoint.setMmpOrder(rs.getInt("MMP_ORDER"));
                         modelPoint.setMmpType(rs.getInt("MMP_TYPE"));
+                        modelPoint.setIsShowIndex(rs.getInt("IS_SHOW_INDEX"));
+                        modelPoint.setValue(rs.getBigDecimal("INIT_VALUE"));
+                        modelPoint.setUpValue(rs.getBigDecimal("UP_VALUE"));
+                        modelPoint.setDownValue(rs.getBigDecimal("DOWN_VALUE"));
+                        modelPoint.setIsAlarm(rs.getInt("IS_ALARM"));
                         int preMmpCode=rs.getInt("MEASUR_MMP_CODE");
                         int preMmpCodeOffset=rs.getInt("MMP_OFFSET");
                         int newMmpCode=preMmpCode+facility.getFacilitiesOffset()+preMmpCodeOffset;

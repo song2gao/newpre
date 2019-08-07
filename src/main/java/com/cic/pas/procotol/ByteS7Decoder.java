@@ -1,6 +1,7 @@
 package com.cic.pas.procotol;
 
 import com.cic.pas.common.bean.MeterDevice;
+import com.cic.pas.common.bean.Option;
 import com.cic.pas.common.bean.PointDevice;
 import com.cic.pas.common.bean.TerminalDevice;
 import com.cic.pas.common.util.CRC16M;
@@ -159,8 +160,14 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
         try {
             if (pd.getIsBit() == 1) {
                 try {
-                    if (pd.getFormatMap() != null) {
-                        showValue = pd.getFormatMap().get(value.intValue() + "").toString();
+                    List<Option> options=pd.getOptions();
+                    if ( options!= null&&options.size()>0) {
+                        for(Option option:options){
+                            if(option.getKey().equals(value.intValue()+"")){
+                                showValue = option.getValue();
+                                break;
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

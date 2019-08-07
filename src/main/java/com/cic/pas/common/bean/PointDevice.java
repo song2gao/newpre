@@ -3,10 +3,7 @@ package com.cic.pas.common.bean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.cic.domain.PomsCalculateAlterRecord;
 import com.cic.pas.application.DBVisitService;
@@ -36,6 +33,10 @@ public class PointDevice implements Serializable {
      */
     private String ctdCode;
     private String ctdName;
+    /**
+     * 采集模型编码
+     */
+    private String preType;
     private String ctmType;
     private String systemCode;
     /**
@@ -235,16 +236,7 @@ public class PointDevice implements Serializable {
 
     private boolean boor = true;
 
-
-    public Map getFormatMap() {
-        return formatMap;
-    }
-
-    public void setFormatMap(Map formatMap) {
-        this.formatMap = formatMap;
-    }
-
-    private Map formatMap;
+    private List<Option> options;
 
     public String getSystemCode() {
         return systemCode;
@@ -508,19 +500,21 @@ public class PointDevice implements Serializable {
                 break;
             }
             for (PomsEnergyUsingFacilities facilities : system.getFacilitiyList()) {
-                if (facilities.getPreModelCode().equals(getCtmType())) {
+                if (facilities.getPreModelCode().equals(getPreType())) {
                     for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
                         if (point.getMeasurMmpCode().equals(getCode())) {
                             point.setValue(getValue());
                             point.setIsBit(getIsBit());
-                            point.setFormatMap(getFormatMap());
+                            point.setOptions(getOptions());
                             point.setRwType(getRwType());
+                            point.setMeterCode(getCtdCode());
+                            point.setFormatStr(getFormular());
                             setAlarmData(facilities, point);
                             isFind = true;
                             break;
                         }
                     }
-                    isFind=true;
+                    isFind = true;
                     break;
                 }
             }
@@ -650,18 +644,21 @@ public class PointDevice implements Serializable {
 
     public void setFormular(String formular) {
         if (isBit == 1) {
-            formatMap = new HashMap();
+            options = new ArrayList<Option>();
             if (formular.indexOf(",") > 0) {
                 String[] keyValues = formular.split(",");
                 for (String keyValue : keyValues) {
                     if (keyValue.indexOf("=") > 0) {
                         String[] keyAndValue = keyValue.split("=");
-                        formatMap.put(keyAndValue[0], keyAndValue[1]);
+                        Option option = new Option();
+                        option.setKey(keyAndValue[0]);
+                        option.setValue(keyAndValue[1]);
+                        options.add(option);
                     }
                 }
             }
         } else {
-            formatMap = new HashMap();
+            options = new ArrayList<Option>();
         }
         this.formular = formular;
     }
@@ -918,5 +915,21 @@ public class PointDevice implements Serializable {
 
     public void setDbIndex(int dbIndex) {
         this.dbIndex = dbIndex;
+    }
+
+    public String getPreType() {
+        return preType;
+    }
+
+    public void setPreType(String preType) {
+        this.preType = preType;
+    }
+
+    public List<Option> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<Option> options) {
+        this.options = options;
     }
 }
