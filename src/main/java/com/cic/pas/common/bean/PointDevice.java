@@ -157,14 +157,6 @@ public class PointDevice implements Serializable {
      */
     private int mmpIsAlarm;
     /**
-     * 报警类型   1 故障（报警） 2 超上限   3 下限
-     */
-    private int alarmType;
-    /**
-     * 测点当前报警状态  0 无报警   1 正在报警
-     */
-    private int mmpAlarmStatus = 0;
-    /**
      * 测点标准值
      */
     private Double standard_val = 0.0;
@@ -512,7 +504,10 @@ public class PointDevice implements Serializable {
                             point.setRwType(getRwType());
                             point.setMeterCode(getCtdCode());
                             point.setFormatStr(getFormular());
-                            setAlarmData(facilities, point);
+                            point.setMaxDate(max_time);
+                            point.setMaxValue(max_value);
+                            point.setMinDate(min_time);
+                            point.setMinValue(min_value);
                             isFind = true;
                             break;
                         }
@@ -523,71 +518,6 @@ public class PointDevice implements Serializable {
             }
         }
     }
-
-    private void setAlarmData(PomsEnergyUsingFacilities facilities, PomsEnergyUsingFacilitiesModelPoint point) {
-        boolean isAlarmFlag = false;
-        BigDecimal setAlarmValue = null;
-        Double up_line = point.getUpValue().doubleValue();
-        Double down_line = point.getDownValue().doubleValue();
-        if (point.getIsAlarm() == 1) {
-            if (mmpAlarmStatus == 1) {//正在报警   判断报警是否恢复
-                if (alarmType == 1) { // 开关量
-                    if (value.intValue() == 0) {// 开关量报警恢复
-                        isAlarmFlag = true;
-                        setAlarmValue = new BigDecimal(up_line);
-                    }
-                } else {
-                    if (value.doubleValue() <= up_line && value.doubleValue() >= down_line) {
-                        isAlarmFlag = true;
-                        if (alarmType == 2) {//上限
-                            setAlarmValue = new BigDecimal(up_line);
-                        } else {//下限
-                            setAlarmValue = new BigDecimal(down_line);
-                        }
-                    }
-                }
-            } else {// 正常状态   判断是否超限
-                if (point.getIsAlarm() == 1) {
-                    if (isBit == 1) {//开关量
-                        if (value.intValue() == 1) {// 开关量报警
-                            alarmType = 1;
-                            isAlarmFlag = true;
-                            setAlarmValue = new BigDecimal(up_line);
-                        }
-                    } else {
-                        if (value.doubleValue() > up_line) {
-                            alarmType = 2;
-                            isAlarmFlag = true;
-                            setAlarmValue = new BigDecimal(up_line);
-                        }
-                        if (value.doubleValue() < down_line) {
-                            alarmType = 3;
-                            isAlarmFlag = true;
-                            setAlarmValue = new BigDecimal(down_line);
-                        }
-                    }
-                }
-            }
-        }
-        if (isAlarmFlag) {
-            String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-            PomsCalculateAlterRecord record = new PomsCalculateAlterRecord();
-            record.setSystemCode(facilities.getSystemCode());
-            record.setEusCodes(facilities.getFacilitiesCode());
-            record.setEusName(facilities.getFacilitiesName());
-            record.setMmpCodes(point.getMmpCode());
-            record.setMmpName(point.getMmpName());
-            mmpAlarmStatus = mmpAlarmStatus == 0 ? 1 : 0;
-            record.setAlterLevel(mmpAlarmStatus);
-            record.setAlterType(alarmType);
-            record.setAlterValue(value);
-            record.setSetValue(setAlarmValue);
-            record.setDateTime(dateTime);
-            DBVisitService.batchInsertAlarm(record);
-            isAlarmFlag = false;
-        }
-    }
-
     /**
      * 生成报警数据
      *
@@ -896,23 +826,6 @@ public class PointDevice implements Serializable {
     public void setMmpIsAlarm(int mmpIsAlarm) {
         this.mmpIsAlarm = mmpIsAlarm;
     }
-
-    public int getAlarmType() {
-        return alarmType;
-    }
-
-    public void setAlarmType(int alarmType) {
-        this.alarmType = alarmType;
-    }
-
-    public int getMmpAlarmStatus() {
-        return mmpAlarmStatus;
-    }
-
-    public void setMmpAlarmStatus(int mmpAlarmStatus) {
-        this.mmpAlarmStatus = mmpAlarmStatus;
-    }
-
     public int getDbIndex() {
         return dbIndex;
     }

@@ -48,7 +48,7 @@ public final class BussinessConfig {
 
     public static List<EsmspSumMeasurOrganizationDay> daylist = Collections
             .synchronizedList(new ArrayList<EsmspSumMeasurOrganizationDay>());
-
+    public static List<EsmspSumMeasurSystemDay> systemDayList=new ArrayList<>();
     public static List<EsmspSumMeasurOrganizationMonth> monthlist = Collections
             .synchronizedList(new ArrayList<EsmspSumMeasurOrganizationMonth>());
 
@@ -68,7 +68,6 @@ public final class BussinessConfig {
     private BussinessConfig() {
 
     }
-
     static {
         /**
          * 加载日月年数据
@@ -82,8 +81,8 @@ public final class BussinessConfig {
          * 加载用能系统及设备模型参数
          */
         systemParams();
+        getSystemDayData();
     }
-
     /**
      * 加载采集模型参数
      */
@@ -410,10 +409,13 @@ public final class BussinessConfig {
                         modelPoint.setUpValue(rs.getBigDecimal("UP_VALUE"));
                         modelPoint.setDownValue(rs.getBigDecimal("DOWN_VALUE"));
                         modelPoint.setIsAlarm(rs.getInt("IS_ALARM"));
+                        modelPoint.setIsSave(rs.getInt("IS_SAVE"));
                         int preMmpCode=rs.getInt("MEASUR_MMP_CODE");
                         int preMmpCodeOffset=rs.getInt("MMP_OFFSET");
                         int newMmpCode=preMmpCode+facility.getFacilitiesOffset()+preMmpCodeOffset;
                         modelPoint.setMeasurMmpCode(newMmpCode+"");
+                        modelPoint.setFacilityCode(facility.getFacilitiesCode());
+                        modelPoint.setFacilityName(facility.getFacilitiesName());
                         return modelPoint;
                     }
                 });
@@ -675,7 +677,155 @@ public final class BussinessConfig {
 
                         });
     }
+    /**
+     * create by: 高嵩
+     * description: 得到用能系统日数据
+     * create time: 2019/8/8 11:44
+     * @params
+     * @return
+     */
+    private static void getSystemDayData(){
+        /**
+         * 日数据
+         */
+        systemDayList = jdbcTemplate
+                .query(
+                        " select eui_code, MMP_CODE,system_code,DATE_CODE,point1,point2,"
+                                + "point3,point4,point5,point6,point7,point8,point9,"
+                                + "point10,point11,point12,point13,point14,point15,"
+                                + "point16,point17,point18,point19,point20,point21,"
+                                + "point22,point23,point24,point25,point26,point27,"
+                                + "point28,point29,point30,point31,point32,point33,"
+                                + "point34,point35,point36,point37,point38,point39,"
+                                + "point40,point41,point42,point43,point44,point45,"
+                                + "point46,point47,point48,point49,point50,point51,"
+                                + "point52,point53,point54,point55,point56,point57,"
+                                + "point58,point59,point60,point61,point62,point63,"
+                                + "point64,point65,point66,point67,point68,point69,"
+                                + "point70,point71,point72,point73,point74,point75,"
+                                + "point76,point77,point78,point79,point80,point81,"
+                                + "point82,point83,point84,point85,point86,point87,"
+                                + "point88,point89,point90,point91,point92,point93,"
+                                + "point94,point95,point96,MAX_VALUE,MAX_DATE,"
+                                + "MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE FROM esmsp_sum_measur_system_day_temp ",
+                        new RowMapper() {
+                            @Override
+                            public EsmspSumMeasurSystemDay mapRow(
+                                    ResultSet rs, int index)
+                                    throws SQLException {
+                                // TODO Auto-generated method stub
+                                EsmspSumMeasurSystemDay day = new EsmspSumMeasurSystemDay();
+                                day.setEuiCode(rs.getString("eui_code"));
+                                day.setSystemCode(rs.getString("system_code"));
+                                day.setMmpCode(rs.getString("mmp_code"));
+                                day.setDateCode(rs.getString("date_code"));
+                                day.setPoint1(rs.getBigDecimal("point1"));
+                                day.setPoint2(rs.getBigDecimal("point2"));
+                                day.setPoint3(rs.getBigDecimal("point3"));
+                                day.setPoint4(rs.getBigDecimal("point4"));
+                                day.setPoint5(rs.getBigDecimal("point5"));
+                                day.setPoint6(rs.getBigDecimal("point6"));
+                                day.setPoint7(rs.getBigDecimal("point7"));
+                                day.setPoint8(rs.getBigDecimal("point8"));
+                                day.setPoint9(rs.getBigDecimal("point9"));
+                                day.setPoint10(rs.getBigDecimal("point10"));
+                                day.setPoint11(rs.getBigDecimal("point11"));
+                                day.setPoint12(rs.getBigDecimal("point12"));
+                                day.setPoint13(rs.getBigDecimal("point13"));
+                                day.setPoint14(rs.getBigDecimal("point14"));
+                                day.setPoint15(rs.getBigDecimal("point15"));
+                                day.setPoint16(rs.getBigDecimal("point16"));
+                                day.setPoint17(rs.getBigDecimal("point17"));
+                                day.setPoint18(rs.getBigDecimal("point18"));
+                                day.setPoint19(rs.getBigDecimal("point19"));
+                                day.setPoint20(rs.getBigDecimal("point20"));
+                                day.setPoint21(rs.getBigDecimal("point21"));
+                                day.setPoint22(rs.getBigDecimal("point22"));
+                                day.setPoint23(rs.getBigDecimal("point23"));
+                                day.setPoint24(rs.getBigDecimal("point24"));
+                                day.setPoint25(rs.getBigDecimal("point25"));
+                                day.setPoint26(rs.getBigDecimal("point26"));
+                                day.setPoint27(rs.getBigDecimal("point27"));
+                                day.setPoint28(rs.getBigDecimal("point28"));
+                                day.setPoint29(rs.getBigDecimal("point29"));
+                                day.setPoint30(rs.getBigDecimal("point30"));
+                                day.setPoint31(rs.getBigDecimal("point31"));
+                                day.setPoint32(rs.getBigDecimal("point32"));
+                                day.setPoint33(rs.getBigDecimal("point33"));
+                                day.setPoint34(rs.getBigDecimal("point34"));
+                                day.setPoint35(rs.getBigDecimal("point35"));
+                                day.setPoint36(rs.getBigDecimal("point36"));
+                                day.setPoint37(rs.getBigDecimal("point37"));
+                                day.setPoint38(rs.getBigDecimal("point38"));
+                                day.setPoint39(rs.getBigDecimal("point39"));
+                                day.setPoint40(rs.getBigDecimal("point40"));
+                                day.setPoint41(rs.getBigDecimal("point41"));
+                                day.setPoint42(rs.getBigDecimal("point42"));
+                                day.setPoint43(rs.getBigDecimal("point43"));
+                                day.setPoint44(rs.getBigDecimal("point44"));
+                                day.setPoint45(rs.getBigDecimal("point45"));
+                                day.setPoint46(rs.getBigDecimal("point46"));
+                                day.setPoint47(rs.getBigDecimal("point47"));
+                                day.setPoint48(rs.getBigDecimal("point48"));
+                                day.setPoint49(rs.getBigDecimal("point49"));
+                                day.setPoint50(rs.getBigDecimal("point50"));
+                                day.setPoint51(rs.getBigDecimal("point51"));
+                                day.setPoint52(rs.getBigDecimal("point52"));
+                                day.setPoint53(rs.getBigDecimal("point53"));
+                                day.setPoint54(rs.getBigDecimal("point54"));
+                                day.setPoint55(rs.getBigDecimal("point55"));
+                                day.setPoint56(rs.getBigDecimal("point56"));
+                                day.setPoint57(rs.getBigDecimal("point57"));
+                                day.setPoint58(rs.getBigDecimal("point58"));
+                                day.setPoint59(rs.getBigDecimal("point59"));
+                                day.setPoint60(rs.getBigDecimal("point60"));
+                                day.setPoint61(rs.getBigDecimal("point61"));
+                                day.setPoint62(rs.getBigDecimal("point62"));
+                                day.setPoint63(rs.getBigDecimal("point63"));
+                                day.setPoint64(rs.getBigDecimal("point64"));
+                                day.setPoint65(rs.getBigDecimal("point65"));
+                                day.setPoint66(rs.getBigDecimal("point66"));
+                                day.setPoint67(rs.getBigDecimal("point67"));
+                                day.setPoint68(rs.getBigDecimal("point68"));
+                                day.setPoint69(rs.getBigDecimal("point69"));
+                                day.setPoint70(rs.getBigDecimal("point70"));
+                                day.setPoint71(rs.getBigDecimal("point71"));
+                                day.setPoint72(rs.getBigDecimal("point72"));
+                                day.setPoint73(rs.getBigDecimal("point73"));
+                                day.setPoint74(rs.getBigDecimal("point74"));
+                                day.setPoint75(rs.getBigDecimal("point75"));
+                                day.setPoint76(rs.getBigDecimal("point76"));
+                                day.setPoint77(rs.getBigDecimal("point77"));
+                                day.setPoint78(rs.getBigDecimal("point78"));
+                                day.setPoint79(rs.getBigDecimal("point79"));
+                                day.setPoint80(rs.getBigDecimal("point80"));
+                                day.setPoint81(rs.getBigDecimal("point81"));
+                                day.setPoint82(rs.getBigDecimal("point82"));
+                                day.setPoint83(rs.getBigDecimal("point83"));
+                                day.setPoint84(rs.getBigDecimal("point84"));
+                                day.setPoint85(rs.getBigDecimal("point85"));
+                                day.setPoint86(rs.getBigDecimal("point86"));
+                                day.setPoint87(rs.getBigDecimal("point87"));
+                                day.setPoint88(rs.getBigDecimal("point88"));
+                                day.setPoint89(rs.getBigDecimal("point89"));
+                                day.setPoint90(rs.getBigDecimal("point90"));
+                                day.setPoint91(rs.getBigDecimal("point91"));
+                                day.setPoint92(rs.getBigDecimal("point92"));
+                                day.setPoint93(rs.getBigDecimal("point93"));
+                                day.setPoint94(rs.getBigDecimal("point94"));
+                                day.setPoint95(rs.getBigDecimal("point95"));
+                                day.setPoint96(rs.getBigDecimal("point96"));
+                                day.setMaxValue(rs.getBigDecimal("max_value"));
+                                day.setMaxDate(rs.getString("max_date"));
+                                day.setMinValue(rs.getBigDecimal("min_value"));
+                                day.setMinDate(rs.getString("min_date"));
+                                day.setSumValue(rs.getBigDecimal("sum_value"));
+                                day.setAvgValue(rs.getBigDecimal("avg_value"));
+                                return day;
+                            }
 
+                        });
+    }
     public static BussinessConfig getConfig() {
         return config;
     }

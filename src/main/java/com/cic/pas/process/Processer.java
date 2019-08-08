@@ -359,15 +359,21 @@ public class Processer {
         BigDecimal upValue = new BigDecimal(map.get("upValue").toString());
         BigDecimal downValue = new BigDecimal(map.get("downValue").toString());
         Integer mmpIsAlarm = Integer.parseInt(map.get("mmpIsAlarm").toString());
+        /**
+         * 设备模型编码
+         */
         String ctmType = map.get("ctmId").toString();
+        /**
+         * 设备模型参数编码
+         */
         String mmpCode = map.get("mmpCode").toString();
-        for (TerminalDevice td : BussinessConfig.terminalList) {
-            for (MeterDevice md : td.getMeterList()) {
-                for (PointDevice pd : md.getPointDevice()) {
-                    if (pd.getCtmType().equals(ctmType) && mmpCode.equals(pd.getCode())) {
-                        pd.setUp_line(upValue.doubleValue());
-                        pd.setDown_line(downValue.doubleValue());
-                        pd.setMmpIsAlarm(mmpIsAlarm);
+        for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
+            for (PomsEnergyUsingFacilities facilities : system.getFacilitiyList()) {
+                for (PomsEnergyUsingFacilitiesModelPoint pd : facilities.getPointList()) {
+                    if (pd.getFacilitiesModelCode().equals(ctmType) && mmpCode.equals(pd.getMmpCode())) {
+                        pd.setUpValue(upValue);
+                        pd.setDownValue(downValue);
+                        pd.setIsAlarm(mmpIsAlarm);
                         result = 1;
                         break;
                     }

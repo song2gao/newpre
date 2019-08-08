@@ -7,15 +7,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.cic.pas.common.bean.*;
 import org.apache.log4j.Logger;
 
 import com.cic.pas.application.DBVisitService;
-import com.cic.pas.common.bean.EsmspSumMeasurOrganizationDay;
-import com.cic.pas.common.bean.EsmspSumMeasurOrganizationMonth;
-import com.cic.pas.common.bean.EsmspSumMeasurOrganizationYear;
-import com.cic.pas.common.bean.MeterDevice;
-import com.cic.pas.common.bean.PointDevice;
-import com.cic.pas.common.bean.TerminalDevice;
 import com.cic.pas.common.util.Util;
 import com.cic.pas.dao.BussinessConfig;
 
@@ -26,31 +21,36 @@ public class DataInsertThread extends Thread {
         logger.info("数据存储线程启动");
         while (true) {
             Calendar ca = Calendar.getInstance();
+            /**
+             *存储周期  分钟
+             * 默认 15分钟
+             */
+            int saveCycle=15;
             int m = ca.get(Calendar.MINUTE);
             int h = ca.get(Calendar.HOUR_OF_DAY);
             int day = ca.get(Calendar.DAY_OF_MONTH);
-            long sleepTime=0;
-            if (m % 15 == 0) {
+            long sleepTime = 0;
+            if (m % saveCycle == 0) {
                 long start = System.currentTimeMillis();
                 logger.info("准备生成插入数据" + new Date());
                 saveData(day, h, m, ca);
                 long end = System.currentTimeMillis();
                 logger.info("插入数据完成" + new Date() + ",用时:" + (end - start));
-                Calendar current=Calendar.getInstance();
-                int minute=current.get(Calendar.MINUTE);
-                int second=current.get(Calendar.SECOND);
-                int yu=minute%15;
-                int sleepM=15-yu-1;
-                int sleepS=60-second;
-                sleepTime=(sleepM*60+sleepS)*1000;
-                logger.info("当前时间："+ca.getTime()+",线程等待："+sleepTime);
+                Calendar current = Calendar.getInstance();
+                int minute = current.get(Calendar.MINUTE);
+                int second = current.get(Calendar.SECOND);
+                int yu = minute % saveCycle;
+                int sleepM = saveCycle - yu - 1;
+                int sleepS = 60 - second;
+                sleepTime = (sleepM * 60 + sleepS) * 1000;
+                logger.info("当前时间：" + ca.getTime() + ",线程等待：" + sleepTime);
             } else {
-                int second=ca.get(Calendar.SECOND);
-                int yu=m%15;
-                int sleepM=15-yu-1;
-                int sleepS=60-second;
-                sleepTime=(sleepM*60+sleepS)*1000;
-                logger.info("当前时间："+ca.getTime()+",线程等待："+sleepTime);
+                int second = ca.get(Calendar.SECOND);
+                int yu = m % saveCycle;
+                int sleepM = saveCycle - yu - 1;
+                int sleepS = 60 - second;
+                sleepTime = (sleepM * 60 + sleepS) * 1000;
+                logger.info("当前时间：" + ca.getTime() + ",线程等待：" + sleepTime);
             }
             try {
                 Thread.sleep(sleepTime);
@@ -71,29 +71,17 @@ public class DataInsertThread extends Thread {
                 datetime = format.format(ca.getTime());
                 point = 96;
             }
-            List<TerminalDevice> terminalDevices = BussinessConfig.config.terminalList;
-            Class<EsmspSumMeasurOrganizationDay> dayClass = EsmspSumMeasurOrganizationDay.class;
-            Class<EsmspSumMeasurOrganizationMonth> monthClass = EsmspSumMeasurOrganizationMonth.class;
-            Class<EsmspSumMeasurOrganizationYear> yearClass = EsmspSumMeasurOrganizationYear.class;
-            for (TerminalDevice t : terminalDevices) {
-                for (MeterDevice md : t.getMeterList()) {
-                    String eusCode = md.getCode();
-                    for (PointDevice pd : md.getPointDevice()) {
-                        if (pd.getIssave() == 1) {
-                            BulidDayData(ca, format, datetime, point,
-                                    dayClass, monthClass, yearClass,
-                                    eusCode, pd);
-                        }
-                    }
-                }
-            }
+            toBulidDayData(ca, format, datetime, point);
+            toBulidSystemDayData(ca,format,datetime,point);
             DBVisitService
                     .batchInsertTemp(BussinessConfig.config.daylist);
+            DBVisitService.batchInsertSystemTemp(BussinessConfig.systemDayList);
             if (point == 96) {
                 DBVisitService
                         .batchInsertDay(BussinessConfig.config.daylist);
                 DBVisitService
                         .batchInsertMonth(BussinessConfig.config.monthlist);
+                DBVisitService.batchInsertSystemDay(BussinessConfig.systemDayList);
                 if (day == 1) {
                     DBVisitService
                             .batchInsertYear(BussinessConfig.config.yearlist);
@@ -107,6 +95,143 @@ public class DataInsertThread extends Thread {
         }
     }
 
+    /**
+     * create by: 高嵩
+     * description: 准备生成日数据  计量系统
+     * create time: 2019/8/8 12:29
+     *
+     * @return
+     * @params
+     */
+    private void toBulidDayData(Calendar ca, SimpleDateFormat format, String datetime, int point) throws Exception {
+        List<TerminalDevice> terminalDevices = BussinessConfig.config.terminalList;
+        Class<EsmspSumMeasurOrganizationDay> dayClass = EsmspSumMeasurOrganizationDay.class;
+        Class<EsmspSumMeasurOrganizationMonth> monthClass = EsmspSumMeasurOrganizationMonth.class;
+        Class<EsmspSumMeasurOrganizationYear> yearClass = EsmspSumMeasurOrganizationYear.class;
+        for (TerminalDevice t : terminalDevices) {
+            for (MeterDevice md : t.getMeterList()) {
+                /**
+                 * 计量数据
+                 */
+                if (md.getPcpcEnergyType().equals("1") || md.getPcpcEnergyType().equals("2") || md.getPcpcEnergyType().equals("3") || md.getPcpcEnergyType().equals("4")) {
+                    String eusCode = md.getCode();
+                    for (PointDevice pd : md.getPointDevice()) {
+                        if (pd.getIssave() == 1) {
+                            BulidDayData(ca, format, datetime, point,
+                                    dayClass, monthClass, yearClass,
+                                    eusCode, pd);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /**
+     * create by: 高嵩
+     * description: 准备生成用能系统日数据
+     * create time: 2019/8/8 13:20
+     * @params
+     * @return
+     */
+    private void toBulidSystemDayData(Calendar ca, SimpleDateFormat format, String datetime, int point) throws Exception {
+        Class<EsmspSumMeasurSystemDay> dayClass = EsmspSumMeasurSystemDay.class;
+        for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
+            for (PomsEnergyUsingFacilities facility : system.getFacilitiyList()) {
+                String eusCode = facility.getFacilitiesCode();
+                for (PomsEnergyUsingFacilitiesModelPoint pd : facility.getPointList()) {
+                    if (pd.getIsSave() == 1) {
+                        BulidSystemDayData(ca, format, datetime, point,
+                                dayClass,
+                                eusCode, pd);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 生成日数据   用能系统
+     * create time: 2019/8/8 11:53
+     *
+     * @return
+     * @params
+     */
+    private void BulidSystemDayData(Calendar ca, SimpleDateFormat format,
+                                    String datetime, int point,
+                                    Class<EsmspSumMeasurSystemDay> dayClass,
+                                    String eusCode,
+                                    PomsEnergyUsingFacilitiesModelPoint pd) throws Exception {
+        boolean dayIsExi = false;
+        boolean day31IsExi = false;
+        int day = ca.get(Calendar.DAY_OF_MONTH);
+        int month = ca.get(Calendar.MONTH) + 1;
+        String mmpCode = pd.getMmpCode();
+        EsmspSumMeasurSystemDay organizationDay = new EsmspSumMeasurSystemDay();
+        try {
+            for (EsmspSumMeasurSystemDay d : BussinessConfig.systemDayList) {
+                if (d.getSystemCode() != null && d.getMmpCode() != null) {
+                    if (d.getSystemCode().equals(eusCode)
+                            && d.getMmpCode().equals(mmpCode)) {
+                        if (point == 1) {// 新的一天 日累计 峰、谷、平、 最值重置
+                            for (EsmspSumMeasurSystemDay item : BussinessConfig.systemDayList) {
+                                if (item.equals(d)) {
+                                    BussinessConfig.config.systemDayList.remove(item);
+                                    break;
+                                }
+                            }
+                        } else {
+                            organizationDay = d;
+                            organizationDay.setIsSave(pd.getIsSave());
+                            dayIsExi = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        organizationDay.setEuiCode(Util.euo_code);
+        organizationDay.setSystemCode(eusCode);
+        organizationDay.setMmpCode(mmpCode);
+        organizationDay.setDateCode(datetime);
+        organizationDay.setIsSave(pd.getIsSave());
+        try {
+            if (pd.getMaxDate() != null) {
+                organizationDay.setMaxValue(pd.getMaxValue().setScale(2, BigDecimal.ROUND_HALF_UP));
+                organizationDay.setMaxDate(pd.getMaxDate());
+            }
+            if (pd.getMinDate() != null) {
+                organizationDay.setMinValue(pd.getMinValue().setScale(2, BigDecimal.ROUND_HALF_UP));
+                organizationDay.setMinDate(pd.getMinDate());
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        BigDecimal value = new BigDecimal(0);
+        Method method = dayClass.getDeclaredMethod("setPoint" + point,
+                BigDecimal.class);
+
+        value = pd.getValue();
+        method.invoke(organizationDay, value);
+        organizationDay.setSumValue(organizationDay.getSumValue().add(value).setScale(2, BigDecimal.ROUND_HALF_UP));
+        organizationDay.setAvgValue(organizationDay.getSumValue().divide(new BigDecimal(point), 2));
+        if (!dayIsExi) {
+            BussinessConfig.systemDayList.add(organizationDay);
+        }
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 生成日数据
+     * create time: 2019/8/8 11:51
+     *
+     * @return
+     * @params
+     */
     private void BulidDayData(Calendar ca, SimpleDateFormat format,
                               String datetime, int point,
                               Class<EsmspSumMeasurOrganizationDay> dayClass,

@@ -47,11 +47,10 @@ import com.cic.pas.common.util.Util;
  */
 
 /**
+ * @author lenovo
  * @ClassName: DBVisitService
  * @Description: 数据库访问服务
- * @author lenovo
  * @date 2014-2-26 上午09:52:18
- *
  */
 public class DBVisitService {
 
@@ -83,11 +82,11 @@ public class DBVisitService {
     }
 
     /**
-     * @Title: selectProtocolCfg
-     * @Description: TODO(读取协议配置表)
      * @param
      * @return void 返回类型
      * @throws
+     * @Title: selectProtocolCfg
+     * @Description: TODO(读取协议配置表)
      */
     private void selectProtocolCfg() {
 
@@ -97,11 +96,11 @@ public class DBVisitService {
     }
 
     /**
-     * @Title: selectChannel
-     * @Description: TODO(读取通道信息表)
      * @param
      * @return void 返回类型
      * @throws
+     * @Title: selectChannel
+     * @Description: TODO(读取通道信息表)
      */
     private void selectChannel() {
         // TODO Auto-generated method stub
@@ -109,12 +108,11 @@ public class DBVisitService {
     }
 
     /**
-     * @return
-     * @Title: selectProtocol
-     * @Description: TODO(读取通讯协议表)
      * @param
      * @return void 返回类型
      * @throws
+     * @Title: selectProtocol
+     * @Description: TODO(读取通讯协议表)
      */
     public String selectProtocol(String id) {
         // TODO 读取协议表的某个字段
@@ -125,11 +123,11 @@ public class DBVisitService {
     }
 
     /**
-     * @Title: selectTask
-     * @Description: TODO(读取任务方法)
      * @param
      * @return void 返回类型
      * @throws
+     * @Title: selectTask
+     * @Description: TODO(读取任务方法)
      */
     private void selectTask() {
 
@@ -137,11 +135,11 @@ public class DBVisitService {
     }
 
     /**
-     * @Title: update
-     * @Description: 更新库表方法
      * @param
      * @return void 返回类型
      * @throws
+     * @Title: update
+     * @Description: 更新库表方法
      */
     public void update() {
 
@@ -152,11 +150,11 @@ public class DBVisitService {
     }
 
     /**
-     * @Title: mathHandle
-     * @Description: (测点公式处理)
      * @param
      * @return void 返回类型
      * @throws
+     * @Title: mathHandle
+     * @Description: (测点公式处理)
      */
     private void mathHandle() {
 
@@ -167,8 +165,8 @@ public class DBVisitService {
     }
 
     /**
-     * @Description: TODO(终端预警)
      * @throws
+     * @Description: TODO(终端预警)
      */
     private void saveAlert(String[] args) {
 
@@ -177,8 +175,8 @@ public class DBVisitService {
     }
 
     /**
-     * @Description: TODO(终端故障)
      * @throws
+     * @Description: TODO(终端故障)
      */
     private void saveFault(String[] args) {
 
@@ -383,7 +381,7 @@ public class DBVisitService {
 
     /**
      * 为了提高效率{批量插入曲线数据}
-     * */
+     */
     public static void batchInsertRows(String sql, final List<Object[]> dataSet)
             throws Exception {
         BatchPreparedStatementSetter setter = new BatchPreparedStatementSetter() {
@@ -423,7 +421,7 @@ public class DBVisitService {
      * @throws Exception
      */
     public static void batchInsertBroken(BrokenData brokenData) {
-        String sql = "insert into broken_data(date_time,dataStr) values('"+brokenData.getDateTime()+"','"+brokenData.getDataStr()+"')";
+        String sql = "insert into broken_data(date_time,dataStr) values('" + brokenData.getDateTime() + "','" + brokenData.getDataStr() + "')";
 
 
         DBConfigDao.jdbcTemplate.update(sql);
@@ -432,10 +430,11 @@ public class DBVisitService {
     }
 
     /**
-     * 批量插入临时数据
-     *
-     * @param list
-     * @throws Exception
+     * create by: 高嵩
+     * description: 批量插入临时数据 计量部分
+     * create time: 2019/8/8 11:39
+     * @params
+     * @return
      */
     public static void batchInsertTemp(List<EsmspSumMeasurOrganizationDay> list)
             throws Exception {
@@ -460,7 +459,7 @@ public class DBVisitService {
         if (list.size() > 0) {
             DBConfigDao.jdbcTemplate
                     .execute("delete from esmsp_sum_measur_organization_day_temp");
-            Map<String, List<EsmspSumMeasurOrganizationDay>> map = subList(
+            Map<String, List> map = subList(
                     list, 1000);
             for (String key : map.keySet()) {
                 List<EsmspSumMeasurOrganizationDay> sublist = map.get(key);
@@ -468,25 +467,69 @@ public class DBVisitService {
                 buffer.append(head);
                 buffer = getBuffByDayTempList(sublist, dateCode, buffer);
                 DBConfigDao.jdbcTemplate.update(buffer.toString());
-                logger.info("批量执行插入临时数据" + key + "成功,共" + list.size()
+                logger.info("批量执行插入[计量]临时数据" + key + "成功,共" + list.size()
                         + "条数据<SQL>......");
             }
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
     }
-    public static boolean updatePointValue(PointDevice pd,String value){
-        String sql="update poms_device_measur_point set MMP_SET_VALUE='"+value+"' where ID='"+pd.getId()+"'";
-        int result=jdbcTemplate.update(sql);
-        if(result>0){
+    /**
+     * create by: 高嵩
+     * description: 批量插入临时数据 用能系统
+     * create time: 2019/8/8 11:40
+     * @params
+     * @return
+     */
+    public static void batchInsertSystemTemp(List<EsmspSumMeasurSystemDay> list)
+            throws Exception {
+        String dateCode = "";
+        String head = "insert into esmsp_sum_measur_system_day_temp "
+                + "(EUI_CODE,SYSTEM_CODE,MMP_CODE,DATE_CODE,point1,point2,point3,point4,"
+                + "point5,point6,point7,point8,point9,point10,point11,point12,"
+                + "point13,point14,point15,point16,point17,point18,point19,"
+                + "point20,point21,point22,point23,point24,point25,point26,"
+                + "point27,point28,point29,point30,point31,point32,point33,"
+                + "point34,point35,point36,point37,point38,point39,point40,"
+                + "point41,point42,point43,point44,point45,point46,point47,"
+                + "point48,point49,point50,point51,point52,point53,point54,"
+                + "point55,point56,point57,point58,point59,point60,point61,"
+                + "point62,point63,point64,point65,point66,point67,point68,"
+                + "point69,point70,point71,point72,point73,point74,point75,"
+                + "point76,point77,point78,point79,point80,point81,point82,"
+                + "point83,point84,point85,point86,point87,point88,point89,"
+                + "point90,point91,point92,point93,point94,point95,point96,"
+                + "MAX_VALUE,MAX_DATE,MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE)values";
+        if (list.size() > 0) {
+            DBConfigDao.jdbcTemplate
+                    .execute("delete from esmsp_sum_measur_system_day_temp");
+            Map<String, List> map = subList(
+                    list, 1000);
+            for (String key : map.keySet()) {
+                List<EsmspSumMeasurSystemDay> sublist = map.get(key);
+                StringBuffer buffer = new StringBuffer();
+                buffer.append(head);
+                buffer = getSystemBuffByDayList(sublist, dateCode, buffer);
+                DBConfigDao.jdbcTemplate.update(buffer.toString());
+                logger.info("批量执行插入[用能系统]临时数据" + key + "成功,共" + list.size()
+                        + "条数据<SQL>......");
+            }
+            LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
+        }
+    }
+    public static boolean updatePointValue(PointDevice pd, String value) {
+        String sql = "update poms_device_measur_point set MMP_SET_VALUE='" + value + "' where ID='" + pd.getId() + "'";
+        int result = jdbcTemplate.update(sql);
+        if (result > 0) {
             pd.setShowValue(value);
-            if(pd.getCode().equals("1100")){
+            if (pd.getCode().equals("1100")) {
                 pd.setValue(new BigDecimal(value));
             }
             return true;
-        }else{
+        } else {
             return false;
         }
     }
+
     private static StringBuffer getBuffByDayTempList(
             List<EsmspSumMeasurOrganizationDay> list, String dateCode,
             StringBuffer buffer) {
@@ -558,7 +601,13 @@ public class DBVisitService {
         }
         return buffer;
     }
-
+    /**
+     * create by: 高嵩
+     * description: 生成批量插入SQL  计量部分
+     * create time: 2019/8/8 11:32
+     *  [list, dateCode, buffer]
+     * @return java.lang.StringBuffer
+     */
     private static StringBuffer getBuffByDayList(
             List<EsmspSumMeasurOrganizationDay> list, String dateCode,
             StringBuffer buffer) {
@@ -630,10 +679,90 @@ public class DBVisitService {
         // }
         return buffer;
     }
+    /**
+     * create by: 高嵩
+     * description: 生成批量插入SQL  用能设备
+     * create time: 2019/8/8 11:34
+     *  [list, dateCode, buffer]
+     * @return java.lang.StringBuffer
+     */
+    private static StringBuffer getSystemBuffByDayList(
+            List<EsmspSumMeasurSystemDay> list, String dateCode,
+            StringBuffer buffer) {
+        for (int i = 0; i < list.size(); i++) {
+            EsmspSumMeasurSystemDay day = list.get(i);
+            // if (day.getIsSave() == 1) {
+            if (dateCode.equals("")) {
+                dateCode = day.getDateCode();
+            }
+            buffer.append(" ( '" + day.getEuiCode() + "','" + day.getSystemCode()
+                    + "','" + day.getMmpCode() + "','" + day.getDateCode()
+                    + "'," + day.getPoint1() + "," + day.getPoint2() + ","
+                    + day.getPoint3() + "," + day.getPoint4() + ","
+                    + day.getPoint5() + "," + day.getPoint6() + ","
+                    + day.getPoint7() + "," + day.getPoint8() + ","
+                    + day.getPoint9() + "," + day.getPoint10() + ","
+                    + day.getPoint11() + "," + day.getPoint12() + ","
+                    + day.getPoint13() + "," + day.getPoint14() + ","
+                    + day.getPoint15() + "," + day.getPoint16() + ","
+                    + day.getPoint17() + "," + day.getPoint18() + ","
+                    + day.getPoint19() + "," + day.getPoint20() + ","
+                    + day.getPoint21() + "," + day.getPoint22() + ","
+                    + day.getPoint23() + "," + day.getPoint24() + ","
+                    + day.getPoint25() + "," + day.getPoint26() + ","
+                    + day.getPoint27() + "," + day.getPoint28() + ","
+                    + day.getPoint29() + "," + day.getPoint30() + ","
+                    + day.getPoint31() + "," + day.getPoint32() + ","
+                    + day.getPoint33() + "," + day.getPoint34() + ","
+                    + day.getPoint35() + "," + day.getPoint36() + ","
+                    + day.getPoint37() + "," + day.getPoint38() + ","
+                    + day.getPoint39() + "," + day.getPoint40() + ","
+                    + day.getPoint41() + "," + day.getPoint42() + ","
+                    + day.getPoint43() + "," + day.getPoint44() + ","
+                    + day.getPoint45() + "," + day.getPoint46() + ","
+                    + day.getPoint47() + "," + day.getPoint48() + ","
+                    + day.getPoint49() + "," + day.getPoint50() + ","
+                    + day.getPoint51() + "," + day.getPoint52() + ","
+                    + day.getPoint53() + "," + day.getPoint54() + ","
+                    + day.getPoint55() + "," + day.getPoint56() + ","
+                    + day.getPoint57() + "," + day.getPoint58() + ","
+                    + day.getPoint59() + "," + day.getPoint60() + ","
+                    + day.getPoint61() + "," + day.getPoint62() + ","
+                    + day.getPoint63() + "," + day.getPoint64() + ","
+                    + day.getPoint65() + "," + day.getPoint66() + ","
+                    + day.getPoint67() + "," + day.getPoint68() + ","
+                    + day.getPoint69() + "," + day.getPoint70() + ","
+                    + day.getPoint71() + "," + day.getPoint72() + ","
+                    + day.getPoint73() + "," + day.getPoint74() + ","
+                    + day.getPoint75() + "," + day.getPoint76() + ","
+                    + day.getPoint77() + "," + day.getPoint78() + ","
+                    + day.getPoint79() + "," + day.getPoint80() + ","
+                    + day.getPoint81() + "," + day.getPoint82() + ","
+                    + day.getPoint83() + "," + day.getPoint84() + ","
+                    + day.getPoint85() + "," + day.getPoint86() + ","
+                    + day.getPoint87() + "," + day.getPoint88() + ","
+                    + day.getPoint89() + "," + day.getPoint90() + ","
+                    + day.getPoint91() + "," + day.getPoint92() + ","
+                    + day.getPoint93() + "," + day.getPoint94() + ","
+                    + day.getPoint95() + "," + day.getPoint96() + ","
+                    + day.getMaxValue() + ",'" + day.getMaxDate() + "',"
+                    + day.getMinValue() + ",'" + day.getMinDate() + "',"
+                    + day.getAvgValue() + "," + day.getSumValue() + ")");
+            if (i != list.size() - 1) {
+                buffer.append(",");
+            }
+        }
+        // }
+        return buffer;
+    }
 
     /**
-     * 为了提高效率{批量插入日数据}
-     * */
+     * create by: 高嵩
+     * description: 批量插入日数据  计量部分
+     * create time: 2019/8/8 11:36
+     * @params
+     * @return
+     */
     public static void batchInsertDay(List<EsmspSumMeasurOrganizationDay> list)
             throws Exception {
         String dateCode = "";
@@ -655,7 +784,7 @@ public class DBVisitService {
                 + "MAX_VALUE,MAX_DATE,MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE,"
                 + "F_VALUE,P_VALUE,G_VALUE)values";
         if (list.size() > 0) {
-            Map<String, List<EsmspSumMeasurOrganizationDay>> map = subList(
+            Map<String, List> map = subList(
                     list, 1000);
             for (String key : map.keySet()) {
                 List<EsmspSumMeasurOrganizationDay> sublist = map.get(key);
@@ -664,76 +793,62 @@ public class DBVisitService {
                 buffer = getBuffByDayList(sublist, dateCode, buffer);
                 DBConfigDao.jdbcTemplate.update(buffer.toString());
 
-                logger.info("批量执行插入日数据" + key + "成功,共" + list.size()
+                logger.info("批量执行插入[计量]日数据" + key + "成功,共" + list.size()
                         + "条数据<SQL>......");
             }
             DBConfigDao.jdbcTemplate
                     .execute("delete from esmsp_sum_measur_organization_day_temp");
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
-        // } else {
-        // /**
-        // * part1
-        // */
-        // List<EsmspSumMeasurOrganizationDay> daya = new
-        // ArrayList<EsmspSumMeasurOrganizationDay>();
-        // int i = 0;
-        // for (; i < 1000; i++) {
-        // daya.add(list.get(i));
-        // }
-        // StringBuffer buffera = new StringBuffer();
-        // buffera.append(head);
-        // buffera = getBuffByDayList(daya, dateCode, buffera);
-        // DBConfigDao.jdbcTemplate
-        // .execute("delete from esmsp_sum_measur_organization_day_temp");
-        // DBConfigDao.jdbcTemplate.execute(buffera.toString());
-        // logger.info("批量执行插入临时数据成功PART1<SQL>......sql:" + buffera);
-        // LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
-        // /**
-        // * part2
-        // */
-        // List<EsmspSumMeasurOrganizationDay> dayb = new
-        // ArrayList<EsmspSumMeasurOrganizationDay>();
-        // for (; i < 2000; i++) {
-        // if (i == list.size()) {
-        // break;
-        // }
-        // dayb.add(list.get(i));
-        // }
-        // StringBuffer bufferb = new StringBuffer();
-        // bufferb.append(head);
-        // bufferb = getBuffByDayList(dayb, dateCode, bufferb);
-        // if (dayb.size() > 0) {
-        // DBConfigDao.jdbcTemplate.execute(bufferb.toString());
-        // logger.info("批量执行插入临时数据成功PART2<SQL>......sql:" + bufferb);
-        // LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
-        // }
-        // /**
-        // * part3
-        // */
-        // List<EsmspSumMeasurOrganizationDay> dayc = new
-        // ArrayList<EsmspSumMeasurOrganizationDay>();
-        // for (; i < 3000; i++) {
-        // if (i == list.size()) {
-        // break;
-        // }
-        // dayc.add(list.get(i));
-        // }
-        // StringBuffer bufferc = new StringBuffer();
-        // bufferc.append(head);
-        // bufferc = getBuffByDayList(dayc, dateCode, bufferc);
-        // if (dayc.size() > 0) {
-        // DBConfigDao.jdbcTemplate.execute(bufferc.toString());
-        // logger.info("批量执行插入临时数据成功PART3<SQL>......sql:" + bufferc);
-        // LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
-        // }
-        // }
+    }
+    /**
+     * create by: 高嵩
+     * description: 批量插入日数据  用能设备
+     * create time: 2019/8/8 11:37
+     * @params
+     * @return
+     */
+    public static void batchInsertSystemDay(List<EsmspSumMeasurSystemDay> list)
+            throws Exception {
+        String dateCode = "";
+        String head = "insert into esmsp_sum_measur_system_day "
+                + "(EUI_CODE,SYSTEM_CODE,MMP_CODE,DATE_CODE,point1,point2,point3,point4,"
+                + "point5,point6,point7,point8,point9,point10,point11,point12,"
+                + "point13,point14,point15,point16,point17,point18,point19,"
+                + "point20,point21,point22,point23,point24,point25,point26,"
+                + "point27,point28,point29,point30,point31,point32,point33,"
+                + "point34,point35,point36,point37,point38,point39,point40,"
+                + "point41,point42,point43,point44,point45,point46,point47,"
+                + "point48,point49,point50,point51,point52,point53,point54,"
+                + "point55,point56,point57,point58,point59,point60,point61,"
+                + "point62,point63,point64,point65,point66,point67,point68,"
+                + "point69,point70,point71,point72,point73,point74,point75,"
+                + "point76,point77,point78,point79,point80,point81,point82,"
+                + "point83,point84,point85,point86,point87,point88,point89,"
+                + "point90,point91,point92,point93,point94,point95,point96,"
+                + "MAX_VALUE,MAX_DATE,MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE)values";
+        if (list.size() > 0) {
+            Map<String, List> map = subList(
+                    list, 1000);
+            for (String key : map.keySet()) {
+                List<EsmspSumMeasurSystemDay> sublist = map.get(key);
+                StringBuffer buffer = new StringBuffer();
+                buffer.append(head);
+                buffer = getSystemBuffByDayList(sublist, dateCode, buffer);
+                DBConfigDao.jdbcTemplate.update(buffer.toString());
 
+                logger.info("批量执行插入[用能系统]日数据" + key + "成功,共" + list.size()
+                        + "条数据<SQL>......");
+            }
+            DBConfigDao.jdbcTemplate
+                    .execute("delete from esmsp_sum_measur_system_day");
+            LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
+        }
     }
 
     /**
      * 为了提高效率{批量插入月数据}
-     * */
+     */
     public static void batchInsertMonth(
             List<EsmspSumMeasurOrganizationMonth> list) throws Exception {
         String dateCode = "";
@@ -785,7 +900,7 @@ public class DBVisitService {
 
     /**
      * 为了提高效率{批量插入年数据}
-     * */
+     */
     public static void batchInsertYear(List<EsmspSumMeasurOrganizationYear> list)
             throws Exception {
         String dateCode = "";
@@ -856,29 +971,31 @@ public class DBVisitService {
         DBConfigDao.jdbcTemplate.execute(buff.toString());
         logger.info("月度报表数据插入成功");
     }
+
     public static void batchInsertAlarm(PomsCalculateAlterRecord record) {
         StringBuffer buff = new StringBuffer();
         buff.append("insert into poms_calculate_alter_record "
                 + "(SYSTEM_CODE,EUS_CODES,EUS_NAME,MMP_CODES,MMP_NAME,ALTER_LEVEL,ALTER_TYPE,ALTER_VALUE,SET_VALUE,DATE_TIME"
                 + ")values");
-            buff.append("('" +record.getSystemCode()+"','"+record.getEusCodes() + "','" + record.getEusName()
-                    + "','" + record.getMmpCodes() + "','" + record.getMmpName()
-                    + "'," + record.getAlterLevel() + "," + record.getAlterType()
-                    + "," + record.getAlterValue() + "," + record.getSetValue()+",'"
-                    + record.getDateTime()+"')");
+        buff.append("('" + record.getSystemCode() + "','" + record.getEusCodes() + "','" + record.getEusName()
+                + "','" + record.getMmpCodes() + "','" + record.getMmpName()
+                + "'," + record.getAlterLevel() + "," + record.getAlterType()
+                + "," + record.getAlterValue() + "," + record.getSetValue() + ",'"
+                + record.getDateTime() + "')");
         DBConfigDao.jdbcTemplate.execute(buff.toString());
-        logger.info(record.getEusName()+"===>"+record.getMmpName()+"报警信息插入成功");
+        logger.info(record.getEusName() + "===>" + record.getMmpName() + "报警信息插入成功");
     }
+
     private static List<EsmspSumMonth> makeCurrentMonthReport() {
         String dateCode = new SimpleDateFormat("yyyyMM").format(new Date());
         List<EsmspSumMonth> lastmonthlist = getLastMonthReport();
         List<EsmspCalSumRule> rulelist = getCalSumRule();
         List<EsmspSumMonth> currentmonthlist = new ArrayList<EsmspSumMonth>();
         for (EsmspSumMonth m : lastmonthlist) {
-            BigDecimal lastvalue =  new BigDecimal(0);
+            BigDecimal lastvalue = new BigDecimal(0);
             BigDecimal currentvalue = new BigDecimal(0);
-            BigDecimal value =  new BigDecimal(0);
-            BigDecimal valuechange =  new BigDecimal(0);
+            BigDecimal value = new BigDecimal(0);
+            BigDecimal valuechange = new BigDecimal(0);
             boolean isExistData = false;
             boolean isSumRuleCode = false;
             for (EsmspSumMeasurOrganizationDay day : BussinessConfig.config.daylist) {
@@ -943,7 +1060,7 @@ public class DBVisitService {
                 for (String m : minus) {// 减法运算
                     if (month.getEusCode().equals(m)) {
                         value.subtract(
-                        month.getValue());
+                                month.getValue());
                         break;
                     }
                 }
@@ -956,7 +1073,7 @@ public class DBVisitService {
                 if (m.getEusCode().equals(key)) {
                     BigDecimal lastvalue = m.getValueChange();
                     m.setValue(value);
-                    m.setValueChange(value .subtract( lastvalue));
+                    m.setValueChange(value.subtract(lastvalue));
                 }
             }
         }
@@ -1013,17 +1130,16 @@ public class DBVisitService {
     /**
      * 实现java 中 list集合中有几十万条数据,每100条为一组取出
      *
-     * @param list
-     *            可穿入几十万条数据的List
+     * @param list 可穿入几十万条数据的List
      * @return map 每一Kye中有100条数据的List
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static Map<String, List<EsmspSumMeasurOrganizationDay>> subList(
-            List<EsmspSumMeasurOrganizationDay> list, int size) {
+    public static Map<String, List> subList(
+            List list, int size) {
 
         int listSize = list.size();
         int toIndex = size;
-        Map map = new LinkedHashMap<String, List<EsmspSumMeasurOrganizationDay>>(); // 用map存起来新的分组后数据
+        Map map = new LinkedHashMap<String, List>(); // 用map存起来新的分组后数据
         int keyToken = 0;
         for (int i = 0; i < list.size(); i += size) {
             if (i + size > listSize) { // 作用为toIndex最后没有100条数据则剩余几条newList中就装几条
