@@ -451,6 +451,7 @@ public class PointDevice implements Serializable {
     }
 
     public void setValue(BigDecimal value) {
+        System.out.println(ctdName+"==>"+name+"["+code+"]:"+preType);
         if (previousValue == null) {
             try {
                 previousValue = value;
@@ -498,6 +499,7 @@ public class PointDevice implements Serializable {
                     for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
                         if (point.getMeasurMmpCode().equals(getCode())) {
                             point.setValue(getValue());
+                            System.out.println(facilities.getFacilitiesName()+"==>"+point.getMmpName()+"["+point.getMeasurMmpCode()+"]:"+facilities.getPreModelCode());
                             point.setIsBit(getIsBit());
                             point.setOptions(getOptions());
                             point.setFormatMap(getFormatMap());
@@ -512,8 +514,9 @@ public class PointDevice implements Serializable {
                             break;
                         }
                     }
-                    isFind = true;
-                    break;
+                    if(isFind) {
+                        break;
+                    }
                 }
             }
         }

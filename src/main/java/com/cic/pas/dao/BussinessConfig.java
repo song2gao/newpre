@@ -280,6 +280,9 @@ public final class BussinessConfig {
                                             }
                                             pd.setIsCollect(1);
                                             pd.setCtmType(p.getPcpcEnergyType());
+                                            if(!p.getType().equals("3")) {
+                                                System.out.println(pd.getName() + ":" + p.getName());
+                                            }
                                             pd.setPreType(p.getType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
                                             pd.setSystemCode(rs.getString("MMP_BACKUPS"));
