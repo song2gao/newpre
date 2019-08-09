@@ -41,14 +41,14 @@ public final class BussinessConfig {
      * 只会有一个线程对TerminalDevice进行修改，其它只是读取  所以不做线程安全定义
      */
     public static List<TerminalDevice> terminalList = new ArrayList<TerminalDevice>();
-    public static List<PomsEnergyUsingSystem> systemList=new ArrayList<PomsEnergyUsingSystem>();
+    public static List<PomsEnergyUsingSystem> systemList = new ArrayList<PomsEnergyUsingSystem>();
 
     public static List<TerminalDevice> terminalInfo = Collections
             .synchronizedList(new ArrayList<TerminalDevice>());
 
     public static List<EsmspSumMeasurOrganizationDay> daylist = Collections
             .synchronizedList(new ArrayList<EsmspSumMeasurOrganizationDay>());
-    public static List<EsmspSumMeasurSystemDay> systemDayList=new ArrayList<>();
+    public static List<EsmspSumMeasurSystemDay> systemDayList = new ArrayList<>();
     public static List<EsmspSumMeasurOrganizationMonth> monthlist = Collections
             .synchronizedList(new ArrayList<EsmspSumMeasurOrganizationMonth>());
 
@@ -68,6 +68,7 @@ public final class BussinessConfig {
     private BussinessConfig() {
 
     }
+
     static {
         /**
          * 加载日月年数据
@@ -83,6 +84,7 @@ public final class BussinessConfig {
         systemParams();
         getSystemDayData();
     }
+
     /**
      * 加载采集模型参数
      */
@@ -255,13 +257,13 @@ public final class BussinessConfig {
                                             pd.setModWlength(rs.getInt("MMP_WLENGTH"));
                                             pd.setModWType(rs.getInt("MMP_W_TYPE"));
                                             pd.setModWFormular(rs.getString("MMP_W_FORMULAR"));
-                                            pd.setUnits(rs .getString("mmp_units"));
+                                            pd.setUnits(rs.getString("mmp_units"));
                                             pd.setIsPlcAddress(rs.getInt("mmp_isplc"));
                                             pd.setRwType(rs.getInt("MMP_RWTYPE"));
                                             pd.setIsBit(rs.getInt("MMP_ISBIT"));
                                             pd.setIssave(rs.getInt("MMP_ISSAVE"));
                                             pd.setIsCalculate(rs.getInt("mmp_iscalculate"));
-                                            pd.setFormular(rs .getString("mmp_formular"));
+                                            pd.setFormular(rs.getString("mmp_formular"));
                                             pd.setOrders(rs.getInt("MMP_ORDER"));
                                             pd.setIsCt(rs.getInt("MMP_ISCT"));
                                             pd.setIsPt(rs.getInt("MMP_ISPT"));
@@ -280,7 +282,7 @@ public final class BussinessConfig {
                                             }
                                             pd.setIsCollect(1);
                                             pd.setCtmType(p.getPcpcEnergyType());
-                                            if(!p.getType().equals("3")) {
+                                            if (!p.getType().equals("3")) {
                                                 System.out.println(pd.getName() + ":" + p.getName());
                                             }
                                             pd.setPreType(p.getType());
@@ -362,11 +364,11 @@ public final class BussinessConfig {
     /**
      * 加载用能系统及设备模型参数
      */
-    private static void systemParams(){
-        systemList=jdbcTemplate.query("select * from poms_energy_using_system", new RowMapper<PomsEnergyUsingSystem>() {
+    private static void systemParams() {
+        systemList = jdbcTemplate.query("select * from poms_energy_using_system", new RowMapper<PomsEnergyUsingSystem>() {
             @Override
             public PomsEnergyUsingSystem mapRow(ResultSet rs, int i) throws SQLException {
-                PomsEnergyUsingSystem system=new PomsEnergyUsingSystem();
+                PomsEnergyUsingSystem system = new PomsEnergyUsingSystem();
                 system.setId(rs.getInt("id"));
                 system.setEuiId(rs.getString("eui_id"));
                 system.setEulId(rs.getString("eul_id"));
@@ -379,27 +381,30 @@ public final class BussinessConfig {
                 return system;
             }
         });
-        for(PomsEnergyUsingSystem system:systemList){
-            List<PomsEnergyUsingFacilities> facilities=jdbcTemplate.query("select * from poms_energy_using_facilities where system_code=?",new Object[]{system.getSystemCode()}, new RowMapper<PomsEnergyUsingFacilities>() {
+        for (PomsEnergyUsingSystem system : systemList) {
+            List<PomsEnergyUsingFacilities> facilities = jdbcTemplate.query("select a.*,b.FACILITIES_TYPE_IMG from poms_energy_using_facilities a, poms_energy_using_facilities_type b\n" +
+                    "where b.FACILITIES_TYPE_CODE=a.FACILITIES_TYPE_CODE and system_code=?", new Object[]{system.getSystemCode()}, new RowMapper<PomsEnergyUsingFacilities>() {
                 @Override
                 public PomsEnergyUsingFacilities mapRow(ResultSet rs, int i) throws SQLException {
-                    PomsEnergyUsingFacilities facility=new PomsEnergyUsingFacilities();
+                    PomsEnergyUsingFacilities facility = new PomsEnergyUsingFacilities();
                     facility.setId(rs.getInt("id"));
                     facility.setSystemCode(rs.getString("SYSTEM_CODE"));
                     facility.setFacilitiesModelCode(rs.getString("FACILITIES_MODEL_CODE"));
+                    facility.setFacilitiesTypeCode(rs.getString("FACILITIES_TYPE_CODE"));
                     facility.setPreModelCode(rs.getString("PRE_MODEL_CODE"));
                     facility.setFacilitiesCode(rs.getString("FACILITIES_CODE"));
                     facility.setFacilitiesName(rs.getString("FACILITIES_NAME"));
                     facility.setFacilitiesOffset(rs.getInt("FACILITIES_OFFSET"));
+                    facility.setFacilitiesImg(rs.getString("FACILITIES_TYPE_IMG"));
                     facility.setFacilitiesBackups(rs.getString("FACILITIES_BACKUPS"));
                     return facility;
                 }
             });
-            for(PomsEnergyUsingFacilities facility:facilities){
-                List<PomsEnergyUsingFacilitiesModelPoint> points=jdbcTemplate.query("select * from poms_energy_using_facilities_model_point where FACILITIES_MODEL_CODE=?", new Object[]{facility.getFacilitiesModelCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
+            for (PomsEnergyUsingFacilities facility : facilities) {
+                List<PomsEnergyUsingFacilitiesModelPoint> points = jdbcTemplate.query("select * from poms_energy_using_facilities_model_point where FACILITIES_MODEL_CODE=?", new Object[]{facility.getFacilitiesModelCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
                     @Override
                     public PomsEnergyUsingFacilitiesModelPoint mapRow(ResultSet rs, int i) throws SQLException {
-                        PomsEnergyUsingFacilitiesModelPoint modelPoint=new PomsEnergyUsingFacilitiesModelPoint();
+                        PomsEnergyUsingFacilitiesModelPoint modelPoint = new PomsEnergyUsingFacilitiesModelPoint();
                         modelPoint.setId(rs.getInt("id"));
                         modelPoint.setFacilitiesModelCode(rs.getString("FACILITIES_MODEL_CODE"));
                         modelPoint.setMmpCode(rs.getString("MMP_CODE"));
@@ -413,10 +418,10 @@ public final class BussinessConfig {
                         modelPoint.setDownValue(rs.getBigDecimal("DOWN_VALUE"));
                         modelPoint.setIsAlarm(rs.getInt("IS_ALARM"));
                         modelPoint.setIsSave(rs.getInt("IS_SAVE"));
-                        int preMmpCode=rs.getInt("MEASUR_MMP_CODE");
-                        int preMmpCodeOffset=rs.getInt("MMP_OFFSET");
-                        int newMmpCode=preMmpCode+facility.getFacilitiesOffset()+preMmpCodeOffset;
-                        modelPoint.setMeasurMmpCode(newMmpCode+"");
+                        int preMmpCode = rs.getInt("MEASUR_MMP_CODE");
+                        int preMmpCodeOffset = rs.getInt("MMP_OFFSET");
+                        int newMmpCode = preMmpCode + facility.getFacilitiesOffset() + preMmpCodeOffset;
+                        modelPoint.setMeasurMmpCode(newMmpCode + "");
                         modelPoint.setFacilityCode(facility.getFacilitiesCode());
                         modelPoint.setFacilityName(facility.getFacilitiesName());
                         return modelPoint;
@@ -427,10 +432,11 @@ public final class BussinessConfig {
             system.setFacilitiyList(facilities);
         }
     }
+
     /**
      * 加载日月年数据
      */
-    private static void yearMonthDayData(){
+    private static void yearMonthDayData() {
         /**
          * 年数据
          */
@@ -680,14 +686,16 @@ public final class BussinessConfig {
 
                         });
     }
+
     /**
      * create by: 高嵩
      * description: 得到用能系统日数据
      * create time: 2019/8/8 11:44
-     * @params
+     *
      * @return
+     * @params
      */
-    private static void getSystemDayData(){
+    private static void getSystemDayData() {
         /**
          * 日数据
          */
@@ -829,6 +837,7 @@ public final class BussinessConfig {
 
                         });
     }
+
     public static BussinessConfig getConfig() {
         return config;
     }

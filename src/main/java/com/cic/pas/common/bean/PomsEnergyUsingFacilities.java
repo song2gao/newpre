@@ -9,6 +9,8 @@ public class PomsEnergyUsingFacilities {
 
     private String facilitiesModelCode;
 
+    private String facilitiesTypeCode;
+
     private String preModelCode;
 
     private String facilitiesCode;
@@ -18,6 +20,8 @@ public class PomsEnergyUsingFacilities {
     private Integer facilitiesOffset;
 
     private List<PomsEnergyUsingFacilitiesModelPoint> pointList;
+
+    private String facilitiesImg;
 
     private String facilitiesBackups;
 
@@ -91,5 +95,21 @@ public class PomsEnergyUsingFacilities {
 
     public void setPreModelCode(String preModelCode) {
         this.preModelCode = preModelCode;
+    }
+
+    public String getFacilitiesTypeCode() {
+        return facilitiesTypeCode;
+    }
+
+    public void setFacilitiesTypeCode(String facilitiesTypeCode) {
+        this.facilitiesTypeCode = facilitiesTypeCode;
+    }
+
+    public String getFacilitiesImg() {
+        return facilitiesImg;
+    }
+
+    public void setFacilitiesImg(String facilitiesImg) {
+        this.facilitiesImg = facilitiesImg;
     }
 }
