@@ -290,9 +290,7 @@ public class Processer {
                 break;
             }
         }
-        JSONObject json = new JSONObject();
-        json.put("result", result);
-        rm.setObject(json.toString());
+        rm.setObject(result);
         return rm;
     }
 

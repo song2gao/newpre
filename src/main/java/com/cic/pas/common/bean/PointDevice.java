@@ -484,6 +484,7 @@ public class PointDevice implements Serializable {
             previousValue = this.value;
             this.value = value;
         }
+
         setSystemData();
     }
 
@@ -495,9 +496,13 @@ public class PointDevice implements Serializable {
             }
             for (PomsEnergyUsingFacilities facilities : system.getFacilitiyList()) {
                 if (facilities.getPreModelCode().equals(getPreType())) {
+                    if(isFind&&!facilities.getFacilitiesModelCode().equals("4")) {
+                        break;
+                    }
                     for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
                         if (point.getMeasurMmpCode().equals(getCode())) {
                             point.setValue(getValue());
+                            point.setMmpUnit(getUnits());
                             point.setIsBit(getIsBit());
                             point.setOptions(getOptions());
                             point.setFormatMap(getFormatMap());
@@ -511,9 +516,6 @@ public class PointDevice implements Serializable {
                             isFind = true;
                             break;
                         }
-                    }
-                    if(isFind) {
-                        break;
                     }
                 }
             }

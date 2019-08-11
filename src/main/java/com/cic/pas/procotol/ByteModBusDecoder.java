@@ -83,7 +83,6 @@ public class ByteModBusDecoder {
                                         md.setLastCollectDate(dateTime);
                                     }
                                     setSystemParams(ctdCode, pd.getCode(), value);
-//                                    System.out.println(md.getName() +"==>" + pd.getName() + ":" + pd.getValue());
                                 }
                                 lastlen = pd.getPointLen();
                                 if (pd.getMmpType() == 1) {

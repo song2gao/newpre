@@ -283,7 +283,6 @@ public final class BussinessConfig {
                                             pd.setIsCollect(1);
                                             pd.setCtmType(p.getPcpcEnergyType());
                                             if (!p.getType().equals("3")) {
-                                                System.out.println(pd.getName() + ":" + p.getName());
                                             }
                                             pd.setPreType(p.getType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
@@ -401,7 +400,7 @@ public final class BussinessConfig {
                 }
             });
             for (PomsEnergyUsingFacilities facility : facilities) {
-                List<PomsEnergyUsingFacilitiesModelPoint> points = jdbcTemplate.query("select * from poms_energy_using_facilities_model_point where FACILITIES_MODEL_CODE=?", new Object[]{facility.getFacilitiesModelCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
+                List<PomsEnergyUsingFacilitiesModelPoint> points = jdbcTemplate.query("select * from poms_energy_using_facilities_model_point where IS_USE=1 AND FACILITIES_MODEL_CODE=?", new Object[]{facility.getFacilitiesModelCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
                     @Override
                     public PomsEnergyUsingFacilitiesModelPoint mapRow(ResultSet rs, int i) throws SQLException {
                         PomsEnergyUsingFacilitiesModelPoint modelPoint = new PomsEnergyUsingFacilitiesModelPoint();
@@ -418,6 +417,7 @@ public final class BussinessConfig {
                         modelPoint.setDownValue(rs.getBigDecimal("DOWN_VALUE"));
                         modelPoint.setIsAlarm(rs.getInt("IS_ALARM"));
                         modelPoint.setIsSave(rs.getInt("IS_SAVE"));
+                        modelPoint.setIsShowName(rs.getInt("is_show_name"));
                         int preMmpCode = rs.getInt("MEASUR_MMP_CODE");
                         int preMmpCodeOffset = rs.getInt("MMP_OFFSET");
                         int newMmpCode = preMmpCode + facility.getFacilitiesOffset() + preMmpCodeOffset;
