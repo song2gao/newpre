@@ -38,7 +38,9 @@ public enum Command implements Serializable{
 	ChannelOpen,//开启通道
 	ChannelClose, //关闭通道
 	MeterDataCurved,//曲线
-	UpdatePrePointSet//修改前置机测点上下限
+	UpdatePrePointSet,//修改前置机测点上下限
+	AlarmData,//报警数据
+	FanOverViewData//总览数据
 	
 	
 }

@@ -25,119 +25,223 @@ public class GetDataThread extends BaseThread {
     private Logger logger = Logger.getLogger(GetDataThread.class);
     private Map<String, byte[]> map = new LinkedHashMap<String, byte[]>();
     private TerminalDevice td;
+    private Map<String,MeterDevice> nomalMeter;
+    private Map<String,MeterDevice> faultMeter;
     public static boolean DEBUG = false;
     IoSession session;
     ModBusReadAndWrite modRW = new ModBusReadAndWrite();
+    private boolean handFlag = false;
     int i = 0;
     private byte[] firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
     public int pduLength = 0;
 
     public GetDataThread(TerminalDevice td, IoSession session) {
         this.td = td;
+        this.nomalMeter=td.getNormanMeter();
+        this.faultMeter=td.getFaultMeter();
         this.session = session;
-//        if (td.getNoticeAccord().equals("Byte3761")) {
-//            for (MeterDevice meter : td.getMeterList()) {
-//                getSendBuff3761(meter);
-//            }
-//        } else if (td.getNoticeAccord().equals("ByteS7")) {
-//            for (MeterDevice meter : td.getMeterList()) {
-//                getSendBuffS7(meter);
-//            }
-//        } else {
-//            for (MeterDevice meter : td.getMeterList()) {
-//                getSendBuffModBus(meter);
-//            }
-//        }
+    }
+
+    public void setSession(IoSession session) {
+        this.session = session;
+
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 检查握手状态
+     * create time: 2019/8/28 11:05
+     *
+     * @return
+     * @params
+     */
+    private void checkHandFlag() {
+        switch (td.getNoticeAccord()) {
+            case "Byte3761":
+                handFlag = true;
+                break;
+            case "ByteS7":
+                s7HandBuff();
+                break;
+            default:
+                handFlag = true;
+        }
     }
 
     @Override
     public void run() {
+//        logger.info("["+this.getName() + "]数据采集线程启动");
         while (!exit) {
             boolean flag = true;
             if (flag) {
-                Calendar c = Calendar.getInstance();
-                int m = c.get(Calendar.MINUTE);
-                if (map.size() == 0) {
-                    if (td.getNoticeAccord().equals("Byte3761")) {
-                        for (MeterDevice meter : td.getMeterList()) {
-                            getSendBuff3761(meter);
-                        }
-                    } else if (td.getNoticeAccord().equals("ByteS7")) {
-                        for (MeterDevice meter : td.getMeterList()) {
-                            getSendBuffS7(meter);
-                        }
+                checkSendBuff();
+                if (session.isConnected()) {
+                    if (handFlag) {
+                        td.setIsOnline(1);
+                        sendGetDataBuff();
                     } else {
-                        for (MeterDevice meter : td.getMeterList()) {
-                            getSendBuffModBus(meter);
-                        }
+                        checkHandFlag();
                     }
-                }
-                for (String key : map.keySet()) {
-                    try {
-                        synchronized (this) {
-                            while (suspended) {
-                                wait();
-                            }
-                        }
-                    } catch (InterruptedException e) {
-                        System.out.println("Thread " + td.getName() + " interrupted.");
-                        e.printStackTrace();
-                    }
-                    byte[] values = map.get(key);
-                    int firstIndex = key.indexOf(":");
-                    int lastIndex = key.lastIndexOf(":");
-                    String ctdCode = key.substring(0, firstIndex);
-                    String type=key.substring(firstIndex+1,lastIndex);//寄存器类型
-                    String address = key.substring(lastIndex + 1);
-                    session.setAttribute("ctdCode", ctdCode);
-                    session.setAttribute("readAddress", address);
-                    session.setAttribute("type", type);
-                    isReviced = false;
-                    session.write(values);
-                    String terminal_id = session.getAttribute("terminal_id").toString();
-                    BaseThread thread = ServerContext.threadMap
-                            .get(terminal_id);
-                    if (thread != null) {
-                        synchronized (thread) {
-                            try {
-                                thread.wait(td.getTimeOut());
-                                if (!isReviced) {
-                                    if (i > 2) {
-                                        setMeterStatus(ctdCode, 0);
-                                    } else {
-                                        i++;
-                                    }
-                                } else {
-                                    i = 0;
-                                    //setMeterStatus(ctdCode, 1);
-                                }
-
-                            } catch (InterruptedException e) {
-                                // TODO Auto-generated catch block
-                                Thread.currentThread().interrupt();
-                                e.printStackTrace();
-                            } catch (Exception e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    try {
-                        Thread.sleep(td.getCalculateCycle());
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    Thread.sleep(td.getRoundCycle());
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                } else {
+                    td.setIsOnline(0);
+                    handFlag = false;
                 }
             } else {
                 exit = true;
             }
+        }
+    }
+
+    /**
+     * create by: 高嵩
+     * description: s7协议握手指令
+     * create time: 2019/8/28 10:53
+     *
+     * @return
+     * @params
+     */
+    private void s7HandBuff() {
+        pduLength = 0;
+        if (td.getDeviceModel().toLowerCase().equals("s7-200smart")) {
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 04 00 c1 02 01 01 c2 02 01 01 c0 01 0a");
+//            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
+
+        } else if (td.getDeviceModel().toLowerCase().equals("s7-200")) {
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 4d 57 c2 02 4d 57 c0 01 00");
+        } else if (td.getDeviceModel().toLowerCase().equals("s7-300")) {
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 01 00 c2 02 01 00 c0 01 09");
+        } else if (td.getDeviceModel().toLowerCase().equals("s7-400")) {
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 02 00 c2 02 02 00 c0 01 0a");
+        } else if (td.getDeviceModel().toLowerCase().equals("s7-1200")) {
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 10 00 c2 02 03 01 c0 01 0a");
+        } else if (td.getDeviceModel().toLowerCase().equals("s7-1500")) {
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 10 00 c2 02 03 01 c0 01 0a");
+        }
+        while (pduLength == 0) {
+            if(exit){
+                break;
+            }
+            try {
+                session.write(firstHand);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                logger.info("[" + this.getName() + "]数据采集线程关闭");
+            }
+        }
+        handFlag = true;
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 检查数据采集指令是否生成
+     * create time: 2019/8/28 9:38
+     *
+     * @return
+     * @params
+     */
+    private void checkSendBuff() {
+        if (map.size() == 0) {
+            if (td.getNoticeAccord().equals("Byte3761")) {
+                for (MeterDevice meter : td.getMeterList()) {
+                    getSendBuff3761(meter);
+                }
+                handFlag = true;
+            } else if (td.getNoticeAccord().equals("ByteS7")) {
+                s7HandBuff();
+                for (MeterDevice meter : td.getMeterList()) {
+                    getSendBuffS7(meter);
+                }
+            } else {
+                for (MeterDevice meter : td.getMeterList()) {
+                    getSendBuffModBus(meter);
+                }
+                handFlag = true;
+            }
+        }
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 发送采集数据指令
+     * create time: 2019/8/28 9:26
+     *
+     * @return
+     * @params
+     */
+    private void sendGetDataBuff() {
+        if(faultMeter.size()==td.getMeterList().size()&&nomalMeter.size()==0){
+            logger.info("["+td.getName()+"]所有设备均不在线,断开采集器连接");
+            td.setFaultMeter(new HashMap<>());
+            td.setNormanMeter(new HashMap<>());
+            session.closeNow();
+        }
+        for (String key : map.keySet()) {
+            if (!session.isConnected()) {
+                break;
+            }
+            try {
+                synchronized (this) {
+                    while (suspended) {
+                        wait();
+                    }
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Thread " + td.getName() + " interrupted.");
+                e.printStackTrace();
+            }
+            byte[] values = map.get(key);
+            int firstIndex = key.indexOf(":");
+            int lastIndex = key.lastIndexOf(":");
+            String ctdCode = key.substring(0, firstIndex);
+            String type = key.substring(firstIndex + 1, lastIndex);//寄存器类型
+            String address = key.substring(lastIndex + 1);
+            session.setAttribute("ctdCode", ctdCode);
+            session.setAttribute("readAddress", address);
+            session.setAttribute("type", type);
+            isReviced = false;
+            session.write(values);
+            String terminal_id = session.getAttribute("terminal_id").toString();
+            BaseThread thread = ServerContext.threadMap
+                    .get(terminal_id);
+            if (thread != null) {
+                synchronized (thread) {
+                    try {
+                        thread.wait(td.getTimeOut());
+                        if (!isReviced) {
+                            if (i > 2) {
+                                setMeterStatus(ctdCode, 0);
+                            } else {
+                                i++;
+                            }
+                        } else {
+                            i = 0;
+                        }
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        Thread.currentThread().interrupt();
+                        e.printStackTrace();
+                        logger.info("[" + this.getName() + "]数据采集线程关闭");
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        logger.info("[" + this.getName() + "]数据采集线程关闭");
+                    }
+                }
+            }
+            try {
+                Thread.sleep(td.getCalculateCycle());
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                logger.info("[" + this.getName() + "]数据采集线程关闭");
+
+            }
+        }
+        try {
+            Thread.sleep(td.getRoundCycle());
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
@@ -146,6 +250,15 @@ public class GetDataThread extends BaseThread {
             if (md.getCode().equals(ctdCode)) {
                 if (value == 0) {
                     logger.info("<<=[采集器:" + td.getName() + "][表计" + md.getName() + "]=>>超时");
+                    if(nomalMeter.containsKey(ctdCode)){
+                        nomalMeter.remove(ctdCode);
+                    }
+                    faultMeter.put(ctdCode,md);
+                }else{
+                    if(faultMeter.containsKey(ctdCode)){
+                        faultMeter.remove(ctdCode);
+                    }
+                    nomalMeter.put(ctdCode,md);
                 }
                 md.setStatus(value);
                 break;
@@ -187,7 +300,6 @@ public class GetDataThread extends BaseThread {
                 try {
                     thread.wait(td.getTimeOut());
                     result = (Boolean) session.getAttribute("writeResult");
-                    System.out.println(result==true?"写入成功":"写入失败");
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     Thread.currentThread().interrupt();
@@ -311,6 +423,14 @@ public class GetDataThread extends BaseThread {
         }
     }
 
+    /**
+     * create by: 高嵩
+     * description: 376.1协议数据采集指令
+     * create time: 2019/8/28 11:11
+     *
+     * @return
+     * @params
+     */
     public void getSendBuff3761(MeterDevice md) {
         for (PointDevice pd : md.getPointDevice()) {
             byte[] bytes = new byte[2];
@@ -327,28 +447,15 @@ public class GetDataThread extends BaseThread {
         }
     }
 
+    /**
+     * create by: 高嵩
+     * description: s7协议数据采集指令
+     * create time: 2019/8/28 11:11
+     *
+     * @return
+     * @params
+     */
     public void getSendBuffS7(MeterDevice meter) {
-        if(td.getDeviceModel().toLowerCase().equals("s7-200smart")){
-            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
-        }else if(td.getDeviceModel().toLowerCase().equals("s7-200")){
-            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 4d 57 c2 02 4d 57 c0 01 00");
-        }else if(td.getDeviceModel().toLowerCase().equals("s7-300")){
-            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 01 00 c2 02 01 00 c0 01 09");
-        }else if(td.getDeviceModel().toLowerCase().equals("s7-400")){
-            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 02 00 c2 02 02 00 c0 01 0a");
-        }else if(td.getDeviceModel().toLowerCase().equals("s7-1200")){
-            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 10 00 c2 02 03 01 c0 01 0a");
-        }else if(td.getDeviceModel().toLowerCase().equals("s7-1500")){
-            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 10 00 c2 02 03 01 c0 01 0a");
-        }
-        session.write(firstHand);
-        while (pduLength == 0) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
         List<PointDevice> points = meter.getPointDevice();
         BigDecimal start;
         BigDecimal lastAddress = new BigDecimal("0");
@@ -362,7 +469,7 @@ public class GetDataThread extends BaseThread {
             PointDevice p = points.get(0);
             start = p.getModAddress().add(new BigDecimal(meter.getIncrease()));
             key = meter.getCode() + ":" + p.getStorageType() + ":" + start;
-            byte[] values = getS7Send(start, p.getPointLen(), p.getStorageType(), p.getMmpType(),p.getDbIndex());
+            byte[] values = getS7Send(start, p.getPointLen(), p.getStorageType(), p.getMmpType(), p.getDbIndex());
             map.put(key, values);
         } else {
             BigDecimal begin = new BigDecimal(0);
@@ -376,7 +483,7 @@ public class GetDataThread extends BaseThread {
                 } else {
                     if (getDataTypeReadInOneRequest(lastfunction, p.getStorageType(), lastAddress, p.getModAddress(), lastMmpType, p.getMmpType(), lastLen)) {
                         if (len >= pduLength) {
-                            byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType(),p.getDbIndex());
+                            byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType(), p.getDbIndex());
                             map.put(key, values);
                             key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
                             begin = address;
@@ -384,15 +491,15 @@ public class GetDataThread extends BaseThread {
                         } else {
                             len += curlen;
                             if (i == points.size() - 1) {
-                                byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType(),p.getDbIndex());
+                                byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType(), p.getDbIndex());
                                 map.put(key, values);
                             }
                         }
                     } else {
-                        byte[] values = getS7Send(begin, len, lastfunction, lastMmpType,p.getDbIndex());
+                        byte[] values = getS7Send(begin, len, lastfunction, lastMmpType, p.getDbIndex());
                         map.put(key, values);
                         if (i == points.size() - 1) {
-                            byte[] last = getS7Send(address, curlen, p.getStorageType(), p.getMmpType(),p.getDbIndex());
+                            byte[] last = getS7Send(address, curlen, p.getStorageType(), p.getMmpType(), p.getDbIndex());
                             key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
                             map.put(key, last);
                         } else {
@@ -411,11 +518,11 @@ public class GetDataThread extends BaseThread {
         }
     }
 
-    private byte[] getS7Send(BigDecimal start, int length, int type, int mmpType,int dbIndex) {
+    private byte[] getS7Send(BigDecimal start, int length, int type, int mmpType, int dbIndex) {
         S7ReadRequest send = new S7ReadRequest();
         send.setArea((byte) type);
         if (type == 132) {
-            send.setDbNumber(new byte[]{(byte)(dbIndex>>8&0xff),(byte)(dbIndex&0xff) });
+            send.setDbNumber(new byte[]{(byte) (dbIndex >> 8 & 0xff), (byte) (dbIndex & 0xff)});
         } else {
             send.setDbNumber(new byte[]{0, 0});
         }
@@ -505,6 +612,14 @@ public class GetDataThread extends BaseThread {
         }
     }
 
+    /**
+     * create by: 高嵩
+     * description: s7协议写入
+     * create time: 2019/8/28 9:21
+     *
+     * @return
+     * @params
+     */
     public byte[] getS7WriteBytes(PointDevice pd, Double writeValue) {
         S7WriteRequest request = new S7WriteRequest();
         request.setFunction((byte) 0x05);
@@ -519,22 +634,22 @@ public class GetDataThread extends BaseThread {
         } else {
             request.setTransportSize((byte) 2);
             request.setDataTransportSize((byte) 4);
-            request.setDataWriteLength(new byte[]{0, (byte) (pd.getModWlength()*8)});
+            request.setDataWriteLength(new byte[]{0, (byte) (pd.getModWlength() * 8)});
             data = Util.realValueToBytes(writeValue, pd.getModWType());
         }
-        int dataLength=4+pd.getModWlength();
-        request.setDataLength(new byte[]{(byte)(dataLength>>8&0xff),(byte)(dataLength&0xff)});
-        request.setRequestDataLength(new byte[]{(byte)(pd.getModWlength()>>8&0xff),(byte)(pd.getModWlength()&0xff)});
-        int totalLength=35+pd.getModWlength();
-        request.setTotalLength(new byte[]{(byte)(totalLength>>8&0xff),(byte)(totalLength&0xff)});
+        int dataLength = 4 + pd.getModWlength();
+        request.setDataLength(new byte[]{(byte) (dataLength >> 8 & 0xff), (byte) (dataLength & 0xff)});
+        request.setRequestDataLength(new byte[]{(byte) (pd.getModWlength() >> 8 & 0xff), (byte) (pd.getModWlength() & 0xff)});
+        int totalLength = 35 + pd.getModWlength();
+        request.setTotalLength(new byte[]{(byte) (totalLength >> 8 & 0xff), (byte) (totalLength & 0xff)});
         if (pd.getModWFunction() == 132) {
-            int dbNumber=pd.getDbIndex();
-            request.setDbNumber(new byte[]{(byte)(dbNumber>>8&0xff),(byte)(dbNumber&0xff)});
+            int dbNumber = pd.getDbIndex();
+            request.setDbNumber(new byte[]{(byte) (dbNumber >> 8 & 0xff), (byte) (dbNumber & 0xff)});
         }
-        int addressInt=pd.getModWAddress().intValue()*8;
-        int addressPoint=pd.getModWAddress().subtract(new BigDecimal(pd.getModWAddress().intValue())).multiply(new BigDecimal("10")).intValue();
-        int address=addressInt+addressPoint;
-        request.setAddress(new byte[]{(byte)(address>>16&0xff),(byte)(address>>8&0xff),(byte)(address&0xff)});
+        int addressInt = pd.getModWAddress().intValue() * 8;
+        int addressPoint = pd.getModWAddress().subtract(new BigDecimal(pd.getModWAddress().intValue())).multiply(new BigDecimal("10")).intValue();
+        int address = addressInt + addressPoint;
+        request.setAddress(new byte[]{(byte) (address >> 16 & 0xff), (byte) (address >> 8 & 0xff), (byte) (address & 0xff)});
         request.setWriteData(data);
         return request.getSendBytes();
     }

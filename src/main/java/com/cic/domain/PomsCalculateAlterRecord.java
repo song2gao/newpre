@@ -7,6 +7,8 @@ public class PomsCalculateAlterRecord {
 
     private String systemCode;
 
+    private String systemName;
+
     private String eusCodes;
 
     private String mmpCodes;
@@ -15,31 +17,21 @@ public class PomsCalculateAlterRecord {
 
     private BigDecimal setValue;
 
-    public BigDecimal getAlterValue() {
-        return alterValue;
-    }
-
-    public void setAlterValue(BigDecimal alterValue) {
-        this.alterValue = alterValue;
-    }
-
-    public BigDecimal getSetValue() {
-        return setValue;
-    }
-
-    public void setSetValue(BigDecimal setValue) {
-        this.setValue = setValue;
-    }
-
     private String dateTime;
 
     private Integer alterLevel;
 
     private Integer alterType;
-
+    /**
+     * 设备名称
+     */
     private String eusName;
-
+    /**
+     * 测点名称
+     */
     private String mmpName;
+
+    private String alarmText;
 
     public int getId() {
         return id;
@@ -55,6 +47,22 @@ public class PomsCalculateAlterRecord {
 
     public void setSystemCode(String systemCode) {
         this.systemCode = systemCode;
+    }
+
+    public BigDecimal getAlterValue() {
+        return alterValue;
+    }
+
+    public void setAlterValue(BigDecimal alterValue) {
+        this.alterValue = alterValue;
+    }
+
+    public BigDecimal getSetValue() {
+        return setValue;
+    }
+
+    public void setSetValue(BigDecimal setValue) {
+        this.setValue = setValue;
     }
 
     public String getEusCodes() {
@@ -111,5 +119,21 @@ public class PomsCalculateAlterRecord {
 
     public void setMmpName(String mmpName) {
         this.mmpName = mmpName == null ? null : mmpName.trim();
+    }
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
+    }
+
+    public String getAlarmText() {
+        return alarmText;
+    }
+
+    public void setAlarmText(String alarmText) {
+        this.alarmText = alarmText;
     }
 }

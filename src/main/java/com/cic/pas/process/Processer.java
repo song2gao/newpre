@@ -2,9 +2,8 @@ package com.cic.pas.process;
 
 import java.awt.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.cic.pas.common.bean.*;
@@ -89,6 +88,12 @@ public class Processer {
                 break;
             case UpdatePrePointSet:
                 rm = UpdatePrePointSet(message.getConfigMap());
+                break;
+            case AlarmData:
+                rm = getAlarmData();
+                break;
+            case FanOverViewData:
+                rm = getOverViewData(message.getConfigMap());
                 break;
         }
         return rm;
@@ -360,7 +365,7 @@ public class Processer {
         /**
          * 设备模型编码
          */
-        String ctmType = map.get("ctmId").toString();
+        String modelCode = map.get("modelCode").toString();
         /**
          * 设备模型参数编码
          */
@@ -368,12 +373,14 @@ public class Processer {
         for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
             for (PomsEnergyUsingFacilities facilities : system.getFacilitiyList()) {
                 for (PomsEnergyUsingFacilitiesModelPoint pd : facilities.getPointList()) {
-                    if (pd.getFacilitiesModelCode().equals(ctmType) && mmpCode.equals(pd.getMmpCode())) {
-                        pd.setUpValue(upValue);
-                        pd.setDownValue(downValue);
-                        pd.setIsAlarm(mmpIsAlarm);
-                        result = 1;
-                        break;
+                    if(pd.getFacilitiesModelCode()!=null) {
+                        if (pd.getFacilitiesModelCode().equals(modelCode) && mmpCode.equals(pd.getMmpCode())) {
+                            pd.setUpValue(upValue);
+                            pd.setDownValue(downValue);
+                            pd.setIsAlarm(mmpIsAlarm);
+                            result = 1;
+                            break;
+                        }
                     }
                 }
             }
@@ -450,5 +457,94 @@ public class Processer {
             }
         }
         return rm;
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 得到正在报警数据
+     * create time: 2019/8/14 22:27
+     *
+     * @return
+     * @params
+     */
+    public ReturnMessage getAlarmData() {
+        ReturnMessage rm = new ReturnMessage();
+        String json = JSON.toJSONString(BussinessConfig.alarmMap);
+        rm.setObject(json);
+        return rm;
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 总览数据
+     * create time: 2019/8/15 16:50
+     *
+     * @return
+     * @params
+     */
+    public ReturnMessage getOverViewData(Map<String, Object> configMap) {
+        String modelType = configMap.get("modelType").toString();
+        List<FanOverView> result = new ArrayList<>();
+        for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
+            if (system.getSystemModelCode().equals(modelType)&&system.getEulId().equals("2")) {
+                FanOverView fan = new FanOverView();
+                fan.setSystemCode(system.getSystemCode());
+                fan.setSystemName(system.getSystemName());
+                fan.setConnectState(getConnectionState(system.getAsstdStates()));
+                fan.setEulCode(system.getEulId());
+                fan.setEulName(system.getEulName());
+                List<Map<String, Object>> list = new ArrayList<>();
+                for (PomsEnergyUsingFacilities facility : system.getFacilitiyList()) {
+                    if (fan.getMeterCode() == null) {
+                        fan.setMeterCode(facility.getPreModelCode());
+                        fan.setFacilityCode(facility.getFacilitiesCode());
+                        fan.setFacilityName(facility.getFacilitiesName());
+                    }
+                    for (PomsEnergyUsingFacilitiesModelPoint point : facility.getPointList()) {
+                        if (point.getIsOverViewData() == 1) {
+                            Map<String, Object> map = new LinkedHashMap<>();
+                            map.put("mmpCode", point.getMmpCode());
+                            map.put("preMmpCode", point.getMeasurMmpCode());
+                            map.put("value", point.getValue());
+                            list.add(map);
+                        }
+                    }
+                }
+                Collections.sort(list, new Comparator<Map<String, Object>>() {
+                    @Override
+                    public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                        int diff = Integer.parseInt(o1.get("preMmpCode").toString()) - Integer.parseInt(o2.get("preMmpCode").toString());
+                        if (diff > 0) {
+                            return 1;
+                        } else if (diff < 0) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
+                fan.setParams(list);
+                result.add(fan);
+            }
+        }
+        ReturnMessage rm = new ReturnMessage();
+        String obj = JSON.toJSONString(result);
+        rm.setObject(obj);
+        return rm;
+    }
+    /**
+     * create by: 高嵩
+     * description: 得到通讯状态 有一个通讯故障 均定义为故障
+     * create time: 2019/8/29 16:17
+     * @params
+     * @return
+     */
+    public int getConnectionState(Map<String,Integer> states){
+        for(int value:states.values()){
+            if(value==0){
+                return 0;
+            }
+        }
+        return 1;
     }
 }

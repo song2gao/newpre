@@ -72,7 +72,7 @@ public class DataInsertThread extends Thread {
                 point = 96;
             }
             toBulidDayData(ca, format, datetime, point);
-            toBulidSystemDayData(ca,format,datetime,point);
+            toBulidSystemDayData(datetime,point);
             DBVisitService
                     .batchInsertTemp(BussinessConfig.config.daylist);
             DBVisitService.batchInsertSystemTemp(BussinessConfig.systemDayList);
@@ -133,16 +133,14 @@ public class DataInsertThread extends Thread {
      * @params
      * @return
      */
-    private void toBulidSystemDayData(Calendar ca, SimpleDateFormat format, String datetime, int point) throws Exception {
+    private void toBulidSystemDayData(String datetime, int point) throws Exception {
         Class<EsmspSumMeasurSystemDay> dayClass = EsmspSumMeasurSystemDay.class;
         for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
             for (PomsEnergyUsingFacilities facility : system.getFacilitiyList()) {
-                String eusCode = facility.getFacilitiesCode();
                 for (PomsEnergyUsingFacilitiesModelPoint pd : facility.getPointList()) {
                     if (pd.getIsSave() == 1) {
-                        BulidSystemDayData(ca, format, datetime, point,
-                                dayClass,
-                                eusCode, pd);
+                        BulidSystemDayData(datetime, point,
+                                dayClass, pd);
                     }
                 }
             }
@@ -157,21 +155,17 @@ public class DataInsertThread extends Thread {
      * @return
      * @params
      */
-    private void BulidSystemDayData(Calendar ca, SimpleDateFormat format,
+    private void BulidSystemDayData(
                                     String datetime, int point,
                                     Class<EsmspSumMeasurSystemDay> dayClass,
-                                    String eusCode,
                                     PomsEnergyUsingFacilitiesModelPoint pd) throws Exception {
         boolean dayIsExi = false;
-        boolean day31IsExi = false;
-        int day = ca.get(Calendar.DAY_OF_MONTH);
-        int month = ca.get(Calendar.MONTH) + 1;
         String mmpCode = pd.getMmpCode();
         EsmspSumMeasurSystemDay organizationDay = new EsmspSumMeasurSystemDay();
         try {
             for (EsmspSumMeasurSystemDay d : BussinessConfig.systemDayList) {
                 if (d.getSystemCode() != null && d.getMmpCode() != null) {
-                    if (d.getSystemCode().equals(eusCode)
+                    if (d.getSystemCode().equals(pd.getSystemCode())&&d.getFacilityCode().equals(pd.getFacilityCode())
                             && d.getMmpCode().equals(mmpCode)) {
                         if (point == 1) {// 新的一天 日累计 峰、谷、平、 最值重置
                             for (EsmspSumMeasurSystemDay item : BussinessConfig.systemDayList) {
@@ -194,7 +188,8 @@ public class DataInsertThread extends Thread {
             e.printStackTrace();
         }
         organizationDay.setEuiCode(Util.euo_code);
-        organizationDay.setSystemCode(eusCode);
+        organizationDay.setSystemCode(pd.getSystemCode());
+        organizationDay.setFacilityCode(pd.getFacilityCode());
         organizationDay.setMmpCode(mmpCode);
         organizationDay.setDateCode(datetime);
         organizationDay.setIsSave(pd.getIsSave());

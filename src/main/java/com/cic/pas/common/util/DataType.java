@@ -54,7 +54,7 @@ public class DataType {
     public static final int CHAR = 18;//单字
     public static final int VARCHAR = 19;//双字
     public static final int SIX_BYTE_LONG=28;
-    public static final int ONE_BYTE=29;
+    public static final int ONE_BYTE=29;//单字节
 
     public static int getRegisterCount(int id) {
         switch (id) {

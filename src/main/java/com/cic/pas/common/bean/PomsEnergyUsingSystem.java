@@ -1,6 +1,11 @@
 package com.cic.pas.common.bean;
 
+import com.cic.pas.dao.BussinessConfig;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PomsEnergyUsingSystem {
     private int id;
@@ -18,6 +23,10 @@ public class PomsEnergyUsingSystem {
     private String systemCode;
 
     private String systemName;
+
+    private String[] asstdCodes;
+
+    private Map<String,Integer> asstdStates;
 
     private List<PomsEnergyUsingFacilities> facilitiyList;
 
@@ -101,5 +110,29 @@ public class PomsEnergyUsingSystem {
 
     public void setFacilitiyList(List<PomsEnergyUsingFacilities> facilitiyList) {
         this.facilitiyList = facilitiyList;
+    }
+
+    public String[] getAsstdCodes() {
+        return asstdCodes;
+    }
+
+    public void setAsstdCodes(String[] asstdCodes) {
+        this.asstdCodes = asstdCodes;
+        this.asstdStates=new HashMap<>();
+        for(String asstdCode:asstdCodes){
+            for(TerminalDevice td:BussinessConfig.terminalList){
+                if(asstdCode.equals(td.getCode())){
+                    asstdStates.put(td.getName(),td.getIsOnline());
+                }
+            }
+        }
+    }
+
+    public Map<String, Integer> getAsstdStates() {
+        return asstdStates;
+    }
+
+    public void setAsstdStates(Map<String, Integer> asstdStates) {
+        this.asstdStates = asstdStates;
     }
 }

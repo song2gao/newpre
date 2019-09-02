@@ -15,9 +15,9 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        PRunningStatusService service = new PRunningStatusService();
-        Thread thread = new Thread(service);
-        thread.start();
+//        PRunningStatusService service = new PRunningStatusService();
+//        Thread thread = new Thread(service);
+//        thread.start();
         try {
             new PDBManageService();
             new PSystemConfigService();

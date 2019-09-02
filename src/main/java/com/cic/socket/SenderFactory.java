@@ -18,7 +18,7 @@ import com.cic.socket.sender.*;
 public class SenderFactory {
 	private String serverIP;
 	private int port;
-	
+
 	public  SenderFactory(String serverIP,int port){
 		this.serverIP = serverIP;
 		this.port = port;
@@ -28,9 +28,9 @@ public class SenderFactory {
 	 * @return
 	 */
 	public SendingMessage getTestSender(){
-		
+
 		SendingMessage  ts = new TestSender(serverIP,port);
-		
+
 		return ts;
 	}
 	/**
@@ -39,9 +39,9 @@ public class SenderFactory {
 	 * @return
 	 */
 	public SendingMessage getMeterDeviceCreateSender(List<PomsCalculateTerminalDevice> list){
-		
+
 		SendingMessage  mdcs = new MeterDeviceCreateSender(serverIP,port,list);
-		
+
 		return mdcs;
 	}
 	/**
@@ -51,7 +51,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getMeterDeviceDeleteSender(List<PomsCalculateTerminalDevice> list){
 		SendingMessage  mdds = new MeterDeviceDeleteSender(serverIP,port,list);
-		
+
 		return mdds;
 	}
 	/**
@@ -62,7 +62,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getMeterDeviceDetailSender(List<PomsCalculateTerminalDevice> list){
 		SendingMessage  ts = new MeterDeviceDetailSender(serverIP,port,list);
-		
+
 		return ts;
 	}
 	/**
@@ -72,7 +72,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getMeterDeviceDisableSender(List<PomsCalculateTerminalDevice> list){
 		SendingMessage  ts = new MeterDeviceDisableSender(serverIP,port,list);
-		
+
 		return ts;
 	}
 	/**
@@ -83,7 +83,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getMeterDeviceMeterDataSender(List<MeterDevice> list){
 		SendingMessage  ts = new MeterDeviceMeterDataSender(serverIP,port,list);
-		
+
 		return ts;
 	}
 	/**
@@ -93,8 +93,8 @@ public class SenderFactory {
 	 */
 	public SendingMessage getMeterDeviceNormalSender(List<PomsCalculateTerminalDevice> list){
 		SendingMessage  ts = new MeterDeviceNormalSender(serverIP,port,list);
-		
-		return ts;	
+
+		return ts;
 		}
 	/**
 	 * 计量仪表终端状态信息
@@ -103,7 +103,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getMeterDeviceStatusSender(List<PomsCalculateTerminalDevice> list){
 		SendingMessage  ts = new MeterDeviceStatusSender(serverIP,port,list);
-		
+
 		return ts;
 	}
 	/**
@@ -113,7 +113,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getMeterDeviceTrialSender(List<PomsCalculateTerminalDevice> list){
 		SendingMessage  ts = new MeterDeviceTrialSender(serverIP,port,list);
-		
+
 		return ts;
 	}
 	/**
@@ -123,7 +123,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getMeterDeviceUpdateSender(List<PomsCalculateTerminalDevice> list){
 		SendingMessage  ts = new MeterDeviceUpdateSender(serverIP,port,list);
-		
+
 		return ts;
 	}
 	/**
@@ -133,7 +133,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getRequestHistoryDataByCollect(List<PomsAssembledTerminalDevice> list){
 		SendingMessage  ts = new RequestHistoryDataByCollect(serverIP,port,list);
-		
+
 		return ts;
 	}
 	/**
@@ -143,7 +143,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getRequestHistoryDataByMeter(List<PomsCalculateTerminalDevice> list,List list2){
 		SendingMessage  ts = new RequestHistoryDataByMeter(serverIP,port,list,list2);
-		
+
 		return ts;
 	}
 	/**
@@ -153,7 +153,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getTerminalDeviceDetailSender(List<PomsAssembledTerminalDevice> list){
 		SendingMessage  ts = new TerminalDeviceDetailSender(serverIP,port,list);
-		
+
 		return ts;
 	}
 	/**
@@ -163,7 +163,7 @@ public class SenderFactory {
 	 */
 	public SendingMessage getTerminalDeviceStatusSender(List<PomsAssembledTerminalDevice> list){
 		SendingMessage  ts = new TerminalDeviceStatusSender(serverIP,port,list);
-		
+
 		return ts;
 	}
 	/**
@@ -178,7 +178,7 @@ public class SenderFactory {
 		SendingMessage  ts = new SystemDataSender(serverIP,port,map);
 		return ts;
 	}
-	
+
 	public static void main(String[] args){
 		SenderFactory sf = new SenderFactory("192.168.9.17",7005);
 		List<ReturnMessage> list = new ArrayList<ReturnMessage>();

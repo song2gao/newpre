@@ -17,6 +17,7 @@ import com.cic.pas.dao.BussinessConfig;
 import com.cic.pas.service.ConnectorSocketFactory;
 import com.cic.pas.service.ServerContext;
 import com.cic.pas.service.ServerSocketFactory;
+import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 /**
  * @author lenovo
@@ -31,7 +32,7 @@ public class ChannelManageService extends PChannelService {
 
     private static ServerSocketFactory serverSocketFactory = new ServerSocketFactory();
 
-    private static ConnectorSocketFactory connectorSocketFactory = new ConnectorSocketFactory();
+    NioSocketConnector socketConnector = new NioSocketConnector();
 
     public static ChannelConfigService channelConfigService;
 
@@ -109,8 +110,8 @@ public class ChannelManageService extends PChannelService {
 //                            }
                         } else if (type.equals("2")) {// TCP server 外网 通过端口号识别采集器
                             for (TerminalDevice td : c.getTerminalList()) {
-                               ServerAccept accept=new ServerAccept(td,c.getCha_protocolCode());
-                               accept.start();
+                                ServerAccept accept = new ServerAccept(td, c.getCha_protocolCode());
+                                accept.start();
                             }
                         } else if (type.equals("3")) {// TCP CLIENT
                             for (TerminalDevice td : c.getTerminalList()) {
@@ -118,11 +119,11 @@ public class ChannelManageService extends PChannelService {
                                 int index = tdAddressPort.indexOf(":");
                                 String ip = tdAddressPort.substring(0, index);
                                 int port = Integer.parseInt(tdAddressPort.substring(index + 1));
-                                ClientConnectThread thread=new ClientConnectThread(ip,port,c.getCha_protocolCode());
+                                ClientConnectThread thread = new ClientConnectThread(ip, port, c.getCha_protocolCode());
                                 thread.start();
                             }
-                        }else if (type.equals("4")){
-                            SocketAcceptor channel = serverSocketFactory.createServerSocket(c.getCha_addressPort(),c.getCha_protocolCode());
+                        } else if (type.equals("4")) {
+                            SocketAcceptor channel = serverSocketFactory.createServerSocket(c.getCha_addressPort(), c.getCha_protocolCode());
                             try {
                                 channel.bind();
                                 LogFactory.getInstance().saveLog("采集服务启动", LogDao.operation);
@@ -158,14 +159,6 @@ public class ChannelManageService extends PChannelService {
                     + c.getCha_addressPort());
         }
         open(list);
-    }
-
-    public void connectServer() {
-        List<TerminalDevice> list = BussinessConfig.terminalList;
-        for (TerminalDevice t : list) {
-            String addressPort = t.getMSA();
-            connectorSocketFactory.createClientSocket(addressPort, "");
-        }
     }
 
 }

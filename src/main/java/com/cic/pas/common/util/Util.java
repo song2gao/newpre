@@ -742,7 +742,13 @@ public class Util {
     }
 
 
-    //Override
+    /**
+     * create by: 高嵩
+     * description: 根据数据类型得到真实数据
+     * create time: 2019/8/29 12:16
+     * @params
+     * @return
+     */
     public static Object bytesToValueRealOffset(byte[] data, int offset, int dataType) {
         switch (dataType) {
             case DataType.BINARY:
@@ -860,7 +866,13 @@ public class Util {
         }
         throw new RuntimeException("Unsupported data type: " + dataType);
     }
-
+    /**
+     * create by: 高嵩
+     * description: 根据数据类型 将真实数据转化为byte[]
+     * create time: 2019/8/29 12:17
+     * @params
+     * @return
+     */
     public static byte[] realValueToBytes(Double value, int dataType) {
         byte[] result = null;
         switch (dataType) {
@@ -900,7 +912,11 @@ public class Util {
                 ll = (byte) (re & 0xff);
                 result = new byte[]{hh, hl,lh,ll};
                 break;
-
+            case DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED:
+                 high = (byte) (value.intValue() >> 8 & 0xff);
+                 low = (byte) (value.intValue() & 0xff);
+                result = new byte[]{low, high};
+                break;
         }
         return result;
     }
@@ -1012,6 +1028,24 @@ public class Util {
 //        int resultLow=(int)(Math.log(low)/Math.log(2))+1;
 //        System.out.println(resultHigh+resultLow);
         byteToBinaryArray((byte) 99);
+    }
+    /**
+     * create by: 高嵩
+     * description: 查找字符串在是否存在于数组中
+     * create time: 2019/8/29 12:18
+     * @params
+     * @return
+     */
+    public static boolean strInStrs(String[] strs,String str){
+        if(strs==null||strs.length==0){
+            return false;
+        }
+        for(String s:strs){
+            if(s.equals(str)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

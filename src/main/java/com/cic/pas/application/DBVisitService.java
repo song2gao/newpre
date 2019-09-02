@@ -484,7 +484,7 @@ public class DBVisitService {
             throws Exception {
         String dateCode = "";
         String head = "insert into esmsp_sum_measur_system_day_temp "
-                + "(EUI_CODE,SYSTEM_CODE,MMP_CODE,DATE_CODE,point1,point2,point3,point4,"
+                + "(EUI_CODE,SYSTEM_CODE,FACILITY_CODE,MMP_CODE,DATE_CODE,point1,point2,point3,point4,"
                 + "point5,point6,point7,point8,point9,point10,point11,point12,"
                 + "point13,point14,point15,point16,point17,point18,point19,"
                 + "point20,point21,point22,point23,point24,point25,point26,"
@@ -509,9 +509,13 @@ public class DBVisitService {
                 StringBuffer buffer = new StringBuffer();
                 buffer.append(head);
                 buffer = getSystemBuffByDayList(sublist, dateCode, buffer);
-                DBConfigDao.jdbcTemplate.update(buffer.toString());
-                logger.info("批量执行插入[用能系统]临时数据" + key + "成功,共" + list.size()
-                        + "条数据<SQL>......");
+                try {
+                    DBConfigDao.jdbcTemplate.update(buffer.toString());
+                    logger.info("批量执行插入[用能系统]临时数据" + key + "成功,共" + list.size()
+                            + "条数据<SQL>......");
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
@@ -695,7 +699,7 @@ public class DBVisitService {
             if (dateCode.equals("")) {
                 dateCode = day.getDateCode();
             }
-            buffer.append(" ( '" + day.getEuiCode() + "','" + day.getSystemCode()
+            buffer.append(" ( '" + day.getEuiCode() + "','" + day.getSystemCode()+"','"+day.getFacilityCode()
                     + "','" + day.getMmpCode() + "','" + day.getDateCode()
                     + "'," + day.getPoint1() + "," + day.getPoint2() + ","
                     + day.getPoint3() + "," + day.getPoint4() + ","
@@ -792,7 +796,6 @@ public class DBVisitService {
                 buffer.append(head);
                 buffer = getBuffByDayList(sublist, dateCode, buffer);
                 DBConfigDao.jdbcTemplate.update(buffer.toString());
-
                 logger.info("批量执行插入[计量]日数据" + key + "成功,共" + list.size()
                         + "条数据<SQL>......");
             }
@@ -812,7 +815,7 @@ public class DBVisitService {
             throws Exception {
         String dateCode = "";
         String head = "insert into esmsp_sum_measur_system_day "
-                + "(EUI_CODE,SYSTEM_CODE,MMP_CODE,DATE_CODE,point1,point2,point3,point4,"
+                + "(EUI_CODE,SYSTEM_CODE,FACILITY_CODE,MMP_CODE,DATE_CODE,point1,point2,point3,point4,"
                 + "point5,point6,point7,point8,point9,point10,point11,point12,"
                 + "point13,point14,point15,point16,point17,point18,point19,"
                 + "point20,point21,point22,point23,point24,point25,point26,"
@@ -841,7 +844,7 @@ public class DBVisitService {
                         + "条数据<SQL>......");
             }
             DBConfigDao.jdbcTemplate
-                    .execute("delete from esmsp_sum_measur_system_day");
+                    .execute("delete from esmsp_sum_measur_system_day_temp");
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
     }

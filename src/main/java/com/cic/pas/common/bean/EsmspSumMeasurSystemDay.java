@@ -11,6 +11,8 @@ public class EsmspSumMeasurSystemDay {
 
     private String systemCode;
 
+    private String facilityCode;
+
     private String mmpCode;
 
     private String dateCode;
@@ -1104,5 +1106,13 @@ public class EsmspSumMeasurSystemDay {
 
     public void setIsSave(int isSave) {
         this.isSave = isSave;
+    }
+
+    public String getFacilityCode() {
+        return facilityCode;
+    }
+
+    public void setFacilityCode(String facilityCode) {
+        this.facilityCode = facilityCode;
     }
 }

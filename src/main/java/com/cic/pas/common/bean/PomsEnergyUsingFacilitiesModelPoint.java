@@ -2,6 +2,7 @@ package com.cic.pas.common.bean;
 
 import com.cic.domain.PomsCalculateAlterRecord;
 import com.cic.pas.application.DBVisitService;
+import com.cic.pas.dao.BussinessConfig;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,14 @@ public class PomsEnergyUsingFacilitiesModelPoint {
     private Integer id;
 
     private String facilitiesModelCode;
+
+    private String systemCode;
+
+    private String systemName;
+
+    private String facilityCode;
+
+    private String facilityName;
 
     private String mmpCode;
 
@@ -33,10 +42,6 @@ public class PomsEnergyUsingFacilitiesModelPoint {
     private Map<String,String> formatMap;
 
     private List<Option> options;
-
-    private String facilityCode;
-
-    private String facilityName;
 
     private String meterCode;
 
@@ -74,6 +79,10 @@ public class PomsEnergyUsingFacilitiesModelPoint {
      * 测点当前报警状态  0 无报警   1 正在报警
      */
     private int mmpAlarmStatus = 0;
+    /**
+     * 是否为总览数据
+     */
+    private int isOverViewData;
 
     public Integer getId() {
         return id;
@@ -146,7 +155,7 @@ public class PomsEnergyUsingFacilitiesModelPoint {
     public void setValue(BigDecimal value) {
         this.value = value;
     }
-    private void setAlarmData(PomsEnergyUsingFacilities facilities, PomsEnergyUsingFacilitiesModelPoint point) {
+    public void setAlarmData(PomsEnergyUsingSystem system,PomsEnergyUsingFacilities facilities, PomsEnergyUsingFacilitiesModelPoint point) {
         boolean isAlarmFlag = false;
         BigDecimal setAlarmValue = null;
         if (point.getIsAlarm() == 1) {
@@ -188,6 +197,10 @@ public class PomsEnergyUsingFacilitiesModelPoint {
                     }
                 }
             }
+        }else{
+            if (mmpAlarmStatus == 1) {//正在报警   关闭报警
+                isAlarmFlag = true;
+            }
         }
         if (isAlarmFlag) {
             String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -201,8 +214,26 @@ public class PomsEnergyUsingFacilitiesModelPoint {
             record.setAlterLevel(mmpAlarmStatus);
             record.setAlterType(alarmType);
             record.setAlterValue(value);
+            record.setSystemName(system.getSystemName());
             record.setSetValue(setAlarmValue);
             record.setDateTime(dateTime);
+            String text=system.getSystemName()+"==="+facilities.getFacilitiesName()+"==="+point.getMmpName();
+            if(alarmType==1){
+                text+=":报警(故障)";
+            }else if(alarmType==2){
+                text+=":超上限";
+            }else{
+                text+=":超下限";
+            }
+            record.setAlarmText(text);
+            String key=facilities.getSystemCode()+"-"+facilities.getFacilitiesCode()+"-"+point.getMmpCode();
+            if(mmpAlarmStatus==1){//正在报警
+                BussinessConfig.alarmMap.put(key,record);
+            }else{//报警恢复
+                if(BussinessConfig.alarmMap.containsKey(key)){
+                    BussinessConfig.alarmMap.remove(key);
+                }
+            }
             DBVisitService.batchInsertAlarm(record);
             isAlarmFlag = false;
         }
@@ -369,5 +400,29 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     public void setMmpAlarmStatus(int mmpAlarmStatus) {
         this.mmpAlarmStatus = mmpAlarmStatus;
+    }
+
+    public String getSystemCode() {
+        return systemCode;
+    }
+
+    public void setSystemCode(String systemCode) {
+        this.systemCode = systemCode;
+    }
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
+    }
+
+    public int getIsOverViewData() {
+        return isOverViewData;
+    }
+
+    public void setIsOverViewData(int isOverViewData) {
+        this.isOverViewData = isOverViewData;
     }
 }

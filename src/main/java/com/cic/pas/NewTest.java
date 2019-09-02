@@ -4,9 +4,10 @@ import com.cic.pas.common.util.CRC16M;
 
 public class NewTest {
     public static void main(String[] args) {
-        byte[] addressBytes=new byte[]{0,3,32};
-        int address = (addressBytes[0] << 16) + (addressBytes[1] << 8) + (addressBytes[2]);
-        System.out.println(address);
-        System.out.println((int)addressBytes[1]<<8);
+        int a = 20000;
+        double result = (a - 5530) / ((27648 - 5530) / 100) - 20;
+        double result2=a/((27648 - 5530) / 100)-5530/((27648 - 5530) / 100)-20;
+        System.out.println(result);
+        System.out.println(((27648 - 5530) / 100));
     }
 }

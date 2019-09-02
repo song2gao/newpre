@@ -26,6 +26,7 @@ public class ByteS7Encoder extends ProtocolEncoderAdapter {
             session.setAttribute("readType", readType);
         }
         buff.put(a);
+//        System.out.println("TX:"+CRC16M.getBufHexStr(a));
         buff.flip();
         out.write(buff);
         out.flush();

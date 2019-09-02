@@ -8,6 +8,7 @@ import java.util.*;
 
 import javax.annotation.Resource;
 
+import com.cic.domain.PomsCalculateAlterRecord;
 import com.cic.pas.common.bean.*;
 import com.cic.pas.common.util.DateUtils;
 import org.apache.mina.core.session.IoSession;
@@ -45,6 +46,7 @@ public final class BussinessConfig {
 
     public static List<TerminalDevice> terminalInfo = Collections
             .synchronizedList(new ArrayList<TerminalDevice>());
+    public static LinkedHashMap<String,PomsCalculateAlterRecord> alarmMap=new LinkedHashMap<String,PomsCalculateAlterRecord>();
 
     public static List<EsmspSumMeasurOrganizationDay> daylist = Collections
             .synchronizedList(new ArrayList<EsmspSumMeasurOrganizationDay>());
@@ -126,6 +128,7 @@ public final class BussinessConfig {
                                 public TerminalDevice mapRow(ResultSet rs,
                                                              int index) throws SQLException {
                                     TerminalDevice t = new TerminalDevice();
+                                    t.setProcotolCode(c.getCha_protocolCode());
                                     t.setPrimaryKey(rs.getString("id"));
                                     t.setCode(rs.getString("asstd_code"));
                                     t.setName(rs.getString("asstd_names"));
@@ -243,6 +246,7 @@ public final class BussinessConfig {
                                         public PointDevice mapRow(ResultSet rs,
                                                                   int index) throws SQLException {
                                             PointDevice pd = new PointDevice();
+                                            pd.setAsstdCode(t.getCode());
                                             pd.setCtdCode(p.getCode());
                                             pd.setCtdName(p.getName());
                                             pd.setId(rs.getString("id"));
@@ -287,6 +291,7 @@ public final class BussinessConfig {
                                             pd.setPreType(p.getType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
                                             pd.setSystemCode(rs.getString("MMP_BACKUPS"));
+                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(pd.getCtdCode(),pd.getCode()));
                                             return pd;
                                         }
                                     });
@@ -317,6 +322,7 @@ public final class BussinessConfig {
                                                     .getString("mmp_names"));
                                             pd.setIsCalculate(rs.getInt("mmp_iscalculate"));
                                             pd.setCtdCode(p.getCode());
+                                            pd.setAsstdCode(t.getCode());
                                             pd.setUnits(rs
                                                     .getString("mmp_units"));
                                             pd.setCode(rs
@@ -341,9 +347,7 @@ public final class BussinessConfig {
                                             pd.setShowValue(rs.getString("MMP_SET_VALUE"));
                                             pd.setCtmType(p.getPcpcEnergyType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
-                                            // pd.setUp_line(rs.getBigDecimal("ctdp_up_line"));
-                                            // pd.setDown_line(rs.getBigDecimal("ctdp_down_line"));
-                                            // pd.setStandard_val(rs.getBigDecimal("ctdp_standard_val"));
+                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(p.getCode(),pd.getCode()));
                                             return pd;
                                         }
                                     });
@@ -372,6 +376,9 @@ public final class BussinessConfig {
                 system.setEuiId(rs.getString("eui_id"));
                 system.setEulId(rs.getString("eul_id"));
                 system.setEulName(rs.getString("eul_name"));
+                String asstdStr=rs.getString("ASSTD_CODE");
+                String[] asstdCodes=asstdStr==null?null:asstdStr.split(",");
+                system.setAsstdCodes(asstdCodes);
                 system.setSystemModelCode(rs.getString("SYSTEM_MODEL_CODE"));
                 system.setSystemModelName(rs.getString("SYSTEM_MODEL_NAME"));
                 system.setSystemCode(rs.getString("SYSTEM_CODE"));
@@ -406,6 +413,11 @@ public final class BussinessConfig {
                         PomsEnergyUsingFacilitiesModelPoint modelPoint = new PomsEnergyUsingFacilitiesModelPoint();
                         modelPoint.setId(rs.getInt("id"));
                         modelPoint.setFacilitiesModelCode(rs.getString("FACILITIES_MODEL_CODE"));
+                        modelPoint.setSystemCode(system.getSystemCode());
+                        modelPoint.setSystemName(system.getSystemName());
+                        modelPoint.setFacilityCode(facility.getFacilitiesCode());
+                        modelPoint.setFacilityName(facility.getFacilitiesName());
+                        modelPoint.setMeterCode(facility.getPreModelCode());
                         modelPoint.setMmpCode(rs.getString("MMP_CODE"));
                         modelPoint.setMmpName(rs.getString("MMP_NAME"));
                         modelPoint.setMmpUnit(rs.getString("MMP_UNIT"));
@@ -420,13 +432,39 @@ public final class BussinessConfig {
                         modelPoint.setIsShowName(rs.getInt("is_show_name"));
                         int preMmpCode = rs.getInt("MEASUR_MMP_CODE");
                         int preMmpCodeOffset = rs.getInt("MMP_OFFSET");
+                        modelPoint.setIsOverViewData(rs.getInt("IS_OVERVIEW_DATA"));
                         int newMmpCode = preMmpCode + facility.getFacilitiesOffset() + preMmpCodeOffset;
                         modelPoint.setMeasurMmpCode(newMmpCode + "");
-                        modelPoint.setFacilityCode(facility.getFacilitiesCode());
-                        modelPoint.setFacilityName(facility.getFacilitiesName());
                         return modelPoint;
                     }
                 });
+                List<PomsEnergyUsingFacilitiesModelPoint> devicePoints = jdbcTemplate.query("select * from poms_energy_using_facilities_point where IS_USE=1 AND FACILITIES_CODE=?", new Object[]{facility.getFacilitiesCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
+                    @Override
+                    public PomsEnergyUsingFacilitiesModelPoint mapRow(ResultSet rs, int i) throws SQLException {
+                        PomsEnergyUsingFacilitiesModelPoint modelPoint = new PomsEnergyUsingFacilitiesModelPoint();
+                        modelPoint.setId(rs.getInt("id"));
+                        modelPoint.setSystemCode(system.getSystemCode());
+                        modelPoint.setSystemName(system.getSystemName());
+                        modelPoint.setFacilityCode(rs.getString("FACILITIES_CODE"));
+                        modelPoint.setFacilityName(facility.getFacilitiesName());
+                        modelPoint.setMmpCode(rs.getString("MMP_CODE"));
+                        modelPoint.setMmpName(rs.getString("MMP_NAME"));
+                        modelPoint.setMmpUnit(rs.getString("MMP_UNIT"));
+                        modelPoint.setMmpOrder(rs.getInt("MMP_ORDER"));
+                        modelPoint.setMmpType(rs.getInt("MMP_TYPE"));
+                        modelPoint.setIsShowIndex(rs.getInt("IS_SHOW_INDEX"));
+                        modelPoint.setValue(rs.getBigDecimal("INIT_VALUE"));
+                        modelPoint.setUpValue(rs.getBigDecimal("UP_VALUE"));
+                        modelPoint.setDownValue(rs.getBigDecimal("DOWN_VALUE"));
+                        modelPoint.setIsAlarm(rs.getInt("IS_ALARM"));
+                        modelPoint.setIsSave(rs.getInt("IS_SAVE"));
+                        modelPoint.setIsShowName(rs.getInt("is_show_name"));
+                        modelPoint.setMeterCode(rs.getString("PRE_DEVICE_CODE"));
+                        modelPoint.setMeasurMmpCode(rs.getString("MEASUR_MMP_CODE"));
+                        return modelPoint;
+                    }
+                });
+                points.addAll(devicePoints);
                 facility.setPointList(points);
             }
             system.setFacilitiyList(facilities);
@@ -701,7 +739,7 @@ public final class BussinessConfig {
          */
         systemDayList = jdbcTemplate
                 .query(
-                        " select eui_code, MMP_CODE,system_code,DATE_CODE,point1,point2,"
+                        " select eui_code, MMP_CODE,system_code,FACILITY_CODE,DATE_CODE,point1,point2,"
                                 + "point3,point4,point5,point6,point7,point8,point9,"
                                 + "point10,point11,point12,point13,point14,point15,"
                                 + "point16,point17,point18,point19,point20,point21,"
@@ -728,6 +766,7 @@ public final class BussinessConfig {
                                 EsmspSumMeasurSystemDay day = new EsmspSumMeasurSystemDay();
                                 day.setEuiCode(rs.getString("eui_code"));
                                 day.setSystemCode(rs.getString("system_code"));
+                                day.setFacilityCode(rs.getString("FACILITY_CODE"));
                                 day.setMmpCode(rs.getString("mmp_code"));
                                 day.setDateCode(rs.getString("date_code"));
                                 day.setPoint1(rs.getBigDecimal("point1"));
@@ -841,79 +880,6 @@ public final class BussinessConfig {
     public static BussinessConfig getConfig() {
         return config;
     }
-
-    public static final boolean MSAExist(int id) {
-        boolean result = false;
-        for (TerminalDevice termial : terminalList) {
-            if (Integer.parseInt(termial.getLocation()) == id) {
-                return true;
-            }
-        }
-        return result;
-    }
-
-    public static final boolean PnExist(int MSAid, String id) {
-        boolean result = false;
-        for (TerminalDevice termial : terminalList) {
-            if (termial.getId() != MSAid) {
-                continue;
-            } else {
-                for (MeterDevice md : termial.getMeterList()) {
-                    if (md.getId().equals(id)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
-    public static final String getLogIOName(String IP) {
-        String name = null;
-        for (TerminalDevice t : terminalList) {
-            if (t.getMSA().equals(IP)) {
-                name = "CycleLog\\" + IP + ServerContext.getLogTail();
-                break;
-            }
-        }
-        return name;
-    }
-
-    public static final TerminalDevice getTerminalByIP(int id) throws Exception {
-        for (TerminalDevice terminal : terminalList) {
-            if (id == terminal.getId()) {
-                return terminal;
-            }
-        }
-        throw new Exception("终端地址不存在 id为" + id + "的终端");
-    }
-
-    /**
-     * @param terminalID
-     * @return
-     */
-    public static int getPortNumber(int terminalID) {
-        int number = 0;
-        for (TerminalDevice t : terminalList) {
-            if (t.getId() == terminalID) {
-                number = t.getMeterList().size();
-                break;
-            }
-        }
-
-        return number;
-    }
-
-    public static List<MeterDevice> getPortListByTerminalID(int terminalID) {
-        for (TerminalDevice t : terminalList) {
-            if (t.getId() == terminalID) {
-                return t.getMeterList();
-            }
-        }
-        return null;
-    }
-
     /**
      * 将F转换0
      */
@@ -960,9 +926,6 @@ public final class BussinessConfig {
         if (ip.indexOf("/") > -1) {
             ip = ip.substring(ip.indexOf("/") + 1);
         }
-//        if (ip.indexOf(":") > -1) {
-//            ip = ip.substring(0, ip.indexOf(":"));
-//        }
         TerminalDevice termianl = null;
         for (TerminalDevice td : terminalList) {
             if (td.getMSA().equals(ip)) {
@@ -993,12 +956,6 @@ public final class BussinessConfig {
             }
         }
         return lastValue;
-    }
-
-    public static String getIpPort(IoSession session) {
-        SocketAddress client = session.getRemoteAddress();
-        String port = client.toString().substring(client.toString().indexOf("/") + 1);
-        return port;
     }
 
     public static MeterDevice getMeterByTerminalCodeAndCtdCode(String terminalCode, String ctdCode) {
@@ -1039,7 +996,13 @@ public final class BussinessConfig {
         }
         return null;
     }
-
+    /**
+     * create by: 高嵩
+     * description: 根据ip/port/ip:port得到采集器
+     * create time: 2019/8/26 9:59
+     * @params
+     * @return
+     */
     public static TerminalDevice getTerminalByMSA(String msa) {
         for (TerminalDevice td : terminalList) {
             if (td.getMSA().equals(msa)) {
@@ -1069,5 +1032,57 @@ public final class BussinessConfig {
             }
         }
         return null;
+    }
+    /**
+     * create by: 高嵩
+     * description: 查询测点关联设备个数
+     * create time: 2019/8/12 22:15
+     * @params
+     * @return
+     */
+    public static int getPointCountOfSystemRef(String meterCode,String mmpCode){
+        String sql="select count(FACILITIES_CODE) as newCode " +
+                " from poms_energy_using_facilities_model_point a,poms_energy_using_facilities b " +
+                "where b.FACILITIES_MODEL_CODE=a.FACILITIES_MODEL_CODE and b.PRE_MODEL_CODE=? and cast(MEASUR_MMP_CODE as signed integer)+cast(b.FACILITIES_OFFSET as signed integer)+cast(MMP_OFFSET as signed integer)=?";
+        int modelCount=jdbcTemplate.queryForObject(sql,new Object[]{meterCode,mmpCode},Integer.class);
+        sql="select count(FACILITIES_CODE) from poms_energy_using_facilities_point where  PRE_DEVICE_CODE=? and MEASUR_MMP_CODE=? ";
+        int deviceCount=jdbcTemplate.queryForObject(sql,new Object[]{meterCode,mmpCode},Integer.class);
+        return modelCount+deviceCount;
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 得到该连接的远程IP地址端口号
+     * create time: 2019/8/26 9:57
+     * @params
+     * @return
+     */
+    public static String getRemoteIpPort(IoSession session) {
+        String ipPort = session.getRemoteAddress().toString();
+        return ipPort.substring(ipPort.indexOf("/")+1);
+    }
+    /**
+     * create by: 高嵩
+     * description: 得到该连接的本地IP地址端口号
+     * create time: 2019/8/26 9:58
+     * @params
+     * @return
+     */
+    public static String getLoclPort(IoSession session) {
+        String ipPort = session.getLocalAddress().toString();
+        int index = ipPort.indexOf(":");
+        return ipPort.substring(index + 1);
+    }
+    /**
+     * create by: 高嵩
+     * description: 得到该连接的远程IP地址
+     * create time: 2019/8/26 9:58
+     * @params
+     * @return
+     */
+    public static String getRemoteIp(IoSession session) {
+        String ipPort = session.getRemoteAddress().toString();
+        int index = ipPort.indexOf(":");
+        return ipPort.substring(1, index);
     }
 }

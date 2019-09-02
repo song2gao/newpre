@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ByteS7Decoder extends CumulativeProtocolDecoder {
     private Logger logger = Logger.getLogger(ByteS7Decoder.class);
-    private byte[] secondHand = CRC16M.HexString2Buf("03 00 00 19 02 F0 80 32 01 00 00 CC C1 00 08 00 00 F0 00 00 01 00 01 03 C0");
+    private byte[] secondHand = CRC16M.HexString2Buf("03 00 00 19 02 F0 80 32 01 00 00 cc c1 00 08 00 00 f0 00 00 01 00 01 03 c0");
 
     @Override
     public boolean doDecode(IoSession session, IoBuffer in,
@@ -50,10 +50,10 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                 int cotpFunction = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 5, DataType.ONE_BYTE).toString());
                 int function = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 19, DataType.ONE_BYTE).toString());
                 if (bytes.length == 22 && cotpFunction == 208) {
-//                    logger.info("一次握手成功\r\n报文：" + messageHex);
+//                    logger.info("一次握手成功\r\n报文：" + CRC16M.getBufHexStr(bytes));
                     session.write(secondHand);
                 } else if (bytes.length == 27 && function == 240) {//0xf0
-//                    logger.info("二次握手成功\r\n报文：" + messageHex);
+//                    logger.info("二次握手成功\r\n报文：" + CRC16M.getBufHexStr(bytes));
                     int pduLength = Integer.parseInt(Util.bytesToValueRealOffset(bytes, bytes.length - 2, DataType.TWO_BYTE_INT_UNSIGNED).toString());
                     GetDataThread thread = (GetDataThread) ServerContext.threadMap.get(terminal_id);
                     if (thread != null) {

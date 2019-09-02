@@ -28,6 +28,7 @@ public class PointDevice implements Serializable {
      * 测点名称
      */
     private String name;
+    private String asstdCode;
     /**
      * 表计编码
      */
@@ -225,10 +226,14 @@ public class PointDevice implements Serializable {
     private List<Object> curveData;
     //曲线点数
     private int dianshu;
+    /**
+     * 测点被关联个数
+     */
+    private int mmpSystemRefCount;
 
     private boolean boor = true;
 
-    private Map<String,String> formatMap=new HashMap<String,String>();
+    private Map<String, String> formatMap = new HashMap<String, String>();
 
     private List<Option> options;
 
@@ -489,38 +494,46 @@ public class PointDevice implements Serializable {
     }
 
     private void setSystemData() {
-        boolean isFind = false;
+        int findCount = 0;
         for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
-            if (isFind) {
+            if (findCount >= mmpSystemRefCount) {
                 break;
             }
             for (PomsEnergyUsingFacilities facilities : system.getFacilitiyList()) {
-                if (facilities.getPreModelCode().equals(getPreType())) {
-                    if(isFind&&!facilities.getFacilitiesModelCode().equals("4")) {
-                        break;
-                    }
-                    for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
-                        if (point.getMeasurMmpCode().equals(getCode())) {
-                            point.setValue(getValue());
-                            point.setMmpUnit(getUnits());
-                            point.setIsBit(getIsBit());
-                            point.setOptions(getOptions());
-                            point.setFormatMap(getFormatMap());
-                            point.setRwType(getRwType());
-                            point.setMeterCode(getCtdCode());
-                            point.setFormatStr(getFormular());
-                            point.setMaxDate(max_time);
-                            point.setMaxValue(max_value);
-                            point.setMinDate(min_time);
-                            point.setMinValue(min_value);
-                            isFind = true;
-                            break;
+                if (findCount >= mmpSystemRefCount) {
+                    break;
+                }
+                for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
+                    if (point.getMeasurMmpCode().equals(getCode()) && point.getMeterCode().equals(getCtdCode())) {
+                        point.setValue(getValue());
+                        point.setMmpUnit(getUnits());
+                        point.setIsBit(getIsBit());
+                        point.setOptions(getOptions());
+                        if (point.getFormatMap() == null && getFormatMap() != null) {
+                            Map<String, String> map = new HashMap<>();
+                            for (String key : getFormatMap().keySet()) {
+                                map.put(key, getFormatMap().get(key));
+                            }
+                            point.setFormatMap(map);
                         }
+                        point.setRwType(getRwType());
+                        point.setMeterCode(getCtdCode());
+                        if (point.getFormatStr() == null && getFormular() != null) {
+                            point.setFormatStr(getFormular());
+                        }
+                        point.setMaxDate(max_time);
+                        point.setMaxValue(max_value);
+                        point.setMinDate(min_time);
+                        point.setMinValue(min_value);
+                        point.setAlarmData(system, facilities, point);
+                        findCount++;
+                        break;
                     }
                 }
             }
         }
     }
+
     /**
      * 生成报警数据
      *
@@ -590,7 +603,7 @@ public class PointDevice implements Serializable {
                         option.setKey(keyAndValue[0]);
                         option.setValue(keyAndValue[1]);
                         options.add(option);
-                        formatMap.put(keyAndValue[0],keyAndValue[1]);
+                        formatMap.put(keyAndValue[0], keyAndValue[1]);
                     }
                 }
             }
@@ -829,6 +842,7 @@ public class PointDevice implements Serializable {
     public void setMmpIsAlarm(int mmpIsAlarm) {
         this.mmpIsAlarm = mmpIsAlarm;
     }
+
     public int getDbIndex() {
         return dbIndex;
     }
@@ -859,5 +873,21 @@ public class PointDevice implements Serializable {
 
     public void setFormatMap(Map<String, String> formatMap) {
         this.formatMap = formatMap;
+    }
+
+    public int getMmpSystemRefCount() {
+        return mmpSystemRefCount;
+    }
+
+    public void setMmpSystemRefCount(int mmpSystemRefCount) {
+        this.mmpSystemRefCount = mmpSystemRefCount;
+    }
+
+    public String getAsstdCode() {
+        return asstdCode;
+    }
+
+    public void setAsstdCode(String asstdCode) {
+        this.asstdCode = asstdCode;
     }
 }

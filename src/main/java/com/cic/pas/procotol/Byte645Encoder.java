@@ -1,5 +1,6 @@
 package com.cic.pas.procotol;
 
+import com.cic.pas.common.util.CRC16M;
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;

@@ -1,9 +1,10 @@
 package com.cic.pas.common.bean;
 
+import com.cic.pas.common.util.Util;
+import com.cic.pas.dao.BussinessConfig;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author 
@@ -40,6 +41,14 @@ public class TerminalDevice implements Serializable{
 	/**通讯协议*/
 	private String noticeAccord;
 	/**
+	*正常通讯表计
+	 */
+	private Map<String,MeterDevice> normanMeter=new HashMap<>();
+	/**
+	 *异常通讯表计
+	 */
+	private Map<String,MeterDevice> faultMeter=new HashMap<>();
+	/**
 	 * 正常表计个数(通讯)
 	 */
 	private int normalMeterCount;
@@ -50,6 +59,18 @@ public class TerminalDevice implements Serializable{
 
 	/**通讯类型 0,TCP 1,UDP 2GPRS*/
 	private int asstd_Comunicate_Type;
+
+	public String getProcotolCode() {
+		return procotolCode;
+	}
+
+	public void setProcotolCode(String procotolCode) {
+		this.procotolCode = procotolCode;
+	}
+
+	/**通讯协议**/
+
+	private String procotolCode;
 
 	/**上次交互时间*/
 	private Date asstd_LastDate;
@@ -214,6 +235,18 @@ public class TerminalDevice implements Serializable{
 
 	public void setIsOnline(int isOnline) {
 		this.isOnline = isOnline;
+		for(PomsEnergyUsingSystem system:BussinessConfig.systemList){
+			if(Util.strInStrs(system.getAsstdCodes(),code)){
+				system.getAsstdStates().put(name,isOnline);
+			}
+		}
+		if(isOnline==0){
+			if(getMeterList()!=null) {
+				for (MeterDevice md : getMeterList()) {
+					md.setStatus(0);
+				}
+			}
+		}
 	}
 
 
@@ -286,5 +319,21 @@ public class TerminalDevice implements Serializable{
 
 	public void setDeviceModel(String deviceModel) {
 		this.deviceModel = deviceModel;
+	}
+
+	public Map<String, MeterDevice> getNormanMeter() {
+		return normanMeter;
+	}
+
+	public void setNormanMeter(Map<String, MeterDevice> normanMeter) {
+		this.normanMeter = normanMeter;
+	}
+
+	public Map<String, MeterDevice> getFaultMeter() {
+		return faultMeter;
+	}
+
+	public void setFaultMeter(Map<String, MeterDevice> faultMeter) {
+		this.faultMeter = faultMeter;
 	}
 }
