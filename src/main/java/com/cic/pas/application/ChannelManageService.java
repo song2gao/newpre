@@ -76,64 +76,22 @@ public class ChannelManageService extends PChannelService {
                     try {
                         String addressPort = c.getCha_addressPort();
                         String type = c.getCha_commMode();// 1 COM 2 SERVER 3
-                        // CLIENT
-                        if (type.equals("1")) {//串口
-//                            for (TerminalDevice td : c.getTerminalList()) {
-//                                SerialParameters params = new SerialParameters();
-//                                params.setBaudRate(9600);
-//                                params.setCommPortId(td.getMSA());
-//                                params.setDataBits(8);
-//                                params.setStopBits(1);
-//                                params.setParity(0);
-//                                ModbusMaster master = null;
-//                                if (c.getCha_protocolCode().equals("1")) {
-//                                    master = modbusFactory.createComTcpMaster(
-//                                            params, 1);
-//                                } else {
-//                                    master = modbusFactory.createRtuMaster(
-//                                            params, 1);
-//                                }
-//                                GetDataThread thread = new GetDataThread(td,
-//                                        master);
-//                                thread.setName(td.getMSA());
-//                                thread.start();
-//                                if (ConnectorContext.threadMap.containsKey(td
-//                                        .getMSA())) {
-//                                    BaseThread old = ConnectorContext.threadMap
-//                                            .get(td.getMSA());
-//                                    old.exit = true;
-//                                    ConnectorContext.threadMap.remove(td
-//                                            .getMSA());
-//                                }
-//                                ConnectorContext.threadMap.put(td.getMSA(),
-//                                        thread);
-//                            }
-                        } else if (type.equals("2")) {// TCP server 外网 通过端口号识别采集器
-                            for (TerminalDevice td : c.getTerminalList()) {
-                                ServerAccept accept = new ServerAccept(td, c.getCha_protocolCode());
-                                accept.start();
-                            }
-                        } else if (type.equals("3")) {// TCP CLIENT
-                            for (TerminalDevice td : c.getTerminalList()) {
-                                String tdAddressPort = td.getMSA();
-                                int index = tdAddressPort.indexOf(":");
-                                String ip = tdAddressPort.substring(0, index);
-                                int port = Integer.parseInt(tdAddressPort.substring(index + 1));
-                                ClientConnectThread thread = new ClientConnectThread(ip, port, c.getCha_protocolCode());
-                                thread.start();
-                            }
-                        } else if (type.equals("4")) {
-                            SocketAcceptor channel = serverSocketFactory.createServerSocket(c.getCha_addressPort(), c.getCha_protocolCode());
-                            try {
-                                channel.bind();
-                                LogFactory.getInstance().saveLog("采集服务启动", LogDao.operation);
-                            } catch (IOException e) {
-                                channel.unbind();
-                                channel.dispose();
-                                e.printStackTrace();
-                            }
-                        }else if(type.equals("5")){// client to client
-
+                        switch (type) {
+                            // 串口
+                            case "1":
+                                commMode(c);
+                                break;
+                            case "2": // TCP server 外网 通过端口号识别采集器
+                                tcpServerInternet(c);
+                                break;
+                            case "3": // TCP CLIENT
+                                tcpClient(c);
+                                break;
+                            case "4":
+                               break;
+                            case "5":
+                                tcpClient2Client(c);
+                                break;
                         }
                     } catch (Exception e) {
                         // TODO: handle exception
@@ -162,5 +120,92 @@ public class ChannelManageService extends PChannelService {
         }
         open(list);
     }
-
+    /**
+     * 方法名: 串口方式
+     * 描述:
+     * 参数:
+     * 返回值:
+     * 作者:高嵩
+     * 创建时间: 2019/9/3 21:01
+    **/
+    private void commMode(Channel c) {
+//        for (TerminalDevice td : c.getTerminalList()) {
+//            SerialParameters params = new SerialParameters();
+//            params.setBaudRate(9600);
+//            params.setCommPortId(td.getMSA());
+//            params.setDataBits(8);
+//            params.setStopBits(1);
+//            params.setParity(0);
+//            ModbusMaster master = null;
+//            if (c.getCha_protocolCode().equals("1")) {
+//                master = modbusFactory.createComTcpMaster(
+//                        params, 1);
+//            } else {
+//                master = modbusFactory.createRtuMaster(
+//                        params, 1);
+//            }
+//            GetDataThread thread = new GetDataThread(td,
+//                    master);
+//            thread.setName(td.getMSA());
+//            thread.start();
+//            if (ConnectorContext.threadMap.containsKey(td
+//                    .getMSA())) {
+//                BaseThread old = ConnectorContext.threadMap
+//                        .get(td.getMSA());
+//                old.exit = true;
+//                ConnectorContext.threadMap.remove(td
+//                        .getMSA());
+//            }
+//            ConnectorContext.threadMap.put(td.getMSA(),
+//                    thread);
+//        }
+    }
+    /**
+     * 方法名: tcp client
+     * 描述:
+     * 参数:
+     * 返回值:
+     * 作者:高嵩
+     * 创建时间: 2019/9/3 21:03
+    **/
+    private void tcpClient(Channel c){
+        for (TerminalDevice td : c.getTerminalList()) {
+            String tdAddressPort = td.getMSA();
+            int index = tdAddressPort.indexOf(":");
+            String ip = tdAddressPort.substring(0, index);
+            int port = Integer.parseInt(tdAddressPort.substring(index + 1));
+            ClientConnectThread thread = new ClientConnectThread(ip, port, c.getCha_protocolCode(),td);
+            thread.start();
+        }
+    }
+    private void tcpClient2Client(Channel c){
+        for (TerminalDevice td : c.getTerminalList()) {
+            String adressPort = td.getMSA();
+            int index = adressPort.indexOf(",");
+            String client1AddPort=adressPort.substring(0,index);
+            String client2AddPort=adressPort.substring(index+1);
+            int index1=client1AddPort.indexOf(":");
+            int index2=client2AddPort.indexOf(":");
+            String ip1 = client1AddPort.substring(0, index1);
+            int port1 = Integer.parseInt(client1AddPort.substring(index1 + 1));
+            String ip2 = client2AddPort.substring(0, index2);
+            int port2 = Integer.parseInt(client2AddPort.substring(index2 + 1));
+            ClientConnectThread thread = new ClientConnectThread(ip1, port1,ip2,port2, c.getCha_protocolCode(),td);
+            thread.start();
+        }
+    }
+    /**
+     * 方法名: tcp server 外网  通过端口号识别
+     * 描述:
+     * 参数:
+     * 返回值:
+     * 作者:高嵩
+     * 创建时间: 2019/9/3 21:04
+    **/
+    private void tcpServerInternet(Channel c){
+        for (TerminalDevice td : c.getTerminalList()) {
+            ServerAccept accept = new ServerAccept(td, c.getCha_protocolCode());
+            accept.start();
+        }
+    }
 }

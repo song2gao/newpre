@@ -129,6 +129,7 @@ public final class BussinessConfig {
                                                              int index) throws SQLException {
                                     TerminalDevice t = new TerminalDevice();
                                     t.setProcotolCode(c.getCha_protocolCode());
+                                    t.setNoticeManner(c.getCha_commMode());
                                     t.setPrimaryKey(rs.getString("id"));
                                     t.setCode(rs.getString("asstd_code"));
                                     t.setName(rs.getString("asstd_names"));
@@ -936,14 +937,13 @@ public final class BussinessConfig {
         return termianl;
     }
 
-    public static final TerminalDevice getTerminalByCode(String code)
-            throws Exception {
+    public static final TerminalDevice getTerminalByCode(String code) {
         for (TerminalDevice termianl : terminalList) {
             if (termianl.getCode().equals(code)) {
                 return termianl;
             }
         }
-        throw new Exception("不存在编码为" + code + "的采集器");
+       return  null;
     }
 
     public static BigDecimal getLastValue(String meterCode, String mmpCode) {
@@ -1084,5 +1084,17 @@ public final class BussinessConfig {
         String ipPort = session.getRemoteAddress().toString();
         int index = ipPort.indexOf(":");
         return ipPort.substring(1, index);
+    }
+    /**
+     * create by: 高嵩
+     * description: 得到该连接的远程port
+     * create time: 2019/8/26 9:58
+     * @params
+     * @return
+     */
+    public static int getRemotePort(IoSession session) {
+        String ipPort = session.getRemoteAddress().toString();
+        int index = ipPort.indexOf(":");
+        return Integer.parseInt(ipPort.substring(index+1));
     }
 }

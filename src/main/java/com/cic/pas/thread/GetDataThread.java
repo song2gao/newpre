@@ -15,7 +15,6 @@ import com.cic.pas.common.util.ModBusUtil;
 import com.cic.pas.common.util.Util;
 import com.cic.pas.procotol.s7.S7ReadRequest;
 import com.cic.pas.procotol.s7.S7WriteRequest;
-import com.cic.pas.service.ConnectorContext;
 import com.cic.pas.service.ServerContext;
 import org.apache.log4j.Logger;
 import org.apache.mina.core.session.IoSession;
@@ -25,8 +24,8 @@ public class GetDataThread extends BaseThread {
     private Logger logger = Logger.getLogger(GetDataThread.class);
     private Map<String, byte[]> map = new LinkedHashMap<String, byte[]>();
     private TerminalDevice td;
-    private Map<String,MeterDevice> nomalMeter;
-    private Map<String,MeterDevice> faultMeter;
+    private Map<String, MeterDevice> nomalMeter;
+    private Map<String, MeterDevice> faultMeter;
     public static boolean DEBUG = false;
     IoSession session;
     ModBusReadAndWrite modRW = new ModBusReadAndWrite();
@@ -37,8 +36,8 @@ public class GetDataThread extends BaseThread {
 
     public GetDataThread(TerminalDevice td, IoSession session) {
         this.td = td;
-        this.nomalMeter=td.getNormanMeter();
-        this.faultMeter=td.getFaultMeter();
+        this.nomalMeter = td.getNormanMeter();
+        this.faultMeter = td.getFaultMeter();
         this.session = session;
     }
 
@@ -118,7 +117,7 @@ public class GetDataThread extends BaseThread {
             firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 10 00 c2 02 03 01 c0 01 0a");
         }
         while (pduLength == 0) {
-            if(exit){
+            if (exit) {
                 break;
             }
             try {
@@ -169,8 +168,8 @@ public class GetDataThread extends BaseThread {
      * @params
      */
     private void sendGetDataBuff() {
-        if(faultMeter.size()==td.getMeterList().size()&&nomalMeter.size()==0){
-            logger.info("["+td.getName()+"]所有设备均不在线,断开采集器连接");
+        if (faultMeter.size() == td.getMeterList().size() && nomalMeter.size() == 0) {
+            logger.info("[" + td.getName() + "]所有设备均不在线,断开采集器连接");
             td.setFaultMeter(new HashMap<>());
             td.setNormanMeter(new HashMap<>());
             session.closeNow();
@@ -195,6 +194,20 @@ public class GetDataThread extends BaseThread {
             String ctdCode = key.substring(0, firstIndex);
             String type = key.substring(firstIndex + 1, lastIndex);//寄存器类型
             String address = key.substring(lastIndex + 1);
+            if(td.getNoticeAccord().equals("")){
+                int seq=Integer.parseInt(session.getAttribute("SEQ").toString());
+                seq++;
+                if(seq>15){
+                    seq=0;
+                }
+//                System.out.println("取出SEQ："+Integer.toHexString(112+seq));
+                byte byte13 = (byte) (112 +seq);
+                session.setAttribute("SEQ",seq);
+                values[13] = byte13;
+                for (int i = 0; i < 12; i++) {
+                    values[18] += values[6 + i];
+                }//cs
+            }
             session.setAttribute("ctdCode", ctdCode);
             session.setAttribute("readAddress", address);
             session.setAttribute("type", type);
@@ -250,15 +263,15 @@ public class GetDataThread extends BaseThread {
             if (md.getCode().equals(ctdCode)) {
                 if (value == 0) {
                     logger.info("<<=[采集器:" + td.getName() + "][表计" + md.getName() + "]=>>超时");
-                    if(nomalMeter.containsKey(ctdCode)){
+                    if (nomalMeter.containsKey(ctdCode)) {
                         nomalMeter.remove(ctdCode);
                     }
-                    faultMeter.put(ctdCode,md);
-                }else{
-                    if(faultMeter.containsKey(ctdCode)){
+                    faultMeter.put(ctdCode, md);
+                } else {
+                    if (faultMeter.containsKey(ctdCode)) {
                         faultMeter.remove(ctdCode);
                     }
-                    nomalMeter.put(ctdCode,md);
+                    nomalMeter.put(ctdCode, md);
                 }
                 md.setStatus(value);
                 break;
@@ -335,35 +348,35 @@ public class GetDataThread extends BaseThread {
 
     public void getSendBuffModBus(MeterDevice meter) {
         int meterAddress = meter.getAddress();
-        List<PointDevice> allPints = meter.getPointDevice();// 所有参数 含非采集参数
+//        List<PointDevice> allPints = meter.getPointDevice();// 所有参数 含非采集参数
         List<PointDevice> points = new ArrayList<PointDevice>();// 采集参数
-        MeterDevice timingMd = new MeterDevice();
-        timingMd.setCode(meter.getCode());
-        timingMd.setAddress(meter.getAddress());
-        timingMd.setIncrease(meter.getIncrease());
-        timingMd.setType(meter.getType());
-        timingMd.setPointDevice(new ArrayList<PointDevice>());
-        for (PointDevice p : allPints) {
-            if (p.getIsCollect() == 1) {
-                points.add(p);
-                if (p.getCode().equals("311")) {
-                    timingMd.getPointDevice().add(p);
-                }
-            } else {
-                timingMd.getPointDevice().add(p);
-            }
-        }
-        if (timingMd.getPointDevice().size() > 2) {
-            TimingRunStopThread t = new TimingRunStopThread(timingMd, this);
-            t.setName(meter.getName() + "自控");
-            t.start();
-            if (ConnectorContext.deviceAuto.containsKey(timingMd.getCode())) {
-                BaseThread old = ConnectorContext.deviceAuto.get(meter.getCode());
-                old.exit = true;
-                ConnectorContext.deviceAuto.remove(meter.getCode());
-            }
-            ConnectorContext.deviceAuto.put(meter.getCode(), t);
-        }
+//        MeterDevice timingMd = new MeterDevice();
+//        timingMd.setCode(meter.getCode());
+//        timingMd.setAddress(meter.getAddress());
+//        timingMd.setIncrease(meter.getIncrease());
+//        timingMd.setType(meter.getType());
+//        timingMd.setPointDevice(new ArrayList<PointDevice>());
+//        for (PointDevice p : allPints) {
+//            if (p.getIsCollect() == 1) {
+//                points.add(p);
+//                if (p.getCode().equals("311")) {
+//                    timingMd.getPointDevice().add(p);
+//                }
+//            } else {
+//                timingMd.getPointDevice().add(p);
+//            }
+//        }
+//        if (timingMd.getPointDevice().size() > 2) {
+//            TimingRunStopThread t = new TimingRunStopThread(timingMd, this);
+//            t.setName(meter.getName() + "自控");
+//            t.start();
+//            if (ConnectorContext.deviceAuto.containsKey(timingMd.getCode())) {
+//                BaseThread old = ConnectorContext.deviceAuto.get(meter.getCode());
+//                old.exit = true;
+//                ConnectorContext.deviceAuto.remove(meter.getCode());
+//            }
+//            ConnectorContext.deviceAuto.put(meter.getCode(), t);
+//        }
         int start = 0;
         int lastAddress = 0;
         int lastLen = 0;
@@ -432,19 +445,36 @@ public class GetDataThread extends BaseThread {
      * @params
      */
     public void getSendBuff3761(MeterDevice md) {
-        for (PointDevice pd : md.getPointDevice()) {
-            byte[] bytes = new byte[2];
-            int high = (int) ((md.getAddress() - 1) / 8) + 1;
-            int ab = md.getAddress() % 8;
-            if (ab == 0) {
-                ab = 8;
-            }
-            int low = (int) Math.pow(2, ab - 1);
-            bytes[0] = (byte) low;
-            bytes[1] = (byte) high;
-            String key = md.getCode() + ":" + pd.getStorageType() + ":" + pd.getModAddress();
-            map.put(key, bytes);
+        int terminal_id = Integer.parseInt(td.getCode());
+        byte[] sendBytes = new byte[20];
+        sendBytes[0] = sendBytes[5] = 0x68;
+        sendBytes[1] = sendBytes[3] = 0x32;
+        sendBytes[2] = sendBytes[4] = 0;
+        sendBytes[6] = (byte) Integer.parseInt("4B", 16);
+        sendBytes[7] = 0x02;
+        sendBytes[8] = 0x37;
+        sendBytes[9] = (byte) (terminal_id % 256);
+        sendBytes[10] = (byte) (terminal_id / 256);
+        sendBytes[11] = (byte) Integer.parseInt("F2", 16);
+        sendBytes[12] = (byte) Integer.parseInt("0C", 16);
+        sendBytes[13]=0;
+        int high=(md.getAddress()-1)/8+1;
+        int ab=md.getAddress()%8;
+        if(ab==0){
+            ab=8;
         }
+        int low=(int)Math.pow(2,ab-1);
+        sendBytes[14] = (byte)low;
+        sendBytes[15] = (byte) high;
+        sendBytes[16] = 0x01;
+        sendBytes[17] = 0x10;
+        sendBytes[18]=0;
+        for (int i = 0; i < 12; i++) {
+            sendBytes[18] += sendBytes[6 + i];
+        }//cs
+        sendBytes[19]=0x16;
+        String key = md.getCode() + ":3:31";
+        map.put(key, sendBytes);
     }
 
     /**

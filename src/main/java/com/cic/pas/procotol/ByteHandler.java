@@ -3,38 +3,21 @@
  */
 package com.cic.pas.procotol;
 
-import java.net.SocketAddress;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.cic.pas.service.ConnectorSocketFactory;
 import com.cic.pas.thread.BaseThread;
 import com.cic.pas.thread.GetDataThread;
 import org.apache.log4j.Logger;
-import org.apache.mina.core.future.CloseFuture;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
-import sun.reflect.generics.tree.Tree;
-
-import com.cic.pas.application.DBVisitService;
-import com.cic.pas.common.bean.Channel;
-import com.cic.pas.common.bean.MeterDevice;
-import com.cic.pas.common.bean.PointDevice;
 import com.cic.pas.common.bean.TerminalDevice;
-import com.cic.pas.common.util.CRC16M;
-import com.cic.pas.common.util.Util;
 import com.cic.pas.dao.BussinessConfig;
-import com.cic.pas.service.ConnectorContext;
 import com.cic.pas.service.ServerContext;
-import com.cic.pas.thread.ClientThread;
 
 /**
  * @author Administrator 终端和server进行通讯过程的处理
@@ -85,7 +68,7 @@ public class ByteHandler extends IoHandlerAdapter {
                 int index = ipPort.indexOf(":");
                 String ip = ipPort.substring(0, index);
                 int port = Integer.parseInt(ipPort.substring(index + 1));
-                socketConnector = ConnectorSocketFactory.getSocketConnector(ip, port, td.getProcotolCode());
+                socketConnector = ConnectorSocketFactory.getSocketConnector(ip, port, td.getProcotolCode(),td.getNoticeManner());
                 for (; ; ) {
                     try {
                         Thread.sleep(6000);
@@ -143,7 +126,7 @@ public class ByteHandler extends IoHandlerAdapter {
     @Override
     public void sessionOpened(IoSession session) {
         TerminalDevice td = getTerminalBySession(session);
-        if (td != null) {
+        if (td != null&&!td.getNoticeAccord().equals("Byte3761")) {
             ServerContext.addSession(session);
             td.setIsOnline(1);
             session.setAttribute("terminal_id", td.getCode());

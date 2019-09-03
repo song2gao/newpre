@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import com.cic.pas.service.ServerContext;
 import com.cic.pas.thread.BaseThread;
-import com.cic.pas.thread.Get3761DataThread;
+import com.cic.pas.thread.GetDataThread;
 import org.apache.log4j.Logger;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -18,7 +18,6 @@ import com.cic.pas.common.bean.TerminalDevice;
 import com.cic.pas.common.util.CRC16M;
 import com.cic.pas.common.util.Util;
 import com.cic.pas.dao.BussinessConfig;
-import com.cic.pas.service.ConnectorContext;
 
 public class Byte3761Decoder extends CumulativeProtocolDecoder {
     private Logger logger = Logger.getLogger(Byte3761Decoder.class);
@@ -151,9 +150,7 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
                     session.setAttribute("terminal_Name", t.getName());
                     session.setAttribute("login",true);
                     ServerContext.addSession(session);
-                   // LogFactory.getInstance().saveLog("采集设备 [ " + t.getName() + " ]正确接入系统", LogDao.warnning);
                     logger.info("采集设备 [ " + t.getName() + " ]正确接入系统");
-                    //createLog(terminal_id);
                     logger.info("[" + t.getName() + "登录帧]:[" + CRC16M.getBufHexStr(bytes) + "]");
                     byte[] bytes0 = new byte[20];// = Util.getByte(temp0);
                     bytes0[0] = bytes0[5] = 0x68;
@@ -180,7 +177,13 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
                     session.setAttribute("SEQ", seq);
                     session.setAttribute("RSEQ", rseq);
                     session.setAttribute("terminal_id",terminal_id);
+                    session.setAttribute("terminal_name", t.getName());
+                    session.setAttribute("terminal", t);
                     session.write(bytes0);
+                    BaseThread thread=new GetDataThread(t,session);
+                    thread.setName(t.getName()+"["+t.getCode()+"]");
+                    thread.start();
+                    ServerContext.addThread(t.getCode(), thread);
                 }
             }
         }else if(fN==3) {

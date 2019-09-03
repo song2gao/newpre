@@ -1,13 +1,9 @@
 package com.cic.pas.service;
 
 import java.net.InetSocketAddress;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import com.cic.pas.thread.BaseThread;
-import com.cic.pas.thread.ClientConnectThread;
+import com.cic.pas.procotol.Client2ClientHandler;
 import org.apache.log4j.Logger;
-import org.apache.mina.core.RuntimeIoException;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.session.IdleStatus;
@@ -16,13 +12,10 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.transport.socket.SocketConnector;
-import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 import com.cic.pas.common.util.ClassUtils;
-import com.cic.pas.dao.BussinessConfig;
 import com.cic.pas.procotol.ByteHandler;
-import com.cic.pas.thread.ClientThread;
 
 public class ConnectorSocketFactory {
 
@@ -68,8 +61,8 @@ public class ConnectorSocketFactory {
                                             .getPort() + "]成功");
                                     // ConnectorContext.socketConnectorlist.put(addressport,
                                     // value)
-                                    ConnectorContext.clientMap.put(address,
-                                            session);
+//                                    ConnectorContext.clientMap.put(address,
+//                                            session);
                                     break;
                                 }
                             } catch (Exception ex) {
@@ -113,7 +106,7 @@ public class ConnectorSocketFactory {
 //        socketConnector.dispose();
         return socketConnector;
     }
-    public static NioSocketConnector getSocketConnector(String address,int port,String protocol,int type){
+    public static NioSocketConnector getSocketConnector(String address,int port,String protocol,String type){
         NioSocketConnector socketConnector = new NioSocketConnector();
         socketConnector.setConnectTimeoutMillis(1000); // 设置连接超时
         try {
@@ -130,10 +123,15 @@ public class ConnectorSocketFactory {
             e.printStackTrace();
         }
         socketConnector.getSessionConfig().setIdleTime(IdleStatus.READER_IDLE, 60);
-        if(type==0) {
-            socketConnector.setHandler(new ByteHandler());
-        }else if(type==1){
-            socketConnector.setHandler(Client2ClientHandler());
+        switch (type){
+            case "2":
+            case "3":
+            case "4":
+                socketConnector.setHandler(new ByteHandler());
+                break;
+            case "5":
+                socketConnector.setHandler(new Client2ClientHandler());
+                break;
         }
         socketConnector.setDefaultRemoteAddress(new InetSocketAddress(
                 address, port));

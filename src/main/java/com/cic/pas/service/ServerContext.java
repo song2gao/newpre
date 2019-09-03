@@ -3,10 +3,7 @@ package com.cic.pas.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import com.cic.pas.thread.BaseThread;
 import org.apache.log4j.Logger;
@@ -50,6 +47,7 @@ public class ServerContext {
      * 保存所有连接到此服务器的终端的长连接session
      */
     public static Map<Long, IoSession> clientMap;
+    public static Map<String,Map<Long,IoSession>> client2clientMap;
     /**
      * 所有GetDataThread线程
      */
@@ -78,6 +76,7 @@ public class ServerContext {
     static {
         runtime = new Date();
         clientMap = new HashMap<Long, IoSession>();
+        client2clientMap=new HashMap<>();
         threadMap=new HashMap<String, BaseThread>();
         terminalCommunicationsLog = new HashMap<Integer, FileOutputStream>();
         serverSocketList = new HashMap<String, SocketAcceptor>();
@@ -106,6 +105,9 @@ public class ServerContext {
     }
     public final static void addThread(String terminalCode,BaseThread thread){
         if(thread!=null){
+            if(threadMap.containsKey(terminalCode)){
+                threadMap.remove(terminalCode);
+            }
             threadMap.put(terminalCode,thread);
         }
     }

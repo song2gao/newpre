@@ -1,14 +1,11 @@
 package com.cic.pas.thread;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 import com.cic.pas.service.ServerSocketFactory;
 import org.apache.log4j.Logger;
 
 import com.cic.pas.common.bean.TerminalDevice;
-import com.cic.pas.service.ConnectorContext;
 import org.apache.mina.transport.socket.SocketAcceptor;
 
 public class ServerAccept extends BaseThread {
