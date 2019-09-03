@@ -29,6 +29,7 @@ public class ConnectorSocketFactory {
     public static final Logger logger = Logger
             .getLogger(ServerSocketFactory.class);
 
+
     /**
      * 创建客户端连接
      *
@@ -112,7 +113,7 @@ public class ConnectorSocketFactory {
 //        socketConnector.dispose();
         return socketConnector;
     }
-    public static NioSocketConnector getSocketConnector(String address,int port,String protocol){
+    public static NioSocketConnector getSocketConnector(String address,int port,String protocol,int type){
         NioSocketConnector socketConnector = new NioSocketConnector();
         socketConnector.setConnectTimeoutMillis(1000); // 设置连接超时
         try {
@@ -129,7 +130,11 @@ public class ConnectorSocketFactory {
             e.printStackTrace();
         }
         socketConnector.getSessionConfig().setIdleTime(IdleStatus.READER_IDLE, 60);
-        socketConnector.setHandler(new ByteHandler());
+        if(type==0) {
+            socketConnector.setHandler(new ByteHandler());
+        }else if(type==1){
+            socketConnector.setHandler(Client2ClientHandler());
+        }
         socketConnector.setDefaultRemoteAddress(new InetSocketAddress(
                 address, port));
         return socketConnector;

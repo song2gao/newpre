@@ -132,6 +132,8 @@ public class ChannelManageService extends PChannelService {
                                 channel.dispose();
                                 e.printStackTrace();
                             }
+                        }else if(type.equals("5")){// client to client
+
                         }
                     } catch (Exception e) {
                         // TODO: handle exception
