@@ -40,12 +40,16 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
     @Override
     public boolean doDecode(IoSession session, IoBuffer in,
                             ProtocolDecoderOutput out) throws Exception {
-        if (in.remaining() > 0) {//
+        if (in.remaining() > 3) {//
+            System.out.println("ss:"+in.getHexDump());
+            int slaveId = (int) session.getAttribute("slaveId");
+            int len = (int) session.getAttribute("len");
             in.mark();// 标记当前位置，以便reset
             // 因为我的前数据包的长度是保存在第6字节中，
             int headSize = 3;
             byte[] headBytes = new byte[headSize];
             in.get(headBytes, 0, headSize);
+            int address= Util.bytesToInt(headBytes, 0, 1);
             int function = Util.bytesToInt(headBytes, 1, 2);
             int size = 0;
             if (function == 1 || function == 2 || function == 3 || function == 4) {
@@ -54,19 +58,24 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
                 size = 3;
             }
             in.reset();
+            if(slaveId!=address&&len*2!=size){
+                byte[] toDel=new byte[in.remaining()];
+                in.get(toDel);
+                return false;
+            }
             if (size + 5 > in.remaining()) {// 如果消息内容不够，则重置，相当于不读取size
                 return false;// 父类接收新数据，以拼凑成完整数据
             } else {
                 byte[] bytes = new byte[size + 5];
                 in.get(bytes);
-                int slaveId = (int) session.getAttribute("slaveId");
                 String terminal_id = session.getAttribute("terminal_id").toString();
                 int start = (int) session.getAttribute("start");
-                int len = (int) session.getAttribute("len");
                 String ctdCode = session.getAttribute("ctdCode").toString();
                 byte[] sendBytes = (byte[]) session.getAttribute("sendMessage");
                 String sendStr = CRC16M.getBufHexStr(sendBytes);
                 String recStr = CRC16M.getBufHexStr(bytes);
+                System.out.println("TX:"+sendStr);
+                System.out.println("RX:"+recStr);
                 checkMessage(session,terminal_id, ctdCode, slaveId, start, len, bytes, sendStr, recStr);
                 if (in.remaining() > 0) {// 如果读取内容后还粘了包，就让父类再重读 一次，进行下一次解析
                     // in.flip();

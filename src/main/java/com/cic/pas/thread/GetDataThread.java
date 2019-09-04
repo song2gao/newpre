@@ -194,7 +194,7 @@ public class GetDataThread extends BaseThread {
             String ctdCode = key.substring(0, firstIndex);
             String type = key.substring(firstIndex + 1, lastIndex);//寄存器类型
             String address = key.substring(lastIndex + 1);
-            if(td.getNoticeAccord().equals("")){
+            if(td.getNoticeAccord().equals("Byte3761")){
                 int seq=Integer.parseInt(session.getAttribute("SEQ").toString());
                 seq++;
                 if(seq>15){
@@ -207,6 +207,13 @@ public class GetDataThread extends BaseThread {
                 for (int i = 0; i < 12; i++) {
                     values[18] += values[6 + i];
                 }//cs
+            }else if(td.getNoticeAccord().indexOf("ModBus")>-1){
+                int slaveId = values[0];
+                int start = Util.bytesToInt(values, 2, 4);
+                int len = Util.bytesToInt(values, 4, 6);
+                session.setAttribute("slaveId", slaveId);
+                session.setAttribute("start", start);
+                session.setAttribute("len", len);
             }
             session.setAttribute("ctdCode", ctdCode);
             session.setAttribute("readAddress", address);
@@ -349,7 +356,7 @@ public class GetDataThread extends BaseThread {
     public void getSendBuffModBus(MeterDevice meter) {
         int meterAddress = meter.getAddress();
 //        List<PointDevice> allPints = meter.getPointDevice();// 所有参数 含非采集参数
-        List<PointDevice> points = new ArrayList<PointDevice>();// 采集参数
+        List<PointDevice> points =meter.getPointDevice();// 采集参数
 //        MeterDevice timingMd = new MeterDevice();
 //        timingMd.setCode(meter.getCode());
 //        timingMd.setAddress(meter.getAddress());

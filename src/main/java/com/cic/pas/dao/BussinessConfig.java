@@ -312,42 +312,51 @@ public final class BussinessConfig {
                                         public PointDevice mapRow(ResultSet rs,
                                                                   int index) throws SQLException {
                                             PointDevice pd = new PointDevice();
+                                            pd.setAsstdCode(t.getCode());
+                                            pd.setCtdCode(p.getCode());
+                                            pd.setCtdName(p.getName());
                                             pd.setId(rs.getString("id"));
+                                            pd.setCode(rs.getString("mmp_codes"));
+                                            pd.setName(rs.getString("mmp_names"));
                                             pd.setStorageType(rs.getInt("MMP_STORAGE_TYPE"));
+                                            pd.setDbIndex(rs.getInt("DB_INDEX"));
+                                            pd.setModAddress(rs.getBigDecimal("mod_address"));
+                                            pd.setPointLen(rs.getInt("mmp_length"));
                                             pd.setModWFunction(rs.getInt("MMP_W_FUNCTION"));
                                             pd.setModWAddress(rs.getBigDecimal("MOD_WADDRESS"));
                                             pd.setModWlength(rs.getInt("MMP_WLENGTH"));
                                             pd.setModWType(rs.getInt("MMP_W_TYPE"));
                                             pd.setModWFormular(rs.getString("MMP_W_FORMULAR"));
-                                            pd.setName(rs
-                                                    .getString("mmp_names"));
-                                            pd.setIsCalculate(rs.getInt("mmp_iscalculate"));
-                                            pd.setCtdCode(p.getCode());
-                                            pd.setAsstdCode(t.getCode());
-                                            pd.setUnits(rs
-                                                    .getString("mmp_units"));
-                                            pd.setCode(rs
-                                                    .getString("mmp_codes"));
+                                            pd.setUnits(rs.getString("mmp_units"));
                                             pd.setIsPlcAddress(rs.getInt("mmp_isplc"));
-                                            pd.setIsBit(rs.getInt("MMP_ISBIT"));
                                             pd.setRwType(rs.getInt("MMP_RWTYPE"));
-                                            pd.setModAddress(rs
-                                                    .getBigDecimal("mod_address"));
-                                            pd.setPointLen(rs
-                                                    .getInt("mmp_length"));
-                                            pd.setFormular(rs
-                                                    .getString("mmp_formular"));
+                                            pd.setIsBit(rs.getInt("MMP_ISBIT"));
+                                            pd.setIssave(rs.getInt("MMP_ISSAVE"));
+                                            pd.setIsCalculate(rs.getInt("mmp_iscalculate"));
+                                            pd.setFormular(rs.getString("mmp_formular"));
+                                            pd.setOrders(rs.getInt("MMP_ORDER"));
                                             pd.setIsCt(rs.getInt("MMP_ISCT"));
                                             pd.setIsPt(rs.getInt("MMP_ISPT"));
-                                            pd.setIssave(rs
-                                                    .getInt("MMP_ISSAVE"));
                                             pd.setUp_line(rs.getDouble("mmp_up_value"));
                                             pd.setDown_line(rs.getDouble("mmp_down_value"));
                                             pd.setMmpIsAlarm(rs.getInt("MMP_IS_ALARM"));
-                                            pd.setIsCollect(rs.getInt("MMP_ISCOLLECT"));
-                                            pd.setShowValue(rs.getString("MMP_SET_VALUE"));
+                                            pd.setIsCollect(rs.getInt("MMP_IS_COLLECT"));
+                                            if (pd.getIsCalculate() == 1) {
+                                                BigDecimal lastValue = getLastValue(
+                                                        p.getCode(),
+                                                        pd.getCode());
+                                                if (lastValue != null && lastValue.compareTo(BigDecimal.ZERO) != 0) {
+                                                    pd.setLastPointValue(lastValue);
+                                                    pd.setValue(lastValue);
+                                                    pd.setShowValue(lastValue + "");
+                                                }
+                                            }
                                             pd.setCtmType(p.getPcpcEnergyType());
+                                            if (!p.getType().equals("3")) {
+                                            }
+                                            pd.setPreType(p.getType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
+                                            pd.setSystemCode(rs.getString("MMP_BACKUPS"));
                                             pd.setMmpSystemRefCount(getPointCountOfSystemRef(p.getCode(),pd.getCode()));
                                             return pd;
                                         }

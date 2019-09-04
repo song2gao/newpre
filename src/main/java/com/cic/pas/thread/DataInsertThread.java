@@ -25,7 +25,7 @@ public class DataInsertThread extends Thread {
              *存储周期  分钟
              * 默认 15分钟
              */
-            int saveCycle=15;
+            int saveCycle = 15;
             int m = ca.get(Calendar.MINUTE);
             int h = ca.get(Calendar.HOUR_OF_DAY);
             int day = ca.get(Calendar.DAY_OF_MONTH);
@@ -72,7 +72,7 @@ public class DataInsertThread extends Thread {
                 point = 96;
             }
             toBulidDayData(ca, format, datetime, point);
-            toBulidSystemDayData(datetime,point);
+            toBulidSystemDayData(datetime, point);
             DBVisitService
                     .batchInsertTemp(BussinessConfig.config.daylist);
             DBVisitService.batchInsertSystemTemp(BussinessConfig.systemDayList);
@@ -110,28 +110,25 @@ public class DataInsertThread extends Thread {
         Class<EsmspSumMeasurOrganizationYear> yearClass = EsmspSumMeasurOrganizationYear.class;
         for (TerminalDevice t : terminalDevices) {
             for (MeterDevice md : t.getMeterList()) {
-                /**
-                 * 计量数据
-                 */
-                if (md.getPcpcEnergyType().equals("1") || md.getPcpcEnergyType().equals("2") || md.getPcpcEnergyType().equals("3") || md.getPcpcEnergyType().equals("4")) {
-                    String eusCode = md.getCode();
-                    for (PointDevice pd : md.getPointDevice()) {
-                        if (pd.getIssave() == 1) {
-                            BulidDayData(ca, format, datetime, point,
-                                    dayClass, monthClass, yearClass,
-                                    eusCode, pd);
-                        }
+                String eusCode = md.getCode();
+                for (PointDevice pd : md.getPointDevice()) {
+                    if (pd.getIssave() == 1) {
+                        BulidDayData(ca, format, datetime, point,
+                                dayClass, monthClass, yearClass,
+                                eusCode, pd);
                     }
                 }
             }
         }
     }
+
     /**
      * create by: 高嵩
      * description: 准备生成用能系统日数据
      * create time: 2019/8/8 13:20
-     * @params
+     *
      * @return
+     * @params
      */
     private void toBulidSystemDayData(String datetime, int point) throws Exception {
         Class<EsmspSumMeasurSystemDay> dayClass = EsmspSumMeasurSystemDay.class;
@@ -156,16 +153,16 @@ public class DataInsertThread extends Thread {
      * @params
      */
     private void BulidSystemDayData(
-                                    String datetime, int point,
-                                    Class<EsmspSumMeasurSystemDay> dayClass,
-                                    PomsEnergyUsingFacilitiesModelPoint pd) throws Exception {
+            String datetime, int point,
+            Class<EsmspSumMeasurSystemDay> dayClass,
+            PomsEnergyUsingFacilitiesModelPoint pd) throws Exception {
         boolean dayIsExi = false;
         String mmpCode = pd.getMmpCode();
         EsmspSumMeasurSystemDay organizationDay = new EsmspSumMeasurSystemDay();
         try {
             for (EsmspSumMeasurSystemDay d : BussinessConfig.systemDayList) {
                 if (d.getSystemCode() != null && d.getMmpCode() != null) {
-                    if (d.getSystemCode().equals(pd.getSystemCode())&&d.getFacilityCode().equals(pd.getFacilityCode())
+                    if (d.getSystemCode().equals(pd.getSystemCode()) && d.getFacilityCode().equals(pd.getFacilityCode())
                             && d.getMmpCode().equals(mmpCode)) {
                         if (point == 1) {// 新的一天 日累计 峰、谷、平、 最值重置
                             for (EsmspSumMeasurSystemDay item : BussinessConfig.systemDayList) {

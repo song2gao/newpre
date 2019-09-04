@@ -26,12 +26,6 @@ public class ByteModBusTcpEncoder  extends ProtocolEncoderAdapter {
         buff.setAutoExpand(true);
         buff.setAutoShrink(true);
         byte[] a = (byte[]) message;
-        int slaveId = a[0];
-        int start = Util.bytesToInt(a, 2, 4);
-        int len = Util.bytesToInt(a, 4, 6);
-        session.setAttribute("slaveId", slaveId);
-        session.setAttribute("start", start);
-        session.setAttribute("len", len);
         int size=a.length;
         byte[] send=new byte[size+6];
         send[0]=(byte)(headId&(0xff>>8));
