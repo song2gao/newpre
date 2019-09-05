@@ -296,7 +296,7 @@ public final class BussinessConfig {
                                             return pd;
                                         }
                                     });
-                    sql = "select * from poms_device_measur_point where device_id = ?  order by MMP_STORAGE_TYPE,";
+                    sql = "select * from poms_device_measur_point where CAL_id = ?  order by MMP_STORAGE_TYPE,";
                     if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
                         sql += "cast(MOD_ADDRESS as  integer)";
                     } else {

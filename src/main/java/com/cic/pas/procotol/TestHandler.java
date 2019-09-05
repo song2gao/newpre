@@ -3,27 +3,9 @@
  */
 package com.cic.pas.procotol;
 
-import java.net.SocketAddress;
-import java.util.Calendar;
-import java.util.List;
-
-import org.apache.log4j.Logger;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-
-import sun.reflect.generics.tree.Tree;
-
-import com.cic.pas.application.DBVisitService;
-import com.cic.pas.common.bean.MeterDevice;
-import com.cic.pas.common.bean.PointDevice;
-import com.cic.pas.common.bean.TerminalDevice;
-import com.cic.pas.common.util.CRC16M;
-import com.cic.pas.common.util.Util;
-import com.cic.pas.dao.BussinessConfig;
-import com.cic.pas.service.ConnectorContext;
-import com.cic.pas.service.ServerContext;
-import com.cic.pas.thread.ClientThread;
 
 /**
  * @author Administrator 终端和server进行通讯过程的处理

@@ -41,7 +41,6 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
     public boolean doDecode(IoSession session, IoBuffer in,
                             ProtocolDecoderOutput out) throws Exception {
         if (in.remaining() > 3) {//
-            System.out.println("ss:"+in.getHexDump());
             int slaveId = (int) session.getAttribute("slaveId");
             int len = (int) session.getAttribute("len");
             in.mark();// 标记当前位置，以便reset
@@ -74,8 +73,8 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
                 byte[] sendBytes = (byte[]) session.getAttribute("sendMessage");
                 String sendStr = CRC16M.getBufHexStr(sendBytes);
                 String recStr = CRC16M.getBufHexStr(bytes);
-                System.out.println("TX:"+sendStr);
-                System.out.println("RX:"+recStr);
+//                System.out.println("TX:"+sendStr);
+//                System.out.println("RX:"+recStr);
                 checkMessage(session,terminal_id, ctdCode, slaveId, start, len, bytes, sendStr, recStr);
                 if (in.remaining() > 0) {// 如果读取内容后还粘了包，就让父类再重读 一次，进行下一次解析
                     // in.flip();
