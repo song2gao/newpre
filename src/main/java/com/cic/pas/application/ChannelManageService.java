@@ -88,7 +88,8 @@ public class ChannelManageService extends PChannelService {
                                 tcpClient(c);
                                 break;
                             case "4":
-                               break;
+                                tcpServer(c);
+                                break;
                             case "5":
                                 tcpClient2Client(c);
                                 break;
@@ -120,6 +121,7 @@ public class ChannelManageService extends PChannelService {
         }
         open(list);
     }
+
     /**
      * 方法名: 串口方式
      * 描述:
@@ -127,7 +129,7 @@ public class ChannelManageService extends PChannelService {
      * 返回值:
      * 作者:高嵩
      * 创建时间: 2019/9/3 21:01
-    **/
+     **/
     private void commMode(Channel c) {
 //        for (TerminalDevice td : c.getTerminalList()) {
 //            SerialParameters params = new SerialParameters();
@@ -160,6 +162,7 @@ public class ChannelManageService extends PChannelService {
 //                    thread);
 //        }
     }
+
     /**
      * 方法名: tcp client
      * 描述:
@@ -167,33 +170,35 @@ public class ChannelManageService extends PChannelService {
      * 返回值:
      * 作者:高嵩
      * 创建时间: 2019/9/3 21:03
-    **/
-    private void tcpClient(Channel c){
+     **/
+    private void tcpClient(Channel c) {
         for (TerminalDevice td : c.getTerminalList()) {
             String tdAddressPort = td.getMSA();
             int index = tdAddressPort.indexOf(":");
             String ip = tdAddressPort.substring(0, index);
             int port = Integer.parseInt(tdAddressPort.substring(index + 1));
-            ClientConnectThread thread = new ClientConnectThread(ip, port, c.getCha_protocolCode(),td);
+            ClientConnectThread thread = new ClientConnectThread(ip, port, c.getCha_protocolCode(), td);
             thread.start();
         }
     }
-    private void tcpClient2Client(Channel c){
+
+    private void tcpClient2Client(Channel c) {
         for (TerminalDevice td : c.getTerminalList()) {
             String adressPort = td.getMSA();
             int index = adressPort.indexOf(",");
-            String client1AddPort=adressPort.substring(0,index);
-            String client2AddPort=adressPort.substring(index+1);
-            int index1=client1AddPort.indexOf(":");
-            int index2=client2AddPort.indexOf(":");
+            String client1AddPort = adressPort.substring(0, index);
+            String client2AddPort = adressPort.substring(index + 1);
+            int index1 = client1AddPort.indexOf(":");
+            int index2 = client2AddPort.indexOf(":");
             String ip1 = client1AddPort.substring(0, index1);
             int port1 = Integer.parseInt(client1AddPort.substring(index1 + 1));
             String ip2 = client2AddPort.substring(0, index2);
             int port2 = Integer.parseInt(client2AddPort.substring(index2 + 1));
-            ClientConnectThread thread = new ClientConnectThread(ip1, port1,ip2,port2, c.getCha_protocolCode(),td);
+            ClientConnectThread thread = new ClientConnectThread(ip1, port1, ip2, port2, c.getCha_protocolCode(), td);
             thread.start();
         }
     }
+
     /**
      * 方法名: tcp server 外网  通过端口号识别
      * 描述:
@@ -201,11 +206,35 @@ public class ChannelManageService extends PChannelService {
      * 返回值:
      * 作者:高嵩
      * 创建时间: 2019/9/3 21:04
-    **/
-    private void tcpServerInternet(Channel c){
+     **/
+    private void tcpServerInternet(Channel c) {
         for (TerminalDevice td : c.getTerminalList()) {
-            ServerAccept accept = new ServerAccept(td, c.getCha_protocolCode());
-            accept.start();
+            try{
+                int port=Integer.parseInt(td.getMSA());
+                ServerAccept accept = new ServerAccept(port, c.getCha_protocolCode());
+                accept.start();
+            }catch (Exception e){
+                logger.info(e);
+            }
         }
+    }
+
+    /**
+     * 方法名: tcp server 外网  通过端口号识别
+     * 描述:
+     * 参数:
+     * 返回值:
+     * 作者:高嵩
+     * 创建时间: 2019/9/3 21:04
+     **/
+    private void tcpServer(Channel c) {
+        try{
+            int port=Integer.parseInt(c.getCha_addressPort());
+            ServerAccept accept = new ServerAccept(port, c.getCha_protocolCode());
+            accept.start();
+        }catch (Exception e){
+            logger.info(e);
+        }
+
     }
 }

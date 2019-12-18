@@ -761,6 +761,13 @@ public class Util {
                 return new Short((short) (((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff)));
             case DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED:
                 return new Short((short) (((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+            case DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED_NOT:
+                Short value=new Short((short) (((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+                if(value==0){
+                    return 1;
+                }else{
+                    return 0;
+                }
             case DataType.TWO_BYTE_BCD:
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < 2; i++) {

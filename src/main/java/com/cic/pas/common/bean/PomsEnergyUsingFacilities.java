@@ -11,7 +11,7 @@ public class PomsEnergyUsingFacilities {
 
     private String facilitiesTypeCode;
 
-    private String preModelCode;
+    private String[] preModelCode;
 
     private String facilitiesCode;
 
@@ -89,11 +89,11 @@ public class PomsEnergyUsingFacilities {
         this.pointList = pointList;
     }
 
-    public String getPreModelCode() {
+    public String[] getPreModelCode() {
         return preModelCode;
     }
 
-    public void setPreModelCode(String preModelCode) {
+    public void setPreModelCode(String[] preModelCode) {
         this.preModelCode = preModelCode;
     }
 

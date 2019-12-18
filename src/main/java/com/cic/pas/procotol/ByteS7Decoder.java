@@ -6,10 +6,8 @@ import com.cic.pas.common.bean.PointDevice;
 import com.cic.pas.common.bean.TerminalDevice;
 import com.cic.pas.common.util.CRC16M;
 import com.cic.pas.common.util.DataType;
-import com.cic.pas.common.util.ModBusUtil;
 import com.cic.pas.common.util.Util;
 import com.cic.pas.dao.BussinessConfig;
-import com.cic.pas.procotol.s7.S7ReadResponse;
 import com.cic.pas.procotol.s7.S7Response;
 import com.cic.pas.service.ServerContext;
 import com.cic.pas.thread.BaseThread;
@@ -20,6 +18,8 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,8 +47,16 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                 byte[] bytes = new byte[size];
                 in.get(bytes, 0, size);
                 String terminal_id = session.getAttribute("terminal_id").toString();
-                int cotpFunction = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 5, DataType.ONE_BYTE).toString());
-                int function = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 19, DataType.ONE_BYTE).toString());
+                int cotpFunction=0;
+                int function=0;
+                try {
+                    cotpFunction = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 5, DataType.ONE_BYTE).toString());
+                    function = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 19, DataType.ONE_BYTE).toString());
+                } catch (Exception e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    String exception = baos.toString();
+                    logger.info(exception);
+                }
                 if (bytes.length == 22 && cotpFunction == 208) {
 //                    logger.info("一次握手成功\r\n报文：" + CRC16M.getBufHexStr(bytes));
                     session.write(secondHand);
@@ -60,7 +68,7 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                         thread.pduLength = pduLength;
                     }
                 } else {
-                    analyticMessage(bytes,terminal_id,session);
+                    analyticMessage(bytes, terminal_id, session);
                 }
                 if (in.remaining() > 0) {// 如果读取内容后还粘了包，就让父类再重读 一次，进行下一次解析
                     // in.flip();
@@ -71,13 +79,24 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
         return false;// 处理成功，让父类进行接收下个包
     }
 
-    public void analyticMessage(byte[] message, String terminal_id,IoSession session) {
+    public void analyticMessage(byte[] message, String terminal_id, IoSession session) {
         String ctdCode = session.getAttribute("ctdCode").toString();
         int readType = Integer.parseInt(session.getAttribute("readType").toString());
-        int type=Integer.parseInt(session.getAttribute("type").toString());
+        int type = Integer.parseInt(session.getAttribute("type").toString());
         BigDecimal readAddress = new BigDecimal(session.getAttribute("readAddress").toString());
         S7Response response = new S7Response();
-        response.setResponseBytes(message);
+        try
+        {
+            response.setResponseBytes(message);
+        }catch (Exception e){
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.info(exception);
+            String sendMessage=session.getAttribute("sendMessage").toString();
+            logger.info(sendMessage);
+            logger.info(CRC16M.getBufHexStr(message));
+        }
         if (response.getReturnCode() == (byte) 0xff && response.getErrorClass() == 0 && response.getErrorCode() == 0) {
             if (response.getFunction() == 0x04) {
                 byte[] data = response.getResponseData();
@@ -87,14 +106,17 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                     BigDecimal lastlen = new BigDecimal(0);
                     for (PointDevice pd : md.getPointDevice()) {
                         readAddress = readAddress.add(lastlen);
-                        if (pd.getModAddress().compareTo(readAddress) == 0&&pd.getStorageType()==type) {
+                        if (pd.getModAddress().compareTo(readAddress) == 0 && pd.getStorageType() == type) {
                             BigDecimal pointlen = new BigDecimal(0);
                             if (i.intValue() + pointlen.intValue() > data.length) {
                                 break;
                             }
+                            if (lastlen.compareTo(BigDecimal.ZERO) == 0) {
+                                lastlen = readAddress.subtract(new BigDecimal(readAddress.intValue()));
+                            }
+                            i = i.add(lastlen);
                             pointlen = setPointValues(data, readAddress, md, i, pd, readType);
                             lastlen = pointlen;
-                            i = i.add(lastlen);
                             BigDecimal pointValue = pd.getModAddress().subtract(new BigDecimal(pd.getModAddress().intValue()));
                             int flag = pointValue.compareTo(new BigDecimal("0.6"));
                             if (flag > 0) {
@@ -106,8 +128,8 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                     }
                 }
             } else if (response.getFunction() == 0x05) {
-                if(response.getReturnCode()==(byte)0xff){
-                    session.setAttribute("writeResult",true);
+                if (response.getReturnCode() == (byte) 0xff) {
+                    session.setAttribute("writeResult", true);
                 }
             }
         } else {
@@ -133,22 +155,27 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
 
     private BigDecimal setPointValues(byte[] data, BigDecimal address, MeterDevice md, BigDecimal i, PointDevice pd, int readType) {
         BigDecimal pointlen;
-        BigDecimal value;
+        BigDecimal value = new BigDecimal(0);
         if (pd.getMmpType() == 1) {
             pointlen = new BigDecimal(pd.getPointLen()).divide(new BigDecimal("10"));
             if (readType == 1) {
                 value = new BigDecimal(data[i.intValue()]);
             } else {
-                byte b = Byte.parseByte(Util.bytesToValueRealOffset(data, i.intValue(),
-                        DataType.ONE_BYTE).toString());
+//               Object obj=Util.bytesToValueRealOffset(data,i.intValue(),DataType.ONE_BYTE);
+                byte b = data[i.intValue()];
                 byte[] bins = Util.byteToBinaryArray(b);
                 int binIndex = address.subtract(new BigDecimal(address.intValue())).multiply(new BigDecimal("10")).intValue();
                 value = new BigDecimal(bins[binIndex]);
             }
         } else {
             pointlen = new BigDecimal(pd.getPointLen());
-            value = new BigDecimal(Util.bytesToValueRealOffset(data, i.intValue(),
-                    pd.getMmpType()).toString());
+            try {
+                value = new BigDecimal(Util.bytesToValueRealOffset(data, i.intValue(),
+                        pd.getMmpType()).toString());
+            } catch (Exception e) {
+                System.out.println(pd.getName() + ":" + pd.getModAddress() + "[" + pd.getPointLen() + "]");
+                e.printStackTrace();
+            }
         }
         if (pd.getIsCt() == 1) {
             value = value.multiply(new BigDecimal(md.getCt()));
@@ -160,10 +187,10 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
         try {
             if (pd.getIsBit() == 1) {
                 try {
-                    List<Option> options=pd.getOptions();
-                    if ( options!= null&&options.size()>0) {
-                        for(Option option:options){
-                            if(option.getKey().equals(value.intValue()+"")){
+                    List<Option> options = pd.getOptions();
+                    if (options != null && options.size() > 0) {
+                        for (Option option : options) {
+                            if (option.getKey().equals(value.intValue() + "")) {
                                 showValue = option.getValue();
                                 break;
                             }

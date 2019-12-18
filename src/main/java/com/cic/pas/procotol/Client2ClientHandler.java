@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * @author Administrator 终端和server进行通讯过程的处理
  */
-public class Client2ClientHandler extends IoHandlerAdapter {
+public class  Client2ClientHandler extends IoHandlerAdapter {
     public static byte PFC = 0;
     private static final Logger logger = Logger.getLogger(ByteHandler.class);
     private static Map<String, Integer> map = new HashMap<String, Integer>();

@@ -48,7 +48,7 @@ public class ServerSocketFactory {
 	 * @throws InstantiationException
 	 */
 
-	public SocketAcceptor createServerSocket(String address, String protocol) {
+	public SocketAcceptor createServerSocket(int port, String protocol) {
 		SocketAcceptor socketAcceptor = new NioSocketAcceptor();
 		try {
 			socketAcceptor.getFilterChain().addLast(
@@ -66,9 +66,8 @@ public class ServerSocketFactory {
 				new ExecutorFilter(Executors.newCachedThreadPool()));
 		socketAcceptor.setHandler(new ByteHandler());
 		socketAcceptor.getSessionConfig().setReadBufferSize(16383 + 8);// Buffer大小告诉底层操作系统应该分配多大空间放置到来的数据
-		socketAcceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 60);
+		socketAcceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 60*5);
 		//TODO 端口号从address中截取的处理
-		String port = address.substring(address.indexOf(":")+1);
 		socketAcceptor.setDefaultLocalAddress(new InetSocketAddress(Integer
 				.valueOf(port)));
 		// 将端口监听服务放入map进行管理

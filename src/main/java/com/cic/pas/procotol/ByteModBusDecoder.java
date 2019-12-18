@@ -15,7 +15,7 @@ import com.cic.pas.common.util.Util;
 public class ByteModBusDecoder {
     private Logger logger = Logger.getLogger(ByteModBusDecoder.class);
 
-    public void decoder(String terminalCode, String ctdCode, int start, byte[] data, String sendStr, String receivedStr) {
+    public void decoder(String terminalCode, String ctdCode, int function, BigDecimal start, byte[] data, String sendStr, String receivedStr) {
         for (TerminalDevice td : BussinessConfig.terminalList) {
             if (td.getCode().equals(terminalCode)) {
                 for (MeterDevice md : td.getMeterList()) {
@@ -23,19 +23,44 @@ public class ByteModBusDecoder {
 //                        md.setStatus(1);
                         int i = 0;
                         int lastlen = 0;
+                        int lastMMpType = 0;
+                        int currentlen = 0;
                         for (PointDevice pd : md.getPointDevice()) {
-                            start += lastlen;
-                            int address = pd.getModAddress().intValue() + md.getIncrease();
-                            int pointAddress = ModBusUtil.getProtocolCodeAndAddress(address, pd.getIsPlcAddress());
-                            if (pointAddress == start) {
-                                int pointlen = pd.getPointLen();
-                                if (pd.getMmpType() != 1) {
-                                    pointlen = pointlen * 2;
+                            if (lastMMpType == 1) {
+                                BigDecimal realLastLen = new BigDecimal(lastlen);
+                                if (function == 3 || function == 4) {
+                                    realLastLen = realLastLen.divide(new BigDecimal("100"));
                                 }
-                                if (i + pointlen > data.length) {
-                                    break;
+                                start = start.add(realLastLen);
+                                if (start.subtract(new BigDecimal(start.intValue())).compareTo(new BigDecimal("0.15")) > 0) {//如果start小数部分大于0.15
+                                    start = new BigDecimal(start.intValue() + 1);
                                 }
-                                BigDecimal value = new BigDecimal(Util
+                            } else {
+                                start = start.add(new BigDecimal(lastlen));
+                            }
+                            BigDecimal address = pd.getModAddress().add(new BigDecimal(md.getIncrease()));
+                            BigDecimal pointAddress = ModBusUtil.getProtocolCodeAndAddress(address, pd.getIsPlcAddress());
+                            if (pointAddress.compareTo(start) == 0) {
+                                currentlen = pd.getPointLen();
+                                if (pd.getMmpType() == 1) {
+                                    if (i + currentlen > data.length) {
+                                        break;
+                                    }
+                                } else {
+                                    if (i + currentlen * 2 > data.length) {
+                                        break;
+                                    }
+                                }
+                                BigDecimal value = null;
+                                if (pd.getMmpType() == 1) {
+                                    BigDecimal addressPoint=address.subtract(new BigDecimal(address.intValue()));//地址小数部分
+                                    if (addressPoint.compareTo(BigDecimal.ZERO) > 0) {//地址小数部分不为0 是用03 04指令读取 重新定义位数组下标
+                                        if(i==0){
+                                            i=addressPoint.multiply(new BigDecimal("100")).intValue();
+                                        }
+                                    }
+                                }
+                                value = new BigDecimal(Util
                                         .bytesToValueRealOffset(data, i,
                                                 pd.getMmpType()).toString());
                                 if (pd.getIsCt() == 1) {
@@ -47,10 +72,10 @@ public class ByteModBusDecoder {
                                 String showValue = value + "";
                                 try {
                                     if (pd.getIsBit() == 1) {
-                                        List<Option> options=pd.getOptions();
-                                        if ( options!= null&&options.size()>0) {
-                                            for(Option option:options){
-                                                if(option.getKey().equals(value.intValue()+"")){
+                                        List<Option> options = pd.getOptions();
+                                        if (options != null && options.size() > 0) {
+                                            for (Option option : options) {
+                                                if (option.getKey().equals(value.intValue() + "")) {
                                                     showValue = option.getValue();
                                                     break;
                                                 }
@@ -69,26 +94,30 @@ public class ByteModBusDecoder {
                                     String dateTime = new SimpleDateFormat(
                                             "yyyy-MM-dd HH:mm:ss").format(new Date());
                                     pd.setTime(dateTime);
-                                    if(pd.getCode().equals("10000")){//PLC采集表计通讯状态
-                                        if(pd.getValue().intValue()>0) {
+                                    if (pd.getCode().equals("10000")) {//PLC采集表计通讯状态
+                                        if (pd.getValue().intValue() > 0) {
                                             md.setStatus(0);
-                                        }else{
+                                        } else {
                                             md.setStatus(1);
                                             md.setLastCollectDate(dateTime);
                                         }
-                                    }else {
-                                        if(getOnlineStatus(md)){
+                                    } else {
+                                        if (getOnlineStatus(md)) {
                                             md.setStatus(1);
                                         }
                                         md.setLastCollectDate(dateTime);
                                     }
+                                    if(md.getIsinvented()==2){
+                                        setInventedMeterData(td,pd);
+                                    }
                                     setSystemParams(ctdCode, pd.getCode(), value);
                                 }
-                                lastlen = pd.getPointLen();
+                                lastlen = currentlen;
+                                lastMMpType = pd.getMmpType();
                                 if (pd.getMmpType() == 1) {
-                                    i += pd.getPointLen();
+                                    i += currentlen;
                                 } else {
-                                    i += pd.getPointLen() * 2;
+                                    i += currentlen * 2;
                                 }
                             }
                         }
@@ -99,6 +128,7 @@ public class ByteModBusDecoder {
             }
         }
     }
+
     public void setSystemParams(String ctdCode, String mmpCode, BigDecimal value) {
         for (SystemParams param : BussinessConfig.systemParams) {
             if (param.getCalCode().equals(ctdCode) && param.getMmpCode().equals(mmpCode)) {
@@ -109,6 +139,7 @@ public class ByteModBusDecoder {
         }
 
     }
+
     public BigDecimal getPointValue(BigDecimal value, int point) {
         if (point == 0) {
             return value;
@@ -168,16 +199,42 @@ public class ByteModBusDecoder {
         }
     }
 
-    public static boolean getOnlineStatus(MeterDevice md){
-        for(PointDevice pd:md.getPointDevice()){
-            if(pd.getCode().equals("10000")){
-                if(pd.getValue().intValue()>0){
+    public static boolean getOnlineStatus(MeterDevice md) {
+        for (PointDevice pd : md.getPointDevice()) {
+            if (pd.getCode().equals("10000")) {
+                if (pd.getValue().intValue() > 0) {
                     return false;
-                }else{
+                } else {
                     return true;
                 }
             }
         }
         return true;
+    }
+    /**
+     * create by: 高嵩
+     * description: 给虚拟表进行赋值
+     * create time: 2019/12/11 16:11
+     * @params
+     * @return
+     */
+    public static void setInventedMeterData(TerminalDevice td,PointDevice pd){
+        boolean isFind=false;
+        for(MeterDevice md:td.getMeterList()){
+            if(md.getIsinvented()==1){
+                if(md.getIncrease()==pd.getModAddress().intValue()){
+                    for(PointDevice p:md.getPointDevice()){
+                        p.setValue(pd.getValue());
+                        p.setTime(pd.getTime());
+                        md.setStatus(1);
+                        isFind=true;
+                        break;
+                    }
+                }
+                if(isFind){
+                    break;
+                }
+            }
+        }
     }
 }

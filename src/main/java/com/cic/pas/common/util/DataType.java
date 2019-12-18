@@ -30,6 +30,7 @@ public class DataType {
 
     public static final int TWO_BYTE_INT_UNSIGNED = 2;//无符号短整型
     public static final int TWO_BYTE_INT_UNSIGNED_SWAPPED = 22;//无符号短整型反转
+    public static final int TWO_BYTE_INT_UNSIGNED_SWAPPED_NOT = 30;//无符号短整型取非
     public static final int TWO_BYTE_INT_SIGNED = 3;//有符号短整型
     public static final int FOUR_BYTE_INT_UNSIGNED = 4;//无符号长整型
     public static final int FOUR_BYTE_INT_SIGNED = 5;//有符号长整型

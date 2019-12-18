@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.cic.domain.PomsCalculateAlterRecord;
 import com.cic.pas.application.DBVisitService;
+import com.cic.pas.common.util.ArrayUtils;
 import com.cic.pas.common.util.StringUtils;
 import com.cic.pas.common.util.Util;
 import com.cic.pas.dao.BussinessConfig;
@@ -489,7 +490,6 @@ public class PointDevice implements Serializable {
             previousValue = this.value;
             this.value = value;
         }
-
         setSystemData();
     }
 
@@ -504,7 +504,7 @@ public class PointDevice implements Serializable {
                     break;
                 }
                 for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
-                    if (point.getMeasurMmpCode().equals(getCode()) && point.getMeterCode().equals(getCtdCode())) {
+                    if (point.getMeasurMmpCode().equals(getCode()) &&ArrayUtils.inArray(point.getMeterCode(),getCtdCode())) {
                         point.setValue(getValue());
                         point.setMmpUnit(getUnits());
                         point.setIsBit(getIsBit());
@@ -517,7 +517,7 @@ public class PointDevice implements Serializable {
                             point.setFormatMap(map);
                         }
                         point.setRwType(getRwType());
-                        point.setMeterCode(getCtdCode());
+//                        point.setMeterCode(getCtdCode());
                         if (point.getFormatStr() == null && getFormular() != null) {
                             point.setFormatStr(getFormular());
                         }

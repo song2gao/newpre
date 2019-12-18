@@ -282,7 +282,13 @@ public class MeterDevice implements Serializable {
 	public void setScale(String scale) {
 		this.scale = scale;
 	}
-
+    /**
+     * create by: 高嵩
+     * description: 是否为虚拟表  0 实表需采集  1 实表非直接采集 2 虚拟表需采集
+     * create time: 2019/12/12 14:13
+     * @params
+     * @return
+     */
 	public int getIsinvented() {
 		return isinvented;
 	}

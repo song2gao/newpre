@@ -11,6 +11,8 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
+import java.math.BigDecimal;
+
 /**
  * 版权所有(C)2013-2014 CIC
  * 公司名称：众智盈鑫能源科技（北京）有限公司
@@ -58,14 +60,15 @@ public class ByteModBusTcpDecoder extends CumulativeProtocolDecoder {
                 int slaveId = (int) session.getAttribute("slaveId");
                 long sessionId = session.getId();
                 String terminal_id = session.getAttribute("terminal_id").toString();
-                int start = (int) session.getAttribute("start");
+                BigDecimal start = new BigDecimal(session.getAttribute("readAddress").toString());
+                int readType=Integer.parseInt(session.getAttribute("readType").toString());
                 int len = (int) session.getAttribute("len");
                 String ctdCode = session.getAttribute("ctdCode").toString();
                 byte[] sendBytes = (byte[]) session.getAttribute("sendMessage");
                 String sendStr = CRC16M.getBufHexStr(sendBytes);
                 String recStr = CRC16M.getBufHexStr(bytes);
 //                logger.info(recStr);
-                checkMessage(session,terminal_id, ctdCode, slaveId, start, len, bytes, sendStr, recStr);
+                checkMessage(session,terminal_id, ctdCode, slaveId, start, len, bytes,readType, sendStr, recStr);
                 if (in.remaining() > 0) {// 如果读取内容后还粘了包，就让父类再重读 一次，进行下一次解析
                     // in.flip();
                     return true;
@@ -76,7 +79,7 @@ public class ByteModBusTcpDecoder extends CumulativeProtocolDecoder {
         return false;// 处理成功，让父类进行接收下个包
     }
 
-    public void checkMessage(IoSession session,String terminalCode, String ctdCode, int slaveId, int start, int len, byte[] bytes, String sendStr, String recStr) {
+    public void checkMessage(IoSession session, String terminalCode, String ctdCode, int slaveId, BigDecimal start, int len, byte[] bytes,int readType, String sendStr, String recStr) {
         int id = bytes[6];
         int function = bytes[7];
         int length = Util.bytesToInt(bytes, 8, 9);
@@ -91,7 +94,7 @@ public class ByteModBusTcpDecoder extends CumulativeProtocolDecoder {
                 case 4:
                     if (len * 2 == length) {
                         byte[] data = Util.bytesSub(bytes, 9, bytes.length - 9);
-                        decoder.decoder(terminalCode, ctdCode, start, data, sendStr, recStr);
+                        decoder.decoder(terminalCode, ctdCode,function, start, data, sendStr, recStr);
                     }
                     break;
                 case 15:

@@ -1,5 +1,7 @@
 package com.cic.pas.common.util;
 
+import java.math.BigDecimal;
+
 public class ModBusUtil {
     public static int getFullAddress(int function, int address, int isPlcAddress) {
         int result = address;
@@ -50,9 +52,9 @@ public class ModBusUtil {
 //        }
 //        return  result;
 //    }
-    public static int getProtocolCodeAndAddress(int address, int isPlcAddress) {
+    public static BigDecimal getProtocolCodeAndAddress(BigDecimal address, int isPlcAddress) {
         if (isPlcAddress == 1) {
-            return address - 1;
+            return address.subtract(new BigDecimal("1"));
         } else {
             return address;
         }

@@ -47,7 +47,6 @@ public class ModBusReadAndWrite {
                 result[8 + i*2] = (byte) (values[i] & 0xff);
             }
         }
-        System.out.println(CRC16M.getBufHexStr(result));
         return result;
     }
 

@@ -168,7 +168,8 @@ public final class BussinessConfig {
                                         p.setCode(rs.getString("CTD_CODES"));
                                         p.setPt(rs.getInt("CDT_FORMULARID"));
                                         p.setCt(rs.getInt("CDT_FORMULAR"));
-                                        //p.setStatus(rs.getInt("cdt_terminal_status"));
+//                                        p.setStatus(rs.getInt("cdt_terminal_status"));
+                                        p.setIsinvented(rs.getInt("CDT_ISINVENTED"));
                                         p.setCdt_assembleid(rs.getString("cdt_assembleid"));
                                         p.setIncrease(rs.getInt("ctd_increase"));
                                         p.setMeasure_loop(rs.getString("cdt_measure_loop"));
@@ -284,11 +285,11 @@ public final class BussinessConfig {
                                                     pd.setValue(lastValue);
                                                     pd.setShowValue(lastValue + "");
                                                 }
+                                            }else{
+                                                pd.setValue(rs.getBigDecimal("MMP_STANDARD_VAL"));
                                             }
-                                            pd.setIsCollect(1);
+                                            pd.setIsCollect(rs.getInt("MMP_ISCOLLECT"));
                                             pd.setCtmType(p.getPcpcEnergyType());
-                                            if (!p.getType().equals("3")) {
-                                            }
                                             pd.setPreType(p.getType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
                                             pd.setSystemCode(rs.getString("MMP_BACKUPS"));
@@ -296,7 +297,7 @@ public final class BussinessConfig {
                                             return pd;
                                         }
                                     });
-                    sql = "select * from poms_device_measur_point where CAL_id = ?  order by MMP_STORAGE_TYPE,";
+                    sql = "select * from poms_device_measur_point where device_id = ?  order by MMP_STORAGE_TYPE,";
                     if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
                         sql += "cast(MOD_ADDRESS as  integer)";
                     } else {
@@ -340,7 +341,6 @@ public final class BussinessConfig {
                                             pd.setUp_line(rs.getDouble("mmp_up_value"));
                                             pd.setDown_line(rs.getDouble("mmp_down_value"));
                                             pd.setMmpIsAlarm(rs.getInt("MMP_IS_ALARM"));
-                                            pd.setIsCollect(rs.getInt("MMP_IS_COLLECT"));
                                             if (pd.getIsCalculate() == 1) {
                                                 BigDecimal lastValue = getLastValue(
                                                         p.getCode(),
@@ -350,10 +350,11 @@ public final class BussinessConfig {
                                                     pd.setValue(lastValue);
                                                     pd.setShowValue(lastValue + "");
                                                 }
+                                            }else{
+                                                pd.setValue(rs.getBigDecimal("MMP_STANDARD_VAL"));
                                             }
+                                            pd.setIsCollect(rs.getInt("MMP_ISCOLLECT"));
                                             pd.setCtmType(p.getPcpcEnergyType());
-                                            if (!p.getType().equals("3")) {
-                                            }
                                             pd.setPreType(p.getType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
                                             pd.setSystemCode(rs.getString("MMP_BACKUPS"));
@@ -407,7 +408,7 @@ public final class BussinessConfig {
                     facility.setSystemCode(rs.getString("SYSTEM_CODE"));
                     facility.setFacilitiesModelCode(rs.getString("FACILITIES_MODEL_CODE"));
                     facility.setFacilitiesTypeCode(rs.getString("FACILITIES_TYPE_CODE"));
-                    facility.setPreModelCode(rs.getString("PRE_MODEL_CODE"));
+                    facility.setPreModelCode(rs.getString("PRE_MODEL_CODE").split(","));
                     facility.setFacilitiesCode(rs.getString("FACILITIES_CODE"));
                     facility.setFacilitiesName(rs.getString("FACILITIES_NAME"));
                     facility.setFacilitiesOffset(rs.getInt("FACILITIES_OFFSET"));
@@ -469,7 +470,7 @@ public final class BussinessConfig {
                         modelPoint.setIsAlarm(rs.getInt("IS_ALARM"));
                         modelPoint.setIsSave(rs.getInt("IS_SAVE"));
                         modelPoint.setIsShowName(rs.getInt("is_show_name"));
-                        modelPoint.setMeterCode(rs.getString("PRE_DEVICE_CODE"));
+                        modelPoint.setMeterCode(rs.getString("PRE_DEVICE_CODE").split(","));
                         modelPoint.setMeasurMmpCode(rs.getString("MEASUR_MMP_CODE"));
                         return modelPoint;
                     }
@@ -1052,10 +1053,10 @@ public final class BussinessConfig {
     public static int getPointCountOfSystemRef(String meterCode,String mmpCode){
         String sql="select count(FACILITIES_CODE) as newCode " +
                 " from poms_energy_using_facilities_model_point a,poms_energy_using_facilities b " +
-                "where b.FACILITIES_MODEL_CODE=a.FACILITIES_MODEL_CODE and b.PRE_MODEL_CODE=? and cast(MEASUR_MMP_CODE as signed integer)+cast(b.FACILITIES_OFFSET as signed integer)+cast(MMP_OFFSET as signed integer)=?";
-        int modelCount=jdbcTemplate.queryForObject(sql,new Object[]{meterCode,mmpCode},Integer.class);
-        sql="select count(FACILITIES_CODE) from poms_energy_using_facilities_point where  PRE_DEVICE_CODE=? and MEASUR_MMP_CODE=? ";
-        int deviceCount=jdbcTemplate.queryForObject(sql,new Object[]{meterCode,mmpCode},Integer.class);
+                "where b.FACILITIES_MODEL_CODE=a.FACILITIES_MODEL_CODE and (b.PRE_MODEL_CODE=? or b.PRE_MODEL_CODE like ? or b.PRE_MODEL_CODE like ?) and cast(MEASUR_MMP_CODE as signed integer)+cast(b.FACILITIES_OFFSET as signed integer)+cast(MMP_OFFSET as signed integer)=?";
+        int modelCount=jdbcTemplate.queryForObject(sql,new Object[]{meterCode,"%,"+meterCode,meterCode+",%",mmpCode},Integer.class);
+        sql="select count(FACILITIES_CODE) from poms_energy_using_facilities_point where  (PRE_DEVICE_CODE=? or PRE_DEVICE_CODE like ? or PRE_DEVICE_CODE like ?) and MEASUR_MMP_CODE=? ";
+        int deviceCount=jdbcTemplate.queryForObject(sql,new Object[]{meterCode,"%,"+meterCode,meterCode+",%",mmpCode},Integer.class);
         return modelCount+deviceCount;
     }
 

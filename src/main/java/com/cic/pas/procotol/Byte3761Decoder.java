@@ -44,14 +44,16 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
             byte[] headBytes = new byte[headSize];
             in.get(headBytes, 0, headSize);
             int size = Integer.parseInt(Util.bytesToValueRealOffset(headBytes, 1, 22).toString());
-            size = size >> 3;
+            size = size >> 2;
             size = size + 8;
             in.reset();
+
             if (size > in.remaining()) {// 如果消息内容不够，则重置，相当于不读取size
                 return false;// 父类接收新数据，以拼凑成完整数据
             } else {
-                byte[] bytes = new byte[in.remaining()];
+                byte[] bytes = new byte[size];
                 in.get(bytes);
+                System.out.println("RX:"+CRC16M.getBufHexStr(bytes));
                 checkMessage(session,bytes);
                 BaseThread thread = ServerContext.threadMap
                         .get(session.getAttribute("terminal_id")+"");
@@ -104,7 +106,8 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
 
     private String getIP(IoSession session) {
         SocketAddress client = session.getRemoteAddress();
-        String IP = client.toString().substring(1);
+        String ipPort=client.toString().substring(1);
+        String IP = ipPort.substring(0,ipPort.indexOf(":"));
         return IP;
     }
 
@@ -167,13 +170,14 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
                     bytes0[14] = bytes0[15] = 0x0;//pn
                     bytes0[16] = 1;//fn
                     bytes0[17] = 0;
+                    int seq =(int)bytes[13]&0x0f;
+                    bytes0[13]=(byte)(0x60+seq);
                     for (int i = 0; i < 12; i++) {
                         bytes0[18] += bytes0[6 + i];
                     }//cs
                     bytes0[19] = 0x16;
-                    logger.info("[" + t.getName() + "确认帧]:[" + CRC16M.getBufHexStr(bytes0) + "]");
-                    int seq =(int)bytes[13]&0x0f;
                     int rseq = (int) bytes0[13]&0x0f;
+                    logger.info("[" + t.getName() + "确认帧]:[" + CRC16M.getBufHexStr(bytes0) + "]");
                     session.setAttribute("SEQ", seq);
                     session.setAttribute("RSEQ", rseq);
                     session.setAttribute("terminal_id",terminal_id);
@@ -182,6 +186,7 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
                     session.write(bytes0);
                     BaseThread thread=new GetDataThread(t,session);
                     thread.setName(t.getName()+"["+t.getCode()+"]");
+                    ((GetDataThread) thread).handFlag=true;
                     thread.start();
                     ServerContext.addThread(t.getCode(), thread);
                 }
@@ -247,9 +252,9 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
             String terminalCode=session.getAttribute("terminal_id").toString();
             MeterDevice md=BussinessConfig.getMeterByTerminalCodeAndCtdCode(terminalCode,ctdCode);
             md.setStatus(0);
-//            logger.info("["+session.getAttribute("terminal_Name")+"终端否定所发请求]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
+            logger.info("["+session.getAttribute("terminal_Name")+"终端否定所发请求]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
         }else {
-//            logger.info("["+session.getAttribute("terminal_Name")+"回复数据帧]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
+            logger.info("["+session.getAttribute("terminal_Name")+"回复数据帧]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
             saveData(asstdCode + "", pn + "", Util.bytesHexStrToBIgDecimal(bytes, 24, 5));
         }
     }

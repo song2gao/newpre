@@ -48,57 +48,60 @@ public class ByteHandler extends IoHandlerAdapter {
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         try {
-            logger.info(session.getAttribute("terminal_name") + "断开连接!");
-            String terminal_id = session.getAttribute("terminal_id").toString();
-            ServerContext.remove(session.getId());
-            TerminalDevice td = BussinessConfig.getTerminalByCode(terminal_id);
-            td.setIsOnline(0);
-            BaseThread thread = ServerContext.threadMap.get(terminal_id);
-            if (thread != null) {
-                thread.exit = true;
-                ServerContext.removeThread(terminal_id);
-                logger.info(thread.getName() + "数据采集线程关闭");
-            } else {
-                logger.info(session.getAttribute("terminal_name") + "数据采集线程未启动");
-            }
-            if (session.getService() instanceof NioSocketConnector) {
-                NioSocketConnector socketConnector = (NioSocketConnector) session.getService();
-                socketConnector.dispose();
-                String ipPort = td.getMSA();
-                int index = ipPort.indexOf(":");
-                String ip = ipPort.substring(0, index);
-                int port = Integer.parseInt(ipPort.substring(index + 1));
-                socketConnector = ConnectorSocketFactory.getSocketConnector(ip, port, td.getProcotolCode(),td.getNoticeManner());
-                for (; ; ) {
-                    try {
-                        Thread.sleep(6000);
-                        ConnectFuture future = socketConnector
-                                .connect();
-                        future.awaitUninterruptibly();// 等待连接创建成功
-                        session = future.getSession();// 获取会话
-                        if (session.isConnected()) {
-                            String message = "断线重连[" + (td == null ? "" : td.getName()) + "("
+            Object obj=session.getAttribute("terminal_id");
+            if(obj!=null) {
+                logger.info(session.getAttribute("terminal_name") + "断开连接!");
+                String terminal_id = obj.toString();
+                ServerContext.remove(session.getId());
+                TerminalDevice td = BussinessConfig.getTerminalByCode(terminal_id);
+                td.setIsOnline(0);
+                BaseThread thread = ServerContext.threadMap.get(terminal_id);
+                if (thread != null) {
+                    thread.exit = true;
+                    ServerContext.removeThread(terminal_id);
+                    logger.info(thread.getName() + "数据采集线程关闭");
+                } else {
+                    logger.info(session.getAttribute("terminal_name") + "数据采集线程未启动");
+                }
+                if (session.getService() instanceof NioSocketConnector) {
+                    NioSocketConnector socketConnector = (NioSocketConnector) session.getService();
+                    socketConnector.dispose();
+                    String ipPort = td.getMSA();
+                    int index = ipPort.indexOf(":");
+                    String ip = ipPort.substring(0, index);
+                    int port = Integer.parseInt(ipPort.substring(index + 1));
+                    socketConnector = ConnectorSocketFactory.getSocketConnector(ip, port, td.getProcotolCode(), td.getNoticeManner());
+                    for (; ; ) {
+                        try {
+                            Thread.sleep(6000);
+                            ConnectFuture future = socketConnector
+                                    .connect();
+                            future.awaitUninterruptibly();// 等待连接创建成功
+                            session = future.getSession();// 获取会话
+                            if (session.isConnected()) {
+                                String message = "断线重连[" + (td == null ? "" : td.getName()) + "("
+                                        + socketConnector
+                                        .getDefaultRemoteAddress()
+                                        .getHostName()
+                                        + ":"
+                                        + socketConnector
+                                        .getDefaultRemoteAddress()
+                                        .getPort() + ")]成功";
+                                logger.info(message);
+                                break;
+                            } else {
+                                System.out.println(td == null ? "" : td.getName() + "未成功建立连接");
+                            }
+                        } catch (Exception ex) {
+                            logger.info("断线重连[" + (td == null ? "" : td.getName()) + "("
                                     + socketConnector
                                     .getDefaultRemoteAddress()
                                     .getHostName()
                                     + ":"
                                     + socketConnector
                                     .getDefaultRemoteAddress()
-                                    .getPort() + ")]成功";
-                            logger.info(message);
-                            break;
-                        } else {
-                            System.out.println(td == null ? "" : td.getName() + "未成功建立连接");
+                                    .getPort() + ")]失败，一分钟后再次发起连接");
                         }
-                    } catch (Exception ex) {
-                        logger.info("断线重连[" + (td == null ? "" : td.getName()) + "("
-                                + socketConnector
-                                .getDefaultRemoteAddress()
-                                .getHostName()
-                                + ":"
-                                + socketConnector
-                                .getDefaultRemoteAddress()
-                                .getPort() + ")]失败，一分钟后再次发起连接");
                     }
                 }
             }
@@ -126,26 +129,30 @@ public class ByteHandler extends IoHandlerAdapter {
     @Override
     public void sessionOpened(IoSession session) {
         TerminalDevice td = getTerminalBySession(session);
-        if (td != null&&!td.getNoticeAccord().equals("Byte3761")) {
-            ServerContext.addSession(session);
-            td.setIsOnline(1);
-            session.setAttribute("terminal_id", td.getCode());
-            session.setAttribute("terminal_name", td.getName());
-            session.setAttribute("terminal", td);
-            if (ServerContext.threadMap.containsKey(td.getCode())) {
-                GetDataThread old = (GetDataThread) ServerContext.threadMap.get(td.getCode());
-                if (old != null) {
-                    old.exit = true;
+        if (td != null) {
+            if(td.getNoticeAccord().equals("Byte3761")){
+
+            }else {
+                ServerContext.addSession(session);
+                td.setIsOnline(1);
+                session.setAttribute("terminal_id", td.getCode());
+                session.setAttribute("terminal_name", td.getName());
+                session.setAttribute("terminal", td);
+                if (ServerContext.threadMap.containsKey(td.getCode())) {
+                    GetDataThread old = (GetDataThread) ServerContext.threadMap.get(td.getCode());
+                    if (old != null) {
+                        old.exit = true;
+                    }
+                    ServerContext.threadMap.remove(td.getCode());
                 }
-                ServerContext.threadMap.remove(td.getCode());
+                GetDataThread thread = new GetDataThread(td, session);
+                thread.setName(td.getName() + "[" + td.getCode() + "]");
+                thread.start();
+                ServerContext.addThread(td.getCode(), thread);
             }
-            GetDataThread thread = new GetDataThread(td, session);
-            thread.setName(td.getName()+"["+td.getCode()+"]");
-            thread.start();
-            ServerContext.addThread(td.getCode(), thread);
         } else {
+           logger.info("未找到采集器,关闭连接");
             session.closeNow();
-            System.out.println("未找到采集器" + BussinessConfig.getRemoteIp(session));
         }
     }
 
@@ -153,7 +160,7 @@ public class ByteHandler extends IoHandlerAdapter {
         TerminalDevice td = null;
         if (session.getService() instanceof NioSocketConnector) {
             td = BussinessConfig.getTerminalByMSA(BussinessConfig.getRemoteIpPort(session));
-//            logger.info("采集器[" + td.getName() + "(连接服务端" + session.getRemoteAddress() + ")]成功");
+            logger.info("采集器[" + td.getName() + "(连接服务端" + session.getRemoteAddress() + ")]成功");
         } else {
             String remoteIp = BussinessConfig.getRemoteIp(session);
             String port = BussinessConfig.getLoclPort(session);

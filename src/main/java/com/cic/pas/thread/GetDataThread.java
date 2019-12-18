@@ -29,7 +29,7 @@ public class GetDataThread extends BaseThread {
     public static boolean DEBUG = false;
     IoSession session;
     ModBusReadAndWrite modRW = new ModBusReadAndWrite();
-    private boolean handFlag = false;
+    public boolean handFlag = false;
     int i = 0;
     private byte[] firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
     public int pduLength = 0;
@@ -69,7 +69,7 @@ public class GetDataThread extends BaseThread {
 
     @Override
     public void run() {
-//        logger.info("["+this.getName() + "]数据采集线程启动");
+        logger.info("[" + this.getName() + "]数据采集线程启动");
         while (!exit) {
             boolean flag = true;
             if (flag) {
@@ -102,8 +102,11 @@ public class GetDataThread extends BaseThread {
     private void s7HandBuff() {
         pduLength = 0;
         if (td.getDeviceModel().toLowerCase().equals("s7-200smart")) {
-            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 04 00 c1 02 01 01 c2 02 01 01 c0 01 0a");
-//            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
+            if (td.getCode().equals("49") || td.getCode().equals("31") || td.getCode().equals("76")) {//这两个设备问题  通讯级无法连接 只能用编程级连接
+                firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 04 00 c1 02 01 01 c2 02 01 01 c0 01 0a");
+            } else {
+                firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
+            }
 
         } else if (td.getDeviceModel().toLowerCase().equals("s7-200")) {
             firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 4d 57 c2 02 4d 57 c0 01 00");
@@ -142,17 +145,23 @@ public class GetDataThread extends BaseThread {
         if (map.size() == 0) {
             if (td.getNoticeAccord().equals("Byte3761")) {
                 for (MeterDevice meter : td.getMeterList()) {
-                    getSendBuff3761(meter);
+                    if (meter.getIsinvented() == 0||meter.getIsinvented() == 2) {
+                        getSendBuff3761(meter);
+                    }
                 }
                 handFlag = true;
             } else if (td.getNoticeAccord().equals("ByteS7")) {
                 s7HandBuff();
                 for (MeterDevice meter : td.getMeterList()) {
-                    getSendBuffS7(meter);
+                    if (meter.getIsinvented() == 0||meter.getIsinvented() == 2) {
+                        getSendBuffS7(meter);
+                    }
                 }
             } else {
                 for (MeterDevice meter : td.getMeterList()) {
-                    getSendBuffModBus(meter);
+                    if (meter.getIsinvented() == 0||meter.getIsinvented() == 2) {
+                        getSendBuffModBus(meter);
+                    }
                 }
                 handFlag = true;
             }
@@ -188,32 +197,39 @@ public class GetDataThread extends BaseThread {
                 System.out.println("Thread " + td.getName() + " interrupted.");
                 e.printStackTrace();
             }
-            byte[] values = map.get(key);
+            byte[] oldValues = map.get(key);
+            byte[] values = new byte[oldValues.length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = oldValues[i];
+            }
             int firstIndex = key.indexOf(":");
             int lastIndex = key.lastIndexOf(":");
             String ctdCode = key.substring(0, firstIndex);
             String type = key.substring(firstIndex + 1, lastIndex);//寄存器类型
             String address = key.substring(lastIndex + 1);
-            if(td.getNoticeAccord().equals("Byte3761")){
-                int seq=Integer.parseInt(session.getAttribute("SEQ").toString());
+            if (td.getNoticeAccord().equals("Byte3761")) {
+                int seq = Integer.parseInt(session.getAttribute("SEQ").toString());
                 seq++;
-                if(seq>15){
-                    seq=0;
+                if (seq > 15) {
+                    seq = 0;
                 }
-//                System.out.println("取出SEQ："+Integer.toHexString(112+seq));
-                byte byte13 = (byte) (112 +seq);
-                session.setAttribute("SEQ",seq);
+                byte byte13 = (byte) (112 + seq);
+                session.setAttribute("SEQ", seq);
                 values[13] = byte13;
                 for (int i = 0; i < 12; i++) {
                     values[18] += values[6 + i];
                 }//cs
-            }else if(td.getNoticeAccord().indexOf("ModBus")>-1){
+            } else if (td.getNoticeAccord().indexOf("ModBus") > -1) {
+                int index = address.indexOf("-");
+                String readType = address.substring(index + 1);
+                address = address.substring(0, index);
                 int slaveId = values[0];
                 int start = Util.bytesToInt(values, 2, 4);
                 int len = Util.bytesToInt(values, 4, 6);
                 session.setAttribute("slaveId", slaveId);
                 session.setAttribute("start", start);
                 session.setAttribute("len", len);
+                session.setAttribute("readType", readType);
             }
             session.setAttribute("ctdCode", ctdCode);
             session.setAttribute("readAddress", address);
@@ -287,19 +303,20 @@ public class GetDataThread extends BaseThread {
     }
 
     public static void main(String[] args) throws SecurityException {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-            Date date1 = sdf.parse("00:00:00");
-            Date date2 = sdf.parse("12:01:30");
-            Date current = sdf.parse(sdf.format(new Date()));
-            if (current.after(date1) && current.before(date2)) {
-                System.out.println("OK");
-            } else {
-                System.out.println("NO");
-            }
-        } catch (Exception e) {
+//        try {
+//            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+//            Date date1 = sdf.parse("00:00:00");
+//            Date date2 = sdf.parse("12:01:30");
+//            Date current = sdf.parse(sdf.format(new Date()));
+//            if (current.after(date1) && current.before(date2)) {
+//                System.out.println("OK");
+//            } else {
+//                System.out.println("NO");
+//            }
+//        } catch (Exception e) {
+//
+//        }
 
-        }
     }
 
     public boolean write(MeterDevice md, PointDevice pd, Double writeValue) {
@@ -356,7 +373,13 @@ public class GetDataThread extends BaseThread {
     public void getSendBuffModBus(MeterDevice meter) {
         int meterAddress = meter.getAddress();
 //        List<PointDevice> allPints = meter.getPointDevice();// 所有参数 含非采集参数
-        List<PointDevice> points =meter.getPointDevice();// 采集参数
+        List<PointDevice> points = meter.getPointDevice();// 采集参数
+        List<PointDevice> prePoints=new ArrayList<PointDevice>();
+        for(PointDevice pd:points){
+            if(pd.getIsCollect()==1){
+                prePoints.add(pd);
+            }
+        }
 //        MeterDevice timingMd = new MeterDevice();
 //        timingMd.setCode(meter.getCode());
 //        timingMd.setAddress(meter.getAddress());
@@ -385,62 +408,86 @@ public class GetDataThread extends BaseThread {
 //            ConnectorContext.deviceAuto.put(meter.getCode(), t);
 //        }
         int start = 0;
-        int lastAddress = 0;
+        BigDecimal lastAddress = new BigDecimal("0");
         int lastLen = 0;
         int len = 0;
         int i = 0;
         String key = "";
         int lastfunction = 3;
-        if (points.size() == 1) {
+        int lastMMpType = 0;
+        if (prePoints.size() == 1) {
             PointDevice p = points.get(0);
             start = p.getModAddress().intValue() + meter.getIncrease();
-            key = meter.getCode() + ":" + p.getStorageType() + ":" + start;
+            key = meter.getCode() + ":" + p.getStorageType() + ":" + p.getModAddress() + "-" + p.getMmpType();
             byte[] values = ModBusUtil.getProtocol(meterAddress, start, p.getPointLen(), p.getIsPlcAddress(), p.getStorageType());
             map.put(key, values);
         } else {
             int begin = 0;
-            for (PointDevice p : points) {
-                int address = p.getModAddress().intValue() + meter.getIncrease();
+            for (PointDevice p : prePoints) {
+                BigDecimal address = p.getModAddress().add(new BigDecimal(meter.getIncrease()));
                 int curlen = p.getPointLen();
                 if (len == 0) {
                     len = curlen;
-                    begin = address;
-                    key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
+                    begin = address.intValue();
+                    key = meter.getCode() + ":" + p.getStorageType() + ":" + address + "-" + p.getMmpType();
                 } else {
-                    if (address == lastAddress + lastLen && p.getStorageType() == lastfunction) {
+                    if (getModDataTypeReadInOneRequest(lastfunction, p.getStorageType(), lastAddress, address, lastMMpType, p.getMmpType(), lastLen)) {
                         if (len >= 95) {
+                            len = getRealLen(lastAddress, len, lastfunction, lastMMpType, address, len);
                             byte[] values = ModBusUtil.getProtocol(meterAddress, begin, len, p.getIsPlcAddress(), lastfunction);
                             map.put(key, values);
-                            key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
-                            begin = address;
+                            key = meter.getCode() + ":" + p.getStorageType() + ":" + address + "-" + p.getMmpType();
+                            begin = address.intValue();
                             len = curlen;
                         } else {
                             len += curlen;
                             if (i == points.size() - 1) {
+                                len = getRealLen(lastAddress, len, lastfunction, lastMMpType, address, len);
                                 byte[] values = ModBusUtil.getProtocol(meterAddress, begin, len, p.getIsPlcAddress(), lastfunction);
                                 map.put(key, values);
                             }
                         }
                     } else {
+                        len = getRealLen(lastAddress, len, lastfunction, lastMMpType, address, curlen);
                         byte[] values = ModBusUtil.getProtocol(meterAddress, begin, len, p.getIsPlcAddress(), lastfunction);
                         map.put(key, values);
                         if (i == points.size() - 1) {
-                            byte[] last = ModBusUtil.getProtocol(meterAddress, address, curlen, p.getIsPlcAddress(), p.getStorageType());
-                            key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
+                            byte[] last = ModBusUtil.getProtocol(meterAddress, address.intValue(), curlen, p.getIsPlcAddress(), p.getStorageType());
+                            key = meter.getCode() + ":" + p.getStorageType() + ":" + address + "-" + p.getMmpType();
                             map.put(key, last);
                         } else {
-                            key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
-                            begin = address;
+                            key = meter.getCode() + ":" + p.getStorageType() + ":" + address + "-" + p.getMmpType();
+                            begin = address.intValue();
                             len = curlen;
                         }
                     }
                 }
                 lastAddress = address;
+                lastMMpType = p.getMmpType();
                 lastLen = curlen;
                 lastfunction = p.getStorageType();
                 i++;
             }
         }
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 得到读取长度   MODBUS 用03 04读位操作时对长度进行处理  x.01代表X的第1位   x.10代表第10位
+     * create time: 2019/11/17 13:44
+     *
+     * @return
+     * @params
+     */
+    private int getRealLen(BigDecimal lastAddress, int len, int lastfunction, int lastMMpType, BigDecimal address, int curlen) {
+        if (lastMMpType == 1 && lastfunction != 1 && lastfunction != 2) {
+            len = lastAddress.intValue() - address.intValue() + 1;
+//            BigDecimal realLen = new BigDecimal(len).divide(new BigDecimal("16"));//1个字等于16位 得到需要读取几个字
+//            BigDecimal currAddressPoint = new BigDecimal(0.15).subtract(address.subtract(new BigDecimal(address.intValue())));//从起始地址开始读取一个完整字所需要读取的位个数  举例  x.01 需要读取的位个数为   x.15-x.01
+//            BigDecimal lastAddressPoint = lastAddress.subtract(new BigDecimal(lastAddress.intValue()));
+//            len = realLen.add(currAddressPoint).add(lastAddressPoint).intValue();
+        }
+        return len;
     }
 
     /**
@@ -464,22 +511,19 @@ public class GetDataThread extends BaseThread {
         sendBytes[10] = (byte) (terminal_id / 256);
         sendBytes[11] = (byte) Integer.parseInt("F2", 16);
         sendBytes[12] = (byte) Integer.parseInt("0C", 16);
-        sendBytes[13]=0;
-        int high=(md.getAddress()-1)/8+1;
-        int ab=md.getAddress()%8;
-        if(ab==0){
-            ab=8;
+        sendBytes[13] = 0;
+        int high = (md.getAddress() - 1) / 8 + 1;
+        int ab = md.getAddress() % 8;
+        if (ab == 0) {
+            ab = 8;
         }
-        int low=(int)Math.pow(2,ab-1);
-        sendBytes[14] = (byte)low;
+        int low = (int) Math.pow(2, ab - 1);
+        sendBytes[14] = (byte) low;
         sendBytes[15] = (byte) high;
         sendBytes[16] = 0x01;
         sendBytes[17] = 0x10;
-        sendBytes[18]=0;
-        for (int i = 0; i < 12; i++) {
-            sendBytes[18] += sendBytes[6 + i];
-        }//cs
-        sendBytes[19]=0x16;
+        sendBytes[18] = 0;
+        sendBytes[19] = 0x16;
         String key = md.getCode() + ":3:31";
         map.put(key, sendBytes);
     }
@@ -493,7 +537,13 @@ public class GetDataThread extends BaseThread {
      * @params
      */
     public void getSendBuffS7(MeterDevice meter) {
-        List<PointDevice> points = meter.getPointDevice();
+        List<PointDevice> points = meter.getPointDevice();// 采集参数
+        List<PointDevice> prePoints=new ArrayList<PointDevice>();
+        for(PointDevice pd:points){
+            if(pd.getIsCollect()==1){
+                prePoints.add(pd);
+            }
+        }
         BigDecimal start;
         BigDecimal lastAddress = new BigDecimal("0");
         int lastLen = 0;
@@ -502,7 +552,7 @@ public class GetDataThread extends BaseThread {
         String key = "";
         int lastfunction = 3;
         int lastMmpType = 1;
-        if (points.size() == 1) {
+        if (prePoints.size() == 1) {
             PointDevice p = points.get(0);
             start = p.getModAddress().add(new BigDecimal(meter.getIncrease()));
             key = meter.getCode() + ":" + p.getStorageType() + ":" + start;
@@ -510,7 +560,7 @@ public class GetDataThread extends BaseThread {
             map.put(key, values);
         } else {
             BigDecimal begin = new BigDecimal(0);
-            for (PointDevice p : points) {
+            for (PointDevice p : prePoints) {
                 BigDecimal address = p.getModAddress().add(new BigDecimal(meter.getIncrease()));
                 int curlen = p.getPointLen();
                 if (len == 0) {
@@ -519,7 +569,7 @@ public class GetDataThread extends BaseThread {
                     key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
                 } else {
                     if (getDataTypeReadInOneRequest(lastfunction, p.getStorageType(), lastAddress, p.getModAddress(), lastMmpType, p.getMmpType(), lastLen)) {
-                        if (len >= pduLength) {
+                        if (len >=200) {
                             byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType(), p.getDbIndex());
                             map.put(key, values);
                             key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
@@ -601,7 +651,7 @@ public class GetDataThread extends BaseThread {
     }
 
     /**
-     * 判断能否用一条指令来读取 相邻两个寄存器可以用一同条指令读取  bit和其它类型不能一条指令读取
+     * 判断PLC寄存器（8位）能否用一条指令来读取 相邻两个寄存器可以用一同条指令读取  bit和其它类型不能一条指令读取
      *
      * @param lastFunction 上一次寄存器类型
      * @param currFunction 本次寄存器类型
@@ -620,6 +670,43 @@ public class GetDataThread extends BaseThread {
                 BigDecimal temp = new BigDecimal(0);//用来处理0.7与1.0的问题  字节0-7 8进位
                 if ((lastAddress + "").indexOf(".7") > 0) {
                     temp = new BigDecimal("0.2");
+                }
+                BigDecimal newLen = new BigDecimal(lastLen).divide(new BigDecimal(10));
+                BigDecimal newAddress = lastAddress.add(newLen).add(temp);
+                if (newAddress.compareTo(currAddress) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if (lastAddress.add(new BigDecimal(lastLen)).compareTo(currAddress) == 0) {
+                    return true;
+                }
+                return false;
+            }
+        }
+    }
+
+    /**
+     * 判断MOD寄存器（16位）能否用一条指令来读取 相邻两个寄存器可以用一同条指令读取  bit和其它类型不能一条指令读取
+     *
+     * @param lastFunction 上一次寄存器类型
+     * @param currFunction 本次寄存器类型
+     * @param lastAddress  上次寄存器地址
+     * @param currAddress  本次寄存器地址
+     * @param lastMmpType  上次数据类型
+     * @param currMmpType  本次数据类型
+     * @param lastLen      上次寄存器长度
+     * @return
+     */
+    private boolean getModDataTypeReadInOneRequest(int lastFunction, int currFunction, BigDecimal lastAddress, BigDecimal currAddress, int lastMmpType, int currMmpType, int lastLen) {
+        if (lastFunction != currFunction || !checkTypeInOnFunction(lastMmpType, currMmpType)) {
+            return false;
+        } else {
+            if (currMmpType == 1) {
+                BigDecimal temp = new BigDecimal(0);//用来处理0.15与1.0的问题  字节0-15 16进位
+                if ((lastAddress + "").indexOf(".15") > 0) {
+                    temp = new BigDecimal("0.84");
                 }
                 BigDecimal newLen = new BigDecimal(lastLen).divide(new BigDecimal(10));
                 BigDecimal newAddress = lastAddress.add(newLen).add(temp);
@@ -660,7 +747,7 @@ public class GetDataThread extends BaseThread {
     public byte[] getS7WriteBytes(PointDevice pd, Double writeValue) {
         S7WriteRequest request = new S7WriteRequest();
         request.setFunction((byte) 0x05);
-        request.setArea((byte) pd.getStorageType());
+        request.setArea((byte) pd.getModWFunction());
         byte[] data;
         if (pd.getModWType() == 1) {
             request.setTransportSize((byte) 1);
@@ -672,6 +759,7 @@ public class GetDataThread extends BaseThread {
             request.setTransportSize((byte) 2);
             request.setDataTransportSize((byte) 4);
             request.setDataWriteLength(new byte[]{0, (byte) (pd.getModWlength() * 8)});
+            writeValue = Util.manageData(new BigDecimal(writeValue), pd.getModWFormular()).doubleValue();
             data = Util.realValueToBytes(writeValue, pd.getModWType());
         }
         int dataLength = 4 + pd.getModWlength();

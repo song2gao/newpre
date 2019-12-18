@@ -10,6 +10,8 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
+import java.math.BigDecimal;
+
 /**
  * 版权所有(C)2013-2014 CIC
  * 公司名称：众智盈鑫能源科技（北京）有限公司
@@ -48,7 +50,7 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
             int headSize = 3;
             byte[] headBytes = new byte[headSize];
             in.get(headBytes, 0, headSize);
-            int address= Util.bytesToInt(headBytes, 0, 1);
+            int address = Util.bytesToInt(headBytes, 0, 1);
             int function = Util.bytesToInt(headBytes, 1, 2);
             int size = 0;
             if (function == 1 || function == 2 || function == 3 || function == 4) {
@@ -57,8 +59,8 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
                 size = 3;
             }
             in.reset();
-            if(slaveId!=address&&len*2!=size){
-                byte[] toDel=new byte[in.remaining()];
+            if (slaveId != address && len * 2 != size) {
+                byte[] toDel = new byte[in.remaining()];
                 in.get(toDel);
                 return false;
             }
@@ -68,14 +70,15 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
                 byte[] bytes = new byte[size + 5];
                 in.get(bytes);
                 String terminal_id = session.getAttribute("terminal_id").toString();
-                int start = (int) session.getAttribute("start");
+                BigDecimal start = new BigDecimal(session.getAttribute("readAddress").toString());
+                int readType = Integer.parseInt(session.getAttribute("readType").toString());
                 String ctdCode = session.getAttribute("ctdCode").toString();
                 byte[] sendBytes = (byte[]) session.getAttribute("sendMessage");
                 String sendStr = CRC16M.getBufHexStr(sendBytes);
                 String recStr = CRC16M.getBufHexStr(bytes);
 //                System.out.println("TX:"+sendStr);
 //                System.out.println("RX:"+recStr);
-                checkMessage(session,terminal_id, ctdCode, slaveId, start, len, bytes, sendStr, recStr);
+                checkMessage(session, terminal_id, ctdCode, slaveId, start, len, bytes, readType, sendStr, recStr);
                 if (in.remaining() > 0) {// 如果读取内容后还粘了包，就让父类再重读 一次，进行下一次解析
                     // in.flip();
                     return true;
@@ -85,13 +88,14 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
 
         return false;// 处理成功，让父类进行接收下个包
     }
-    public void checkMessage(IoSession session, String terminalCode, String ctdCode, int slaveId, int start, int len, byte[] bytes, String sendStr, String recStr) {
+
+    public void checkMessage(IoSession session, String terminalCode, String ctdCode, int slaveId, BigDecimal start, int len, byte[] bytes, int readType, String sendStr, String recStr) {
         int id = bytes[0];
         int function = bytes[1];
         int length = Util.bytesToInt(bytes, 2, 3);
         if (id == slaveId) {
             BaseThread thread = ServerContext.threadMap.get(terminalCode);
-            if(thread==null){
+            if (thread == null) {
                 return;
             }
             synchronized (thread) {
@@ -102,24 +106,19 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
                 case 1:
                 case 2:
                     byte[] bitByteData = Util.bytesSub(bytes, 3, bytes.length - 5);
-                    byte[] bitData=new byte[length*8];
-                    for(int i=0;i<bitByteData.length;i++){
-                        bitData[i*8+0]=(byte)(bitByteData[i]>>7&0x01);
-                        bitData[i*8+1]=(byte)(bitByteData[i]>>6&0x01);
-                        bitData[i*8+2]=(byte)(bitByteData[i]>>5&0x01);
-                        bitData[i*8+3]=(byte)(bitByteData[i]>>4&0x01);
-                        bitData[i*8+4]=(byte)(bitByteData[i]>>3&0x01);
-                        bitData[i*8+5]=(byte)(bitByteData[i]>>2&0x01);
-                        bitData[i*8+6]=(byte)(bitByteData[i]>>1&0x01);
-                        bitData[i*8+7]=(byte)(bitByteData[i]&0x01);
-                    }
-                    decoder.decoder(terminalCode, ctdCode, start, bitData, sendStr, recStr);
+                    byte[] bitData = getBinsOfBytes(bitByteData);
+                    decoder.decoder(terminalCode, ctdCode, function, start, bitData, sendStr, recStr);
                     break;
                 case 3:
                 case 4:
                     if (length == len * 2) {
                         byte[] data = Util.bytesSub(bytes, 3, bytes.length - 5);
-                        decoder.decoder(terminalCode, ctdCode, start, data, sendStr, recStr);
+                        if (readType == 1) {
+                            byte[] newData = getBinsOfBytes(data);
+                            decoder.decoder(terminalCode, ctdCode, function, start, newData, sendStr, recStr);
+                        } else {
+                            decoder.decoder(terminalCode, ctdCode, function, start, data, sendStr, recStr);
+                        }
                     }
                     break;
                 case 15:
@@ -129,9 +128,31 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
 
             }
         } else {
-            System.out.println("无效消息["+recStr+"]");
+            System.out.println("无效消息[" + recStr + "]");
         }
 
+    }
+    /**
+     * create by: 高嵩
+     * description: 字节数组转化为二进制    返回数组下标0对应 最低位（第0位）
+     * 01 01 返回 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1
+     * create time: 2019/11/17 17:49
+     * @params
+     * @return
+     */
+    private byte[] getBinsOfBytes( byte[] bitByteData) {
+        byte[] bitData = new byte[bitByteData.length * 8];
+        for (int i = 0; i < bitByteData.length; i++) {
+            bitData[i * 8 + 0] = (byte) (bitByteData[i] >> 7 & 0x01);
+            bitData[i * 8 + 1] = (byte) (bitByteData[i] >> 6 & 0x01);
+            bitData[i * 8 + 2] = (byte) (bitByteData[i] >> 5 & 0x01);
+            bitData[i * 8 + 3] = (byte) (bitByteData[i] >> 4 & 0x01);
+            bitData[i * 8 + 4] = (byte) (bitByteData[i] >> 3 & 0x01);
+            bitData[i * 8 + 5] = (byte) (bitByteData[i] >> 2 & 0x01);
+            bitData[i * 8 + 6] = (byte) (bitByteData[i] >> 1 & 0x01);
+            bitData[i * 8 + 7] = (byte) (bitByteData[i] & 0x01);
+        }
+        return bitData;
     }
 
 }

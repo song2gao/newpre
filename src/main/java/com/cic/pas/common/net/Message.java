@@ -17,6 +17,8 @@ public class Message implements Serializable{
 	String meterId;
 	
 	String meterCode;
+
+	String[] meterCodes;
 	
 	String value;
 
@@ -159,5 +161,13 @@ public class Message implements Serializable{
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public String[] getMeterCodes() {
+		return meterCodes;
+	}
+
+	public void setMeterCodes(String[] meterCodes) {
+		this.meterCodes = meterCodes;
 	}
 }

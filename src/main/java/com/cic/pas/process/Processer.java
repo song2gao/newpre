@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.cic.pas.common.bean.*;
+import com.cic.pas.common.util.ArrayUtils;
 import com.cic.pas.service.ServerContext;
 import com.cic.pas.service.UpdateNoCollectValue;
 import com.cic.pas.thread.GetDataThread;
@@ -73,7 +74,7 @@ public class Processer {
             case Create:
                 break;
             case Update:
-                rm = updateData(message.getMeterCode(), message.getPointCode(), message
+                rm = updateData(message.getMeterCodes(), message.getPointCode(), message
                         .getValue());
                 break;
             case Delete:
@@ -259,18 +260,19 @@ public class Processer {
      * @date
      */
 
-    public ReturnMessage updateData(String ctdCode, String mmpCode, String value) {
+    public ReturnMessage updateData(String[] ctdCode, String mmpCode, String value) {
         ReturnMessage rm = new ReturnMessage();
-        String result = "写入失败";
+        String result = "写入失败,未找到表计信息（"+ctdCode+"）";
         boolean isFind = false;
         for (TerminalDevice td : BussinessConfig.terminalList) {
             for (MeterDevice md : td.getMeterList()) {
-                if (md.getCode().equals(ctdCode)) {
+                if (ArrayUtils.inArray(ctdCode,md.getCode())) {
+                    result="找到表计("+md.getName()+")，未找到测量点";
                     for (PointDevice pd : md.getPointDevice()) {
                         if (pd.getCode().equals(mmpCode)) {
                             boolean res = false;
                             if (pd.getRwType() != 1) {
-                                result = "该参数不允许写入";
+                                result = "该参数不允许写入("+td.getName()+"-"+md.getName()+"["+pd.getName()+"]"+")";
                             } else {
                                 if (pd.getIsCollect() == 1) {
                                     GetDataThread thread = (GetDataThread) ServerContext.threadMap.get(td.getCode());
@@ -279,15 +281,17 @@ public class Processer {
                                     UpdateNoCollectValue.update(md, pd, value);
                                 }
                                 if (!res) {
-                                    result = "写入失败";
+                                    result = "写入失败（"+td.getName()+"-"+md.getName()+"["+pd.getName()+"]）";
                                 } else {
-                                    result = "写入成功";
+                                    result = "写入成功（"+td.getName()+"-"+md.getName()+"["+pd.getName()+"]）";
                                 }
                             }
+                            isFind = true;
                             break;
                         }
                     }
-                    isFind = true;
+                }
+                if (isFind) {
                     break;
                 }
             }
@@ -496,7 +500,7 @@ public class Processer {
                 List<Map<String, Object>> list = new ArrayList<>();
                 for (PomsEnergyUsingFacilities facility : system.getFacilitiyList()) {
                     if (fan.getMeterCode() == null) {
-                        fan.setMeterCode(facility.getPreModelCode());
+                        fan.setMeterCode(facility.getPreModelCode()[0]);
                         fan.setFacilityCode(facility.getFacilitiesCode());
                         fan.setFacilityName(facility.getFacilitiesName());
                     }

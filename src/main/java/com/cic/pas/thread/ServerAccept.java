@@ -10,19 +10,18 @@ import org.apache.mina.transport.socket.SocketAcceptor;
 
 public class ServerAccept extends BaseThread {
     private Logger logger = Logger.getLogger(ServerAccept.class);
-    private TerminalDevice td;
     private String procotolType;
-
-    public ServerAccept(TerminalDevice td, String procotolType) {
-        this.td = td;
+    private int port;
+    public ServerAccept(int port, String procotolType) {
         this.procotolType = procotolType;
+        this.port=port;
     }
 
     public void run() {
-        if (td.getMSA() != null && !td.getMSA().equals("")) {
+        if (port!=0) {
             ServerSocketFactory serverSocketFactory = new ServerSocketFactory();
             //1、创建服务端口监听
-            SocketAcceptor channel = serverSocketFactory.createServerSocket(td.getMSA(), procotolType);
+            SocketAcceptor channel = serverSocketFactory.createServerSocket(port, procotolType);
             try {
                 channel.bind();
             } catch (IOException e) {

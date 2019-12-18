@@ -75,12 +75,12 @@ public class Byte3761Encoder extends ProtocolEncoderAdapter {
 				sendBytes[18] += sendBytes[6 + i];
 			}//cs
 			sendBytes[19]=0x16;
-//			logger.info("["+session.getAttribute("terminal_Name")+"请求数据帧]:[pn="+pn+"]["+CRC16M.getBufHexStr(sendBytes)+"]");
+			logger.info("["+session.getAttribute("terminal_Name")+"请求数据帧]:[pn="+pn+"]["+CRC16M.getBufHexStr(sendBytes)+"]");
 			buff.put(sendBytes);
 		}else {
 			buff.put(a);
 		}
-
+        logger.info("TX:"+CRC16M.getBufHexStr(a));
 		buff.flip();
 		out.write(buff);
 		out.flush();

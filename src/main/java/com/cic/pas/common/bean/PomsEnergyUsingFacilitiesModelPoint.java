@@ -43,7 +43,7 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     private List<Option> options;
 
-    private String meterCode;
+    private String[] meterCode;
 
     private String measurMmpCode;
 
@@ -278,11 +278,11 @@ public class PomsEnergyUsingFacilitiesModelPoint {
         this.isBit = isBit;
     }
 
-    public String getMeterCode() {
+    public String[] getMeterCode() {
         return meterCode;
     }
 
-    public void setMeterCode(String meterCode) {
+    public void setMeterCode(String[] meterCode) {
         this.meterCode = meterCode;
     }
 

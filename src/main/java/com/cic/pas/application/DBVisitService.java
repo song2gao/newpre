@@ -520,6 +520,53 @@ public class DBVisitService {
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
     }
+    /**
+     * create by: 高嵩
+     * description: 批量插入临时数据 用能系统
+     * create time: 2019/8/8 11:40
+     * @params
+     * @return
+     */
+    public static void batchInsertSystem(List<EsmspSumMeasurSystemDay> list)
+            throws Exception {
+        String dateCode = "";
+        String head = "insert into esmsp_sum_measur_system_day "
+                + "(EUI_CODE,SYSTEM_CODE,FACILITY_CODE,MMP_CODE,DATE_CODE,point1,point2,point3,point4,"
+                + "point5,point6,point7,point8,point9,point10,point11,point12,"
+                + "point13,point14,point15,point16,point17,point18,point19,"
+                + "point20,point21,point22,point23,point24,point25,point26,"
+                + "point27,point28,point29,point30,point31,point32,point33,"
+                + "point34,point35,point36,point37,point38,point39,point40,"
+                + "point41,point42,point43,point44,point45,point46,point47,"
+                + "point48,point49,point50,point51,point52,point53,point54,"
+                + "point55,point56,point57,point58,point59,point60,point61,"
+                + "point62,point63,point64,point65,point66,point67,point68,"
+                + "point69,point70,point71,point72,point73,point74,point75,"
+                + "point76,point77,point78,point79,point80,point81,point82,"
+                + "point83,point84,point85,point86,point87,point88,point89,"
+                + "point90,point91,point92,point93,point94,point95,point96,"
+                + "MAX_VALUE,MAX_DATE,MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE)values";
+        if (list.size() > 0) {
+            Map<String, List> map = subList(
+                    list, 1000);
+            for (String key : map.keySet()) {
+                List<EsmspSumMeasurSystemDay> sublist = map.get(key);
+                StringBuffer buffer = new StringBuffer();
+                buffer.append(head);
+                buffer = getSystemBuffByDayList(sublist, dateCode, buffer);
+                try {
+                    DBConfigDao.jdbcTemplate.update(buffer.toString());
+                    logger.info("批量执行插入[用能系统]日数据" + key + "成功,共" + list.size()
+                            + "条数据<SQL>......");
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            DBConfigDao.jdbcTemplate
+                    .execute("delete from esmsp_sum_measur_system_day_temp");
+            LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
+        }
+    }
     public static boolean updatePointValue(PointDevice pd, String value) {
         String sql = "update poms_device_measur_point set MMP_SET_VALUE='" + value + "' where ID='" + pd.getId() + "'";
         int result = jdbcTemplate.update(sql);
