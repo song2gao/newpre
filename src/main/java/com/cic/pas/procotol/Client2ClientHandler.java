@@ -102,6 +102,7 @@ public class  Client2ClientHandler extends IoHandlerAdapter {
                         .connect();
                 future.awaitUninterruptibly();// 等待连接创建成功
                 session = future.getSession();// 获取会话
+                session.setAttribute("terminal_id", td.getCode());
                 if (session.isConnected()) {
                     if(ip2!=null){
                         session.setAttribute("ip1",ip1);
@@ -150,17 +151,16 @@ public class  Client2ClientHandler extends IoHandlerAdapter {
     @Override
     public void sessionOpened(IoSession session) {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("sessionOpened");
         Object obj = session.getAttribute("ip1");
         String terminal_id=session.getAttribute("terminal_id").toString();
         TerminalDevice td = BussinessConfig.getTerminalByCode(terminal_id);
         if (obj==null) {// client2 连接成功
             if (td != null) {
-                session.setAttribute("terminal_name", td.getName());
+                session.setAttribute("terminal_name", td.getName()+"[client2]");
                 session.setAttribute("terminal", td);
                 session.setAttribute("clientFlag", 2);
                 td.setIsOnline(1);
@@ -173,6 +173,7 @@ public class  Client2ClientHandler extends IoHandlerAdapter {
             }
         } else {// client1连接成功时去发起client2连接
             if (td != null) {
+                session.setAttribute("terminal_name", td.getName()+"[client1]");
                 String ip2 = session.getAttribute("ip2").toString();
                 int port2 = Integer.parseInt(session.getAttribute("port2").toString());
                 session.setAttribute("clientFlag", 1);
