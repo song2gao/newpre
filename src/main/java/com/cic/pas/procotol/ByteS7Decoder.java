@@ -3,7 +3,6 @@ package com.cic.pas.procotol;
 import com.cic.pas.common.bean.MeterDevice;
 import com.cic.pas.common.bean.Option;
 import com.cic.pas.common.bean.PointDevice;
-import com.cic.pas.common.bean.TerminalDevice;
 import com.cic.pas.common.util.CRC16M;
 import com.cic.pas.common.util.DataType;
 import com.cic.pas.common.util.Util;
@@ -85,6 +84,8 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
         int type = Integer.parseInt(session.getAttribute("type").toString());
         BigDecimal readAddress = new BigDecimal(session.getAttribute("readAddress").toString());
         S7Response response = new S7Response();
+        String sendMessage=session.getAttribute("sendMessage").toString();
+        String receiveMessage=CRC16M.getBufHexStr(message);
         try
         {
             response.setResponseBytes(message);
@@ -93,7 +94,6 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
             e.printStackTrace(new PrintStream(baos));
             String exception = baos.toString();
             logger.info(exception);
-            String sendMessage=session.getAttribute("sendMessage").toString();
             logger.info(sendMessage);
             logger.info(CRC16M.getBufHexStr(message));
         }
@@ -115,7 +115,7 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                                 lastlen = readAddress.subtract(new BigDecimal(readAddress.intValue()));
                             }
                             i = i.add(lastlen);
-                            pointlen = setPointValues(data, readAddress, md, i, pd, readType);
+                            pointlen = setPointValues(data, readAddress, md, i, pd, readType,sendMessage,receiveMessage);
                             lastlen = pointlen;
                             BigDecimal pointValue = pd.getModAddress().subtract(new BigDecimal(pd.getModAddress().intValue()));
                             int flag = pointValue.compareTo(new BigDecimal("0.6"));
@@ -153,7 +153,7 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
         }
     }
 
-    private BigDecimal setPointValues(byte[] data, BigDecimal address, MeterDevice md, BigDecimal i, PointDevice pd, int readType) {
+    private BigDecimal setPointValues(byte[] data, BigDecimal address, MeterDevice md, BigDecimal i, PointDevice pd, int readType,String send,String receive) {
         BigDecimal pointlen;
         BigDecimal value = new BigDecimal(0);
         if (pd.getMmpType() == 1) {
@@ -173,6 +173,9 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                 value = new BigDecimal(Util.bytesToValueRealOffset(data, i.intValue(),
                         pd.getMmpType()).toString());
             } catch (Exception e) {
+                System.out.println("TX:"+send);
+                System.out.println("RX:"+receive);
+                System.out.println("DATA:"+CRC16M.getBufHexStr(data));
                 System.out.println(pd.getName() + ":" + pd.getModAddress() + "[" + pd.getPointLen() + "]");
                 e.printStackTrace();
             }
