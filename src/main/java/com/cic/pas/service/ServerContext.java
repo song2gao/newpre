@@ -53,6 +53,7 @@ public class ServerContext {
      */
     public static Map<String, BaseThread> threadMap;
 
+    public static Map<String,BaseThread> transmitThreadMap=new HashMap<>();
 
     /**
      * 保存所有连接到此服务器的终端长连接session（用于取得历史数据）

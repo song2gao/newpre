@@ -567,14 +567,10 @@ public class DBVisitService {
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
     }
-    public static boolean updatePointValue(PointDevice pd, String value) {
-        String sql = "update poms_device_measur_point set MMP_SET_VALUE='" + value + "' where ID='" + pd.getId() + "'";
+    public static boolean updatePointValue(PointDevice pd) {
+        String sql = "update poms_modle_measur_point set MMP_STANDARD_VAL='" + pd.getValue() + "' where ID='" + pd.getId() + "'";
         int result = jdbcTemplate.update(sql);
         if (result > 0) {
-            pd.setShowValue(value);
-            if (pd.getCode().equals("1100")) {
-                pd.setValue(new BigDecimal(value));
-            }
             return true;
         } else {
             return false;

@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 
 public class NewTest {
     public static void main(String[] args) {
-        String str="[1]";
+       for(int i=1;i<32;i++){
+           System.out.print("point"+i+"+");
+       }
 
     }
     /**

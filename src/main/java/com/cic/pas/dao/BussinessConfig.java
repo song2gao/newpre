@@ -77,14 +77,14 @@ public final class BussinessConfig {
          */
         yearMonthDayData();
         /**
-         * 加载采集模型参数
-         */
-        preParams();
-        /**
          * 加载用能系统及设备模型参数
          */
         systemParams();
         getSystemDayData();
+        /**
+         * 加载采集模型参数
+         */
+        preParams();
     }
 
     /**
@@ -276,6 +276,12 @@ public final class BussinessConfig {
                                             pd.setUp_line(rs.getDouble("mmp_up_value"));
                                             pd.setDown_line(rs.getDouble("mmp_down_value"));
                                             pd.setMmpIsAlarm(rs.getInt("MMP_IS_ALARM"));
+                                            pd.setIsCollect(rs.getInt("MMP_ISCOLLECT"));
+                                            pd.setCtmType(p.getPcpcEnergyType());
+                                            pd.setPreType(p.getType());
+                                            pd.setMmpType(rs.getInt("mmp_type"));
+                                            pd.setSystemCode(rs.getString("MMP_BACKUPS"));
+                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(pd.getCtdCode(),pd.getCode()));
                                             if (pd.getIsCalculate() == 1) {
                                                 BigDecimal lastValue = getLastValue(
                                                         p.getCode(),
@@ -286,14 +292,10 @@ public final class BussinessConfig {
                                                     pd.setShowValue(lastValue + "");
                                                 }
                                             }else{
-                                                pd.setValue(rs.getBigDecimal("MMP_STANDARD_VAL"));
+                                                if(pd.getIsCollect()==0) {
+                                                    pd.setValue(rs.getBigDecimal("MMP_STANDARD_VAL"));
+                                                }
                                             }
-                                            pd.setIsCollect(rs.getInt("MMP_ISCOLLECT"));
-                                            pd.setCtmType(p.getPcpcEnergyType());
-                                            pd.setPreType(p.getType());
-                                            pd.setMmpType(rs.getInt("mmp_type"));
-                                            pd.setSystemCode(rs.getString("MMP_BACKUPS"));
-                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(pd.getCtdCode(),pd.getCode()));
                                             return pd;
                                         }
                                     });
@@ -341,6 +343,12 @@ public final class BussinessConfig {
                                             pd.setUp_line(rs.getDouble("mmp_up_value"));
                                             pd.setDown_line(rs.getDouble("mmp_down_value"));
                                             pd.setMmpIsAlarm(rs.getInt("MMP_IS_ALARM"));
+                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(p.getCode(),pd.getCode()));
+                                            pd.setIsCollect(rs.getInt("MMP_ISCOLLECT"));
+                                            pd.setCtmType(p.getPcpcEnergyType());
+                                            pd.setPreType(p.getType());
+                                            pd.setMmpType(rs.getInt("mmp_type"));
+                                            pd.setSystemCode(rs.getString("MMP_BACKUPS"));
                                             if (pd.getIsCalculate() == 1) {
                                                 BigDecimal lastValue = getLastValue(
                                                         p.getCode(),
@@ -351,14 +359,10 @@ public final class BussinessConfig {
                                                     pd.setShowValue(lastValue + "");
                                                 }
                                             }else{
-                                                pd.setValue(rs.getBigDecimal("MMP_STANDARD_VAL"));
+                                                if(pd.getIsCollect()==0) {
+                                                    pd.setValue(rs.getBigDecimal("MMP_STANDARD_VAL"));
+                                                }
                                             }
-                                            pd.setIsCollect(rs.getInt("MMP_ISCOLLECT"));
-                                            pd.setCtmType(p.getPcpcEnergyType());
-                                            pd.setPreType(p.getType());
-                                            pd.setMmpType(rs.getInt("mmp_type"));
-                                            pd.setSystemCode(rs.getString("MMP_BACKUPS"));
-                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(p.getCode(),pd.getCode()));
                                             return pd;
                                         }
                                     });

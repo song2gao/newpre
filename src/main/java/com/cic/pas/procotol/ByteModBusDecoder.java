@@ -26,98 +26,100 @@ public class ByteModBusDecoder {
                         int lastMMpType = 0;
                         int currentlen = 0;
                         for (PointDevice pd : md.getPointDevice()) {
-                            if (lastMMpType == 1) {
-                                BigDecimal realLastLen = new BigDecimal(lastlen);
-                                if (function == 3 || function == 4) {
-                                    realLastLen = realLastLen.divide(new BigDecimal("100"));
-                                }
-                                start = start.add(realLastLen);
-                                if (start.subtract(new BigDecimal(start.intValue())).compareTo(new BigDecimal("0.15")) > 0) {//如果start小数部分大于0.15
-                                    start = new BigDecimal(start.intValue() + 1);
-                                }
-                            } else {
-                                start = start.add(new BigDecimal(lastlen));
-                            }
-                            BigDecimal address = pd.getModAddress().add(new BigDecimal(md.getIncrease()));
-                            BigDecimal pointAddress = ModBusUtil.getProtocolCodeAndAddress(address, pd.getIsPlcAddress());
-                            if (pointAddress.compareTo(start) == 0) {
-                                currentlen = pd.getPointLen();
-                                if (pd.getMmpType() == 1) {
-                                    if (i + currentlen > data.length) {
-                                        break;
+                            if (pd.getIsCollect() == 1) {
+                                if (lastMMpType == 1) {
+                                    BigDecimal realLastLen = new BigDecimal(lastlen);
+                                    if (function == 3 || function == 4) {
+                                        realLastLen = realLastLen.divide(new BigDecimal("100"));
+                                    }
+                                    start = start.add(realLastLen);
+                                    if (start.subtract(new BigDecimal(start.intValue())).compareTo(new BigDecimal("0.15")) > 0) {//如果start小数部分大于0.15
+                                        start = new BigDecimal(start.intValue() + 1);
                                     }
                                 } else {
-                                    if (i + currentlen * 2 > data.length) {
-                                        break;
-                                    }
+                                    start = start.add(new BigDecimal(lastlen));
                                 }
-                                BigDecimal value = null;
-                                if (pd.getMmpType() == 1) {
-                                    BigDecimal addressPoint=address.subtract(new BigDecimal(address.intValue()));//地址小数部分
-                                    if (addressPoint.compareTo(BigDecimal.ZERO) > 0) {//地址小数部分不为0 是用03 04指令读取 重新定义位数组下标
-                                        if(i==0){
-                                            i=addressPoint.multiply(new BigDecimal("100")).intValue();
+                                BigDecimal address = pd.getModAddress().add(new BigDecimal(md.getIncrease()));
+                                BigDecimal pointAddress = ModBusUtil.getProtocolCodeAndAddress(address, pd.getIsPlcAddress());
+                                if (pointAddress.compareTo(start) == 0) {
+                                    currentlen = pd.getPointLen();
+                                    if (pd.getMmpType() == 1) {
+                                        if (i + currentlen > data.length) {
+                                            break;
+                                        }
+                                    } else {
+                                        if (i + currentlen * 2 > data.length) {
+                                            break;
                                         }
                                     }
-                                }
-                                value = new BigDecimal(Util
-                                        .bytesToValueRealOffset(data, i,
-                                                pd.getMmpType()).toString());
-                                if (pd.getIsCt() == 1) {
-                                    value = value.multiply(new BigDecimal(md.getCt()));
-                                }
-                                if (pd.getIsPt() == 1) {
-                                    value = value.multiply(new BigDecimal(md.getPt()));
-                                }
-                                String showValue = value + "";
-                                try {
-                                    if (pd.getIsBit() == 1) {
-                                        List<Option> options = pd.getOptions();
-                                        if (options != null && options.size() > 0) {
-                                            for (Option option : options) {
-                                                if (option.getKey().equals(value.intValue() + "")) {
-                                                    showValue = option.getValue();
-                                                    break;
-                                                }
+                                    BigDecimal value = null;
+                                    if (pd.getMmpType() == 1) {
+                                        BigDecimal addressPoint = address.subtract(new BigDecimal(address.intValue()));//地址小数部分
+                                        if (addressPoint.compareTo(BigDecimal.ZERO) > 0) {//地址小数部分不为0 是用03 04指令读取 重新定义位数组下标
+                                            if (i == 0) {
+                                                i = addressPoint.multiply(new BigDecimal("100")).intValue();
                                             }
                                         }
-                                    } else {
-                                        value = Util.manageData(value, pd
-                                                .getFormular());
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                if (checkData(td, pd, value, md.getName(), sendStr, receivedStr)) {
-                                    pd.setValue(value);
-                                    pd.setShowValue(showValue);
-                                    String dateTime = new SimpleDateFormat(
-                                            "yyyy-MM-dd HH:mm:ss").format(new Date());
-                                    pd.setTime(dateTime);
-                                    if (pd.getCode().equals("10000")) {//PLC采集表计通讯状态
-                                        if (pd.getValue().intValue() > 0) {
-                                            md.setStatus(0);
+                                    value = new BigDecimal(Util
+                                            .bytesToValueRealOffset(data, i,
+                                                    pd.getMmpType()).toString());
+                                    if (pd.getIsCt() == 1) {
+                                        value = value.multiply(new BigDecimal(md.getCt()));
+                                    }
+                                    if (pd.getIsPt() == 1) {
+                                        value = value.multiply(new BigDecimal(md.getPt()));
+                                    }
+                                    String showValue = value + "";
+                                    try {
+                                        if (pd.getIsBit() == 1) {
+                                            List<Option> options = pd.getOptions();
+                                            if (options != null && options.size() > 0) {
+                                                for (Option option : options) {
+                                                    if (option.getKey().equals(value.intValue() + "")) {
+                                                        showValue = option.getValue();
+                                                        break;
+                                                    }
+                                                }
+                                            }
                                         } else {
-                                            md.setStatus(1);
+                                            value = Util.manageData(value, pd
+                                                    .getFormular());
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (checkData(td, pd, value, md.getName(), sendStr, receivedStr)) {
+                                        pd.setValue(value);
+                                        pd.setShowValue(showValue);
+                                        String dateTime = new SimpleDateFormat(
+                                                "yyyy-MM-dd HH:mm:ss").format(new Date());
+                                        pd.setTime(dateTime);
+                                        if (pd.getCode().equals("10000")) {//PLC采集表计通讯状态
+                                            if (pd.getValue().intValue() > 0) {
+                                                md.setStatus(0);
+                                            } else {
+                                                md.setStatus(1);
+                                                md.setLastCollectDate(dateTime);
+                                            }
+                                        } else {
+                                            if (getOnlineStatus(md)) {
+                                                md.setStatus(1);
+                                            }
                                             md.setLastCollectDate(dateTime);
                                         }
-                                    } else {
-                                        if (getOnlineStatus(md)) {
-                                            md.setStatus(1);
+                                        if (md.getIsinvented() == 2) {
+                                            setInventedMeterData(td, pd);
                                         }
-                                        md.setLastCollectDate(dateTime);
+                                        setSystemParams(ctdCode, pd.getCode(), value);
                                     }
-                                    if(md.getIsinvented()==2){
-                                        setInventedMeterData(td,pd);
+                                    lastlen = currentlen;
+                                    lastMMpType = pd.getMmpType();
+                                    if (pd.getMmpType() == 1) {
+                                        i += currentlen;
+                                    } else {
+                                        i += currentlen * 2;
                                     }
-                                    setSystemParams(ctdCode, pd.getCode(), value);
-                                }
-                                lastlen = currentlen;
-                                lastMMpType = pd.getMmpType();
-                                if (pd.getMmpType() == 1) {
-                                    i += currentlen;
-                                } else {
-                                    i += currentlen * 2;
                                 }
                             }
                         }

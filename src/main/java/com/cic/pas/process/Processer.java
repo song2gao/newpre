@@ -278,7 +278,7 @@ public class Processer {
                                     GetDataThread thread = (GetDataThread) ServerContext.threadMap.get(td.getCode());
                                     res = thread.write(md, pd, Double.parseDouble(value));
                                 } else {
-                                    UpdateNoCollectValue.update(md, pd, value);
+                                    res=UpdateNoCollectValue.update(md, pd, value);
                                 }
                                 if (!res) {
                                     result = "写入失败（"+td.getName()+"-"+md.getName()+"["+pd.getName()+"]）";

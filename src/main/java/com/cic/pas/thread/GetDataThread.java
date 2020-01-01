@@ -145,7 +145,7 @@ public class GetDataThread extends BaseThread {
         if (map.size() == 0) {
             if (td.getNoticeAccord().equals("Byte3761")) {
                 for (MeterDevice meter : td.getMeterList()) {
-                    if (meter.getIsinvented() == 0||meter.getIsinvented() == 2) {
+                    if (meter.getIsinvented() == 0 || meter.getIsinvented() == 2) {
                         getSendBuff3761(meter);
                     }
                 }
@@ -153,13 +153,13 @@ public class GetDataThread extends BaseThread {
             } else if (td.getNoticeAccord().equals("ByteS7")) {
                 s7HandBuff();
                 for (MeterDevice meter : td.getMeterList()) {
-                    if (meter.getIsinvented() == 0||meter.getIsinvented() == 2) {
+                    if (meter.getIsinvented() == 0 || meter.getIsinvented() == 2) {
                         getSendBuffS7(meter);
                     }
                 }
             } else {
                 for (MeterDevice meter : td.getMeterList()) {
-                    if (meter.getIsinvented() == 0||meter.getIsinvented() == 2) {
+                    if (meter.getIsinvented() == 0 || meter.getIsinvented() == 2) {
                         getSendBuffModBus(meter);
                     }
                 }
@@ -374,10 +374,18 @@ public class GetDataThread extends BaseThread {
         int meterAddress = meter.getAddress();
 //        List<PointDevice> allPints = meter.getPointDevice();// 所有参数 含非采集参数
         List<PointDevice> points = meter.getPointDevice();// 采集参数
-        List<PointDevice> prePoints=new ArrayList<PointDevice>();
-        for(PointDevice pd:points){
-            if(pd.getIsCollect()==1){
+        List<PointDevice> prePoints = new ArrayList<PointDevice>();
+
+        for (PointDevice pd : points) {
+            if (pd.getIsCollect() == 1) {
                 prePoints.add(pd);
+            } else {
+                if (pd.getValue().compareTo(new BigDecimal("1")) == 0) {
+                    DataTransmitThread transmitThread = new DataTransmitThread(pd);
+                    transmitThread.setName(pd.getName() + "数据转发线程");
+                    transmitThread.start();
+                    ServerContext.transmitThreadMap.put(meter.getCode() + "-" + pd.getCode(), transmitThread);
+                }
             }
         }
 //        MeterDevice timingMd = new MeterDevice();
@@ -416,7 +424,7 @@ public class GetDataThread extends BaseThread {
         int lastfunction = 3;
         int lastMMpType = 0;
         if (prePoints.size() == 1) {
-            PointDevice p = points.get(0);
+            PointDevice p = prePoints.get(0);
             start = p.getModAddress().intValue() + meter.getIncrease();
             key = meter.getCode() + ":" + p.getStorageType() + ":" + p.getModAddress() + "-" + p.getMmpType();
             byte[] values = ModBusUtil.getProtocol(meterAddress, start, p.getPointLen(), p.getIsPlcAddress(), p.getStorageType());
@@ -441,7 +449,7 @@ public class GetDataThread extends BaseThread {
                             len = curlen;
                         } else {
                             len += curlen;
-                            if (i == points.size() - 1) {
+                            if (i == prePoints.size() - 1) {
                                 len = getRealLen(lastAddress, len, lastfunction, lastMMpType, address, len);
                                 byte[] values = ModBusUtil.getProtocol(meterAddress, begin, len, p.getIsPlcAddress(), lastfunction);
                                 map.put(key, values);
@@ -451,7 +459,7 @@ public class GetDataThread extends BaseThread {
                         len = getRealLen(lastAddress, len, lastfunction, lastMMpType, address, curlen);
                         byte[] values = ModBusUtil.getProtocol(meterAddress, begin, len, p.getIsPlcAddress(), lastfunction);
                         map.put(key, values);
-                        if (i == points.size() - 1) {
+                        if (i == prePoints.size() - 1) {
                             byte[] last = ModBusUtil.getProtocol(meterAddress, address.intValue(), curlen, p.getIsPlcAddress(), p.getStorageType());
                             key = meter.getCode() + ":" + p.getStorageType() + ":" + address + "-" + p.getMmpType();
                             map.put(key, last);
@@ -538,10 +546,17 @@ public class GetDataThread extends BaseThread {
      */
     public void getSendBuffS7(MeterDevice meter) {
         List<PointDevice> points = meter.getPointDevice();// 采集参数
-        List<PointDevice> prePoints=new ArrayList<PointDevice>();
-        for(PointDevice pd:points){
-            if(pd.getIsCollect()==1){
+        List<PointDevice> prePoints = new ArrayList<PointDevice>();
+        for (PointDevice pd : points) {
+            if (pd.getIsCollect() == 1) {
                 prePoints.add(pd);
+            } else {
+                if (pd.getValue().compareTo(new BigDecimal("1")) == 0) {
+                    DataTransmitThread transmitThread = new DataTransmitThread(pd);
+                    transmitThread.setName(pd.getName() + "数据转发线程");
+                    transmitThread.start();
+                    ServerContext.transmitThreadMap.put(meter.getCode() + "-" + pd.getCode(), transmitThread);
+                }
             }
         }
         BigDecimal start;
@@ -553,7 +568,7 @@ public class GetDataThread extends BaseThread {
         int lastfunction = 3;
         int lastMmpType = 1;
         if (prePoints.size() == 1) {
-            PointDevice p = points.get(0);
+            PointDevice p = prePoints.get(0);
             start = p.getModAddress().add(new BigDecimal(meter.getIncrease()));
             key = meter.getCode() + ":" + p.getStorageType() + ":" + start;
             byte[] values = getS7Send(start, p.getPointLen(), p.getStorageType(), p.getMmpType(), p.getDbIndex());
@@ -569,7 +584,7 @@ public class GetDataThread extends BaseThread {
                     key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
                 } else {
                     if (getDataTypeReadInOneRequest(lastfunction, p.getStorageType(), lastAddress, p.getModAddress(), lastMmpType, p.getMmpType(), lastLen)) {
-                        if (len >=200) {
+                        if (len >= 200) {
                             byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType(), p.getDbIndex());
                             map.put(key, values);
                             key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
@@ -577,7 +592,7 @@ public class GetDataThread extends BaseThread {
                             len = curlen;
                         } else {
                             len += curlen;
-                            if (i == points.size() - 1) {
+                            if (i == prePoints.size() - 1) {
                                 byte[] values = getS7Send(begin, len, lastfunction, p.getMmpType(), p.getDbIndex());
                                 map.put(key, values);
                             }
@@ -585,7 +600,7 @@ public class GetDataThread extends BaseThread {
                     } else {
                         byte[] values = getS7Send(begin, len, lastfunction, lastMmpType, p.getDbIndex());
                         map.put(key, values);
-                        if (i == points.size() - 1) {
+                        if (i == prePoints.size() - 1) {
                             byte[] last = getS7Send(address, curlen, p.getStorageType(), p.getMmpType(), p.getDbIndex());
                             key = meter.getCode() + ":" + p.getStorageType() + ":" + address;
                             map.put(key, last);

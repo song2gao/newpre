@@ -105,25 +105,27 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                     BigDecimal i = new BigDecimal("0");
                     BigDecimal lastlen = new BigDecimal(0);
                     for (PointDevice pd : md.getPointDevice()) {
-                        readAddress = readAddress.add(lastlen);
-                        if (pd.getModAddress().compareTo(readAddress) == 0 && pd.getStorageType() == type) {
-                            BigDecimal pointlen = new BigDecimal(0);
-                            if (i.intValue() + pointlen.intValue() > data.length) {
-                                break;
+                        if (pd.getIsCollect() == 1) {
+                            readAddress = readAddress.add(lastlen);
+                            if (pd.getModAddress().compareTo(readAddress) == 0 && pd.getStorageType() == type) {
+                                BigDecimal pointlen = new BigDecimal(0);
+                                if (i.intValue() + pointlen.intValue() > data.length) {
+                                    break;
+                                }
+                                if (lastlen.compareTo(BigDecimal.ZERO) == 0) {
+                                    lastlen = readAddress.subtract(new BigDecimal(readAddress.intValue()));
+                                }
+                                i = i.add(lastlen);
+                                pointlen = setPointValues(data, readAddress, md, i, pd, readType, sendMessage, receiveMessage);
+                                lastlen = pointlen;
+                                BigDecimal pointValue = pd.getModAddress().subtract(new BigDecimal(pd.getModAddress().intValue()));
+                                int flag = pointValue.compareTo(new BigDecimal("0.6"));
+                                if (flag > 0) {
+                                    lastlen = lastlen.add(new BigDecimal("0.2"));
+                                }
+                            } else {
+                                lastlen = new BigDecimal("0");
                             }
-                            if (lastlen.compareTo(BigDecimal.ZERO) == 0) {
-                                lastlen = readAddress.subtract(new BigDecimal(readAddress.intValue()));
-                            }
-                            i = i.add(lastlen);
-                            pointlen = setPointValues(data, readAddress, md, i, pd, readType,sendMessage,receiveMessage);
-                            lastlen = pointlen;
-                            BigDecimal pointValue = pd.getModAddress().subtract(new BigDecimal(pd.getModAddress().intValue()));
-                            int flag = pointValue.compareTo(new BigDecimal("0.6"));
-                            if (flag > 0) {
-                                lastlen = lastlen.add(new BigDecimal("0.2"));
-                            }
-                        } else {
-                            lastlen = new BigDecimal("0");
                         }
                     }
                 }
