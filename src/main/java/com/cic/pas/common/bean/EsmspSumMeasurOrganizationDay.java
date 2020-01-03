@@ -241,11 +241,41 @@ public class EsmspSumMeasurOrganizationDay {
 
     private BigDecimal sumValue=new BigDecimal(0);
 
+    private BigDecimal nomalPrice=new BigDecimal("0");
+
+    private  BigDecimal sumAmount=new BigDecimal("0");
+
+    private BigDecimal jValue=new BigDecimal(0);
+
+    private String[] jHours;
+
+    private String[] fHours;
+
+    private String[] pHours;
+
+    private String[] gHours;
+
+    private BigDecimal jPrice=new BigDecimal("0");
+
+    private BigDecimal jAmount=new BigDecimal("0");
+
     private BigDecimal fValue=new BigDecimal(0);
+
+    private BigDecimal fPrice=new BigDecimal("0");
+
+    private BigDecimal fAmount=new BigDecimal("0");
 
     private BigDecimal pValue=new BigDecimal(0);
 
+    private BigDecimal pPrice=new BigDecimal("0");
+
+    private BigDecimal pAmount=new BigDecimal("0");
+
     private BigDecimal gValue=new BigDecimal(0);
+
+    private BigDecimal gPrice=new BigDecimal("0");
+
+    private BigDecimal gAmount=new BigDecimal("0");
 
     private BigDecimal lastValue=new BigDecimal(0);
 
@@ -1151,5 +1181,125 @@ public class EsmspSumMeasurOrganizationDay {
 
     public void setLastValue(BigDecimal lastValue) {
         this.lastValue = lastValue;
+    }
+
+    public BigDecimal getSumAmount() {
+        return sumAmount;
+    }
+
+    public void setSumAmount(BigDecimal sumAmount) {
+        this.sumAmount = sumAmount;
+    }
+
+    public BigDecimal getjValue() {
+        return jValue;
+    }
+
+    public void setjValue(BigDecimal jValue) {
+        this.jValue = jValue;
+    }
+
+    public BigDecimal getjPrice() {
+        return jPrice;
+    }
+
+    public void setjPrice(BigDecimal jPrice) {
+        this.jPrice = jPrice;
+    }
+
+    public BigDecimal getjAmount() {
+        return jAmount;
+    }
+
+    public void setjAmount(BigDecimal jAmount) {
+        this.jAmount = jAmount;
+    }
+
+    public BigDecimal getfPrice() {
+        return fPrice;
+    }
+
+    public void setfPrice(BigDecimal fPrice) {
+        this.fPrice = fPrice;
+    }
+
+    public BigDecimal getfAmount() {
+        return fAmount;
+    }
+
+    public void setfAmount(BigDecimal fAmount) {
+        this.fAmount = fAmount;
+    }
+
+    public BigDecimal getpPrice() {
+        return pPrice;
+    }
+
+    public void setpPrice(BigDecimal pPrice) {
+        this.pPrice = pPrice;
+    }
+
+    public BigDecimal getpAmount() {
+        return pAmount;
+    }
+
+    public void setpAmount(BigDecimal pAmount) {
+        this.pAmount = pAmount;
+    }
+
+    public BigDecimal getgPrice() {
+        return gPrice;
+    }
+
+    public void setgPrice(BigDecimal gPrice) {
+        this.gPrice = gPrice;
+    }
+
+    public BigDecimal getgAmount() {
+        return gAmount;
+    }
+
+    public void setgAmount(BigDecimal gAmount) {
+        this.gAmount = gAmount;
+    }
+
+    public BigDecimal getNomalPrice() {
+        return nomalPrice;
+    }
+
+    public void setNomalPrice(BigDecimal nomalPrice) {
+        this.nomalPrice = nomalPrice;
+    }
+
+    public String[] getjHours() {
+        return jHours;
+    }
+
+    public void setjHours(String[] jHours) {
+        this.jHours = jHours;
+    }
+
+    public String[] getfHours() {
+        return fHours;
+    }
+
+    public void setfHours(String[] fHours) {
+        this.fHours = fHours;
+    }
+
+    public String[] getpHours() {
+        return pHours;
+    }
+
+    public void setpHours(String[] pHours) {
+        this.pHours = pHours;
+    }
+
+    public String[] getgHours() {
+        return gHours;
+    }
+
+    public void setgHours(String[] gHours) {
+        this.gHours = gHours;
     }
 }

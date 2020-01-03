@@ -454,8 +454,8 @@ public class DBVisitService {
                 + "point76,point77,point78,point79,point80,point81,point82,"
                 + "point83,point84,point85,point86,point87,point88,point89,"
                 + "point90,point91,point92,point93,point94,point95,point96,"
-                + "MAX_VALUE,MAX_DATE,MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE,"
-                + "F_VALUE,P_VALUE,G_VALUE,last_value)values";
+                + "MAX_VALUE,MAX_DATE,MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE," +
+                "SUM_AMOUNT,J_VALUE,J_AMOUNT,F_VALUE,F_AMOUNT,P_VALUE,P_AMOUNT,G_VALUE,G_AMOUNT,last_value)values";
         if (list.size() > 0) {
             DBConfigDao.jdbcTemplate
                     .execute("delete from esmsp_sum_measur_organization_day_temp");
@@ -639,8 +639,11 @@ public class DBVisitService {
                     + day.getMaxValue() + ",'" + day.getMaxDate() + "',"
                     + day.getMinValue() + ",'" + day.getMinDate() + "',"
                     + day.getAvgValue() + "," + day.getSumValue() + ","
-                    + day.getfValue() + "," + day.getpValue() + ","
-                    + day.getgValue() + "," + day.getLastValue() + ")");
+                    +day.getSumAmount()+","+day.getjValue()+","
+                    +day.getjAmount()+","+day.getfValue()+","
+                    + day.getfAmount() + "," + day.getpValue() + ","
+                    +day.getpAmount()+"," + day.getgValue() + ","
+                    +day.getgAmount()+","+ day.getLastValue() + ")");
             if (i != list.size() - 1) {
                 buffer.append(",");
             }
@@ -717,8 +720,11 @@ public class DBVisitService {
                     + day.getMaxValue() + ",'" + day.getMaxDate() + "',"
                     + day.getMinValue() + ",'" + day.getMinDate() + "',"
                     + day.getAvgValue() + "," + day.getSumValue() + ","
-                    + day.getfValue() + "," + day.getpValue() + ","
-                    + day.getgValue() + ")");
+                    +day.getSumAmount()+","+day.getjValue()+","
+                    +day.getjAmount()+","+day.getfValue()+","
+                    + day.getfAmount() + "," + day.getpValue() + ","
+                    +day.getpAmount()+"," + day.getgValue() + ","
+                    +day.getgAmount() + ")");
             if (i != list.size() - 1) {
                 buffer.append(",");
             }
@@ -829,7 +835,7 @@ public class DBVisitService {
                 + "point83,point84,point85,point86,point87,point88,point89,"
                 + "point90,point91,point92,point93,point94,point95,point96,"
                 + "MAX_VALUE,MAX_DATE,MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE,"
-                + "F_VALUE,P_VALUE,G_VALUE)values";
+                + "SUM_AMOUNT,J_VALUE,J_AMOUNT,F_VALUE,F_AMOUNT,P_VALUE,P_AMOUNT,G_VALUE,G_AMOUNT)values";
         if (list.size() > 0) {
             Map<String, List> map = subList(
                     list, 1000);
@@ -904,7 +910,7 @@ public class DBVisitService {
                 + "point13,point14,point15,point16,point17,point18,point19,"
                 + "point20,point21,point22,point23,point24,point25,point26,"
                 + "point27,point28,point29,point30,point31,"
-                + "AVG_VALUE,SUM_VALUE," + "F_VALUE,P_VALUE,G_VALUE)values";
+                + "AVG_VALUE,SUM_VALUE,SUM_AMOUNT,J_VALUE,J_AMOUNT,F_VALUE,F_AMOUNT,P_VALUE,P_AMOUNT,G_VALUE,G_AMOUNT)values";
         for (int i = 0; i < list.size(); i++) {
             EsmspSumMeasurOrganizationMonth month = list.get(i);
             if (dateCode.equals("")) {
@@ -928,8 +934,11 @@ public class DBVisitService {
                     + month.getPoint27() + "," + month.getPoint28() + ","
                     + month.getPoint29() + "," + month.getPoint30() + ","
                     + month.getPoint31() + "," + month.getAvgValue() + ","
-                    + month.getSumValue() + "," + month.getfValue() + ","
-                    + month.getpValue() + "," + month.getgValue() + ")";
+                    + month.getSumValue() + "," +month.getSumAmount()+","
+                    +month.getjValue()+","+month.getjAmount()+","
+                    +month.getfValue()+ month.getfAmount() + ","
+                    +month.getpValue()+month.getpAmount()
+                    + month.getgValue() + "," + month.getpAmount() + ")";
             if (i != list.size() - 1) {
                 sql += ",";
             }
@@ -953,7 +962,7 @@ public class DBVisitService {
         String sql = "insert into esmsp_sum_measur_organization_year "
                 + "(euo_code,EUS_CODE,MMP_CODE,DATE_CODE,point1,point2,point3,point4,"
                 + "point5,point6,point7,point8,point9,point10,point11,point12,"
-                + "AVG_VALUE,SUM_VALUE," + "F_VALUE,P_VALUE,G_VALUE) values";
+                + "AVG_VALUE,SUM_VALUE,SUM_AMOUNT,J_VALUE,J_AMOUNT,F_VALUE,F_AMOUNT,P_VALUE,P_AMOUNT,G_VALUE,G_AMOUNT) values";
         for (int i = 0; i < list.size(); i++) {
             EsmspSumMeasurOrganizationYear year = list.get(i);
             if (dateCode.equals("")) {
@@ -968,8 +977,11 @@ public class DBVisitService {
                     + year.getPoint9() + "," + year.getPoint10() + ","
                     + year.getPoint11() + "," + year.getPoint12() + ","
                     + year.getAvgValue() + "," + year.getSumValue() + ","
-                    + year.getfValue() + "," + year.getpValue() + ","
-                    + year.getgValue() + ")";
+                    +year.getSumAmount()+","+year.getjValue()+","
+                    +year.getjAmount()+","+year.getfValue()+","
+                    + year.getfAmount() + "," + year.getpValue() + ","
+                    +year.getpAmount()+","+year.getgValue()
+                    + year.getgAmount() + ")";
             if (i != list.size() - 1) {
                 sql += ",";
             }
@@ -1198,5 +1210,25 @@ public class DBVisitService {
 
         return map;
     }
+    /**
+     * 为了提高效率{批量插入实时数据}
+     */
+    public static void batchInsertRealData(List<EsmspSumMeasurSystemReal> list) {
+        String sql = "insert into esmsp_sum_measur_system_data (EUI_CODE,SYSTEM_CODE,FACILITY_CODE,MMP_CODE,DATE_CODE,value) values";
+        for (int i = 0; i < list.size(); i++) {
+            EsmspSumMeasurSystemReal real = list.get(i);
+            sql += "( '" + real.getEuiCode() + "','" + real.getSystemCode()
+                    + "','" + real.getFacilityCode() + "','" + real.getMmpCode()
+                    + "','" +real.getDateCode() + "'," + real.getValue() + ")";
+            if (i != list.size() - 1) {
+                sql += ",";
+            }
+        }
+        if(list.size()>0){
+            DBConfigDao.jdbcTemplate.execute(sql);
+            System.out.println("批量插入实时数据成功SQL>......");
+        }
+    }
+
 
 }

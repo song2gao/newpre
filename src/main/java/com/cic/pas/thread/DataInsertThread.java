@@ -3,6 +3,7 @@ package com.cic.pas.thread;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,7 @@ public class DataInsertThread extends Thread {
              *存储周期  分钟
              * 默认 15分钟
              */
-            int saveCycle = 15;
+            int saveCycle = 1;
             int m = ca.get(Calendar.MINUTE);
             int h = ca.get(Calendar.HOUR_OF_DAY);
             int day = ca.get(Calendar.DAY_OF_MONTH);
@@ -33,7 +34,8 @@ public class DataInsertThread extends Thread {
             if (m % saveCycle == 0) {
                 long start = System.currentTimeMillis();
                 logger.info("准备生成插入数据" + new Date());
-                saveData(day, h, m, ca);
+//                saveData(day, h, m, ca);
+                buildAndSaveRealData(ca);
                 long end = System.currentTimeMillis();
                 logger.info("插入数据完成" + new Date() + ",用时:" + (end - start));
                 Calendar current = Calendar.getInstance();
@@ -267,6 +269,11 @@ public class DataInsertThread extends Thread {
         organizationDay.setMmpCode(mmpCode);
         organizationDay.setDateCode(datetime);
         organizationDay.setIsSave(pd.getIssave());
+        organizationDay.setNomalPrice(pd.getNormalPrice());
+        organizationDay.setfPrice(pd.getfPrice());
+        organizationDay.setpPrice(pd.getpPrice());
+        organizationDay.setgPrice(pd.getgPrice());
+        organizationDay.setjPrice(pd.getjPrice());
         try {
             if (pd.getMax_time() != null) {
                 organizationDay.setMaxValue(pd.getMax_value().setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -326,16 +333,33 @@ public class DataInsertThread extends Thread {
                     int type = Util.getFGP(point);
                     switch (type) {
                         case 1://
+
                             organizationDay.setfValue(organizationDay.getfValue()
                                     .add(value).setScale(2, BigDecimal.ROUND_HALF_UP));
+                            if (organizationDay.getfPrice() != null && organizationDay.getfPrice() != BigDecimal.ZERO) {
+                                organizationDay.setfAmount(organizationDay.getfValue().multiply(organizationDay.getfPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                            }
                             break;
                         case 2:
                             organizationDay.setpValue(organizationDay.getpValue()
                                     .add(value).setScale(2, BigDecimal.ROUND_HALF_UP));
+                            if (organizationDay.getpPrice() != null && organizationDay.getpPrice() != BigDecimal.ZERO) {
+                                organizationDay.setpAmount(organizationDay.getpValue().multiply(organizationDay.getpPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                            }
                             break;
                         case 3:
                             organizationDay.setgValue(organizationDay.getgValue()
                                     .add(value).setScale(2, BigDecimal.ROUND_HALF_UP));
+                            if (organizationDay.getgPrice() != null && organizationDay.getgPrice() != BigDecimal.ZERO) {
+                                organizationDay.setgAmount(organizationDay.getgValue().multiply(organizationDay.getgPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                            }
+                            break;
+                        case 4:
+                            organizationDay.setjValue(organizationDay.getgValue()
+                                    .add(value).setScale(2, BigDecimal.ROUND_HALF_UP));
+                            if (organizationDay.getjPrice() != null && organizationDay.getjPrice() != BigDecimal.ZERO) {
+                                organizationDay.setfAmount(organizationDay.getjValue().multiply(organizationDay.getjPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                            }
                             break;
                     }
                 } catch (Exception e) {
@@ -350,6 +374,13 @@ public class DataInsertThread extends Thread {
         organizationDay.setLastValue(pd.getValue().setScale(2, BigDecimal.ROUND_HALF_UP));
         method.invoke(organizationDay, value);
         organizationDay.setSumValue(organizationDay.getSumValue().add(value).setScale(2, BigDecimal.ROUND_HALF_UP));
+        if (organizationDay.getfPrice() == null || organizationDay.getfPrice() == BigDecimal.ZERO) {
+            if (organizationDay.getNomalPrice() != null && organizationDay.getNomalPrice() != BigDecimal.ZERO) {
+                organizationDay.setSumAmount(organizationDay.getSumValue().multiply(organizationDay.getNomalPrice()));
+            }
+        } else {
+            organizationDay.setSumAmount(organizationDay.getfAmount().add(organizationDay.getpAmount().add(organizationDay.getgAmount().add(organizationDay.getjAmount()))));
+        }
         organizationDay.setAvgValue(organizationDay.getSumValue().divide(new BigDecimal(point), 2));
         if (!dayIsExi) {
             BussinessConfig.config.daylist.add(organizationDay);
@@ -365,6 +396,14 @@ public class DataInsertThread extends Thread {
         }
     }
 
+    /**
+     * 方法名:
+     * 描述: 生成月数据
+     * 参数:
+     * 返回值:
+     * 作者:高嵩
+     * 创建时间: 2020/1/3 10:51
+     **/
     private void BulidMonthData(String datetime,
                                 Class<EsmspSumMeasurOrganizationMonth> monthClass,
                                 Class<EsmspSumMeasurOrganizationYear> yearClass,
@@ -424,13 +463,25 @@ public class DataInsertThread extends Thread {
         monthM.invoke(organizationMonth, dayOfMonth);
         organizationMonth.setSumValue(organizationMonth.getSumValue()
                 .add(dayOfMonth));
+        organizationMonth.setSumAmount(organizationMonth.getSumAmount()
+                .add(organizationDay.getSumAmount()));
         organizationMonth.setAvgValue(organizationMonth.getSumValue().divide(new BigDecimal(day), 2));
+        organizationMonth.setjValue(organizationMonth.getjValue()
+                .add(organizationDay.getjValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+        organizationMonth.setjAmount(organizationMonth.getgAmount()
+                .add(organizationDay.getjAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
         organizationMonth.setfValue(organizationMonth.getfValue()
                 .add(organizationDay.getfValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+        organizationMonth.setfAmount(organizationMonth.getfAmount()
+                .add(organizationDay.getfAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
         organizationMonth.setpValue(organizationMonth.getpValue()
                 .add(organizationDay.getpValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+        organizationMonth.setpAmount(organizationMonth.getpAmount()
+                .add(organizationDay.getpAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
         organizationMonth.setgValue(organizationMonth.getgValue()
                 .add(organizationDay.getgValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
+        organizationMonth.setgAmount(organizationMonth.getgAmount()
+                .add(organizationDay.getgAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
         organizationMonth31.setEuoCode(Util.euo_code);
         organizationMonth31.setEusCode(organizationDay31.getEusCode());
         organizationMonth31.setMmpCode(organizationDay31.getMmpCode());
@@ -448,6 +499,14 @@ public class DataInsertThread extends Thread {
         }
     }
 
+    /**
+     * 方法名:
+     * 描述: 生成年数据
+     * 参数:
+     * 返回值:
+     * 作者:高嵩
+     * 创建时间: 2020/1/3 10:51
+     **/
     private void BulidYearData(String datetime,
                                Class<EsmspSumMeasurOrganizationMonth> monthClass,
                                Class<EsmspSumMeasurOrganizationYear> yearClass,
@@ -509,13 +568,25 @@ public class DataInsertThread extends Thread {
         yearM.invoke(organizationYear, organizationMonth.getSumValue());
         organizationYear.setSumValue(organizationYear.getSumValue()
                 .add(organizationMonth.getSumValue()));
+        organizationYear.setSumAmount(organizationYear.getSumAmount()
+                .add(organizationMonth.getSumAmount()));
         organizationYear.setAvgValue(organizationYear.getSumValue().divide(new BigDecimal(month)).setScale(2, BigDecimal.ROUND_HALF_UP));
+        organizationYear.setjValue(organizationYear.getjValue()
+                .add(organizationMonth.getjValue()));
+        organizationYear.setfAmount(organizationYear.getfAmount()
+                .add(organizationMonth.getfAmount()));
         organizationYear.setfValue(organizationYear.getfValue()
                 .add(organizationMonth.getfValue()));
+        organizationYear.setfAmount(organizationYear.getfAmount()
+                .add(organizationMonth.getfAmount()));
         organizationYear.setpValue(organizationYear.getpValue()
                 .add(organizationMonth.getpValue()));
+        organizationYear.setpAmount(organizationYear.getpAmount()
+                .add(organizationMonth.getpAmount()));
         organizationYear.setgValue(organizationYear.getgValue()
                 .add(organizationMonth.getgValue()));
+        organizationYear.setgAmount(organizationYear.getgAmount()
+                .add(organizationMonth.getgAmount()));
         organizationYear31.setEuoCode(Util.euo_code);
         organizationYear31.setEusCode(organizationMonth31.getEusCode());
         organizationYear31.setMmpCode(organizationMonth31.getMmpCode());
@@ -539,4 +610,27 @@ public class DataInsertThread extends Thread {
         System.out.println(str);
     }
 
+    private void buildAndSaveRealData(Calendar ca) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date=format.format(ca.getTime());
+        List<EsmspSumMeasurSystemReal> list = new ArrayList<>();
+        for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
+            for (PomsEnergyUsingFacilities facility : system.getFacilitiyList()) {
+                for (PomsEnergyUsingFacilitiesModelPoint pd : facility.getPointList()) {
+                    if (pd.getIsSave() == 1) {
+                        EsmspSumMeasurSystemReal real = new EsmspSumMeasurSystemReal();
+                        real.setSystemCode(system.getSystemCode());
+                        real.setFacilityCode(facility.getFacilitiesCode());
+                        real.setMmpCode(pd.getMmpCode());
+                        real.setDateCode(date);
+                        real.setEuiCode(Util.euo_code);
+                        real.setIsSave(pd.getIsSave());
+                        real.setValue(pd.getValue());
+                        list.add(real);
+                    }
+                }
+            }
+        }
+        DBVisitService.batchInsertRealData(list);
+    }
 }

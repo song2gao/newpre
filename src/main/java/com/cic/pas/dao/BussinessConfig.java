@@ -232,7 +232,10 @@ public final class BussinessConfig {
 
                 for (final MeterDevice p : list) {
                     // final String ctd_id=p.getId();
-                    sql = "select * from poms_modle_measur_point where ctm_id = ? and mmp_isuse=1 order by MMP_STORAGE_TYPE,";
+                    sql = "select m.*,b.j_hour as j_hour,b.f_hour as f_hour,b.p_hour as p_hour,b.g_hour as g_hour," +
+                            "b.j_price as j_price,b.f_price as f_price," +
+                            "b.p_price as p_price,b.g_price as g_price,b.normal_price as normal_price" +
+                            " from poms_modle_measur_point m left join esmsp_point_price b on b.mmp_code=m.mmp_codes where ctm_id = ? and mmp_isuse=1 order by MMP_STORAGE_TYPE,";
                     if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
                         sql += "cast(MOD_ADDRESS as  integer) ";
                     } else {
@@ -290,6 +293,27 @@ public final class BussinessConfig {
                                                     pd.setLastPointValue(lastValue);
                                                     pd.setValue(lastValue);
                                                     pd.setShowValue(lastValue + "");
+                                                }
+                                                pd.setjPrice(rs.getBigDecimal("j_price"));
+                                                pd.setfPrice(rs.getBigDecimal("f_price"));
+                                                pd.setpPrice(rs.getBigDecimal("p_price"));
+                                                pd.setgPrice(rs.getBigDecimal("g_price"));
+                                                pd.setNormalPrice(rs.getBigDecimal("normal_price"));
+                                                String jHoursStr=rs.getString("j_hour");
+                                                if(jHoursStr!=null&&!jHoursStr.equals("")){
+                                                    pd.setjHours(jHoursStr.split(","));
+                                                }
+                                                String fHoursStr=rs.getString("f_hour");
+                                                if(fHoursStr!=null&&!fHoursStr.equals("")){
+                                                    pd.setfHours(fHoursStr.split(","));
+                                                }
+                                                String pHoursStr=rs.getString("p_hour");
+                                                if(pHoursStr!=null&&!pHoursStr.equals("")){
+                                                    pd.setpHours(pHoursStr.split(","));
+                                                }
+                                                String gHoursStr=rs.getString("g_hour");
+                                                if(gHoursStr!=null&&!gHoursStr.equals("")){
+                                                    pd.setgHours(gHoursStr.split(","));
                                                 }
                                             }else{
                                                 if(pd.getIsCollect()==0) {
@@ -496,7 +520,7 @@ public final class BussinessConfig {
         yearlist = jdbcTemplate.query(
                 "select euo_code, MMP_CODE,EUS_CODE,DATE_CODE,point1,point2,point3,"
                         + "point4,point5,point6,point7,point8,point9,point10,point11,"
-                        + "point12,AVG_VALUE,SUM_VALUE,F_VALUE,G_VALUE,P_VALUE FROM "
+                        + "point12,AVG_VALUE,SUM_VALUE,SUM_AMOUNT,J_VALUE,J_AMOUNT,F_VALUE,F_AMOUNT,G_VALUE,G_AMOUNT,P_VALUE,P_AMOUNT FROM "
                         + "esmsp_sum_measur_organization_year where "
                         + "DATE_CODE='" + DateUtils.getYear() + "';",
                 new RowMapper() {
@@ -524,9 +548,15 @@ public final class BussinessConfig {
                         year.setPoint11(rs.getBigDecimal("point11"));
                         year.setPoint12(rs.getBigDecimal("point12"));
                         year.setSumValue(rs.getBigDecimal("sum_value"));
+                        year.setSumAmount(rs.getBigDecimal("sum_amount"));
+                        year.setjValue(rs.getBigDecimal("j_value"));
+                        year.setjAmount(rs.getBigDecimal("j_amount"));
                         year.setfValue(rs.getBigDecimal("f_value"));
+                        year.setfAmount(rs.getBigDecimal("f_amount"));
                         year.setpValue(rs.getBigDecimal("p_value"));
+                        year.setpAmount(rs.getBigDecimal("p_amount"));
                         year.setgValue(rs.getBigDecimal("g_value"));
+                        year.setgAmount(rs.getBigDecimal("g_amount"));
                         return year;
                     }
 
@@ -541,7 +571,7 @@ public final class BussinessConfig {
                                 + "point12,point13,point14,point15,point16,point17,point18,"
                                 + "point19,point20,point21,point22,point23,point24,point25,"
                                 + "point26,point27,point28,point29,point30,point31,MIN_VALUE,"
-                                + "AVG_VALUE,SUM_VALUE,F_VALUE,G_VALUE,P_VALUE FROM "
+                                + "AVG_VALUE,SUM_VALUE,SUM_AMOUNT,J_VALUE,J_AMOUNT,F_VALUE,F_AMOUNT,G_VALUE,G_AMOUNT,P_VALUE,P_AMOUNT FROM "
                                 + "esmsp_sum_measur_organization_month where "
                                 + "DATE_CODE='" + DateUtils.getYearMonth1() + "';",
                         new RowMapper() {
@@ -587,9 +617,15 @@ public final class BussinessConfig {
                                 month.setPoint30(rs.getBigDecimal("point30"));
                                 month.setPoint31(rs.getBigDecimal("point31"));
                                 month.setSumValue(rs.getBigDecimal("sum_value"));
+                                month.setSumAmount(rs.getBigDecimal("sum_amount"));
+                                month.setjValue(rs.getBigDecimal("j_value"));
+                                month.setjAmount(rs.getBigDecimal("j_amount"));
                                 month.setfValue(rs.getBigDecimal("f_value"));
+                                month.setfAmount(rs.getBigDecimal("f_amount"));
                                 month.setpValue(rs.getBigDecimal("p_value"));
+                                month.setpAmount(rs.getBigDecimal("p_amount"));
                                 month.setgValue(rs.getBigDecimal("g_value"));
+                                month.setgAmount(rs.getBigDecimal("g_amount"));
                                 return month;
                             }
 
@@ -599,7 +635,7 @@ public final class BussinessConfig {
          */
         daylist = jdbcTemplate
                 .query(
-                        " select euo_code, MMP_CODE,EUS_CODE,DATE_CODE,point1,point2,"
+                        " select euo_code, d.MMP_CODE as mmp_code,EUS_CODE,DATE_CODE,point1,point2,"
                                 + "point3,point4,point5,point6,point7,point8,point9,"
                                 + "point10,point11,point12,point13,point14,point15,"
                                 + "point16,point17,point18,point19,point20,point21,"
@@ -616,8 +652,10 @@ public final class BussinessConfig {
                                 + "point82,point83,point84,point85,point86,point87,"
                                 + "point88,point89,point90,point91,point92,point93,"
                                 + "point94,point95,point96,MAX_VALUE,MAX_DATE,"
-                                + "MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE,F_VALUE,"
-                                + "G_VALUE,P_VALUE,last_value FROM esmsp_sum_measur_organization_day_temp ",
+                                + "MIN_VALUE,MIN_DATE,AVG_VALUE,SUM_VALUE,SUM_AMOUNT,J_VALUE," +
+                                "J_AMOUNT,F_VALUE,F_AMOUNT,G_VALUE,G_AMOUNT,P_VALUE,P_AMOUNT"
+                                + ",last_value FROM esmsp_sum_measur_organization_day_temp d " +
+                                "left join esmsp_point_price b on b.mmp_code=d.mmp_code",
                         new RowMapper() {
                             @Override
                             public EsmspSumMeasurOrganizationDay mapRow(
@@ -730,9 +768,15 @@ public final class BussinessConfig {
                                 day.setMinValue(rs.getBigDecimal("min_value"));
                                 day.setMinDate(rs.getString("min_date"));
                                 day.setSumValue(rs.getBigDecimal("sum_value"));
+                                day.setSumAmount(rs.getBigDecimal("sum_amount"));
+                                day.setjValue(rs.getBigDecimal("j_value"));
+                                day.setjAmount(rs.getBigDecimal("j_amount"));
                                 day.setfValue(rs.getBigDecimal("f_value"));
+                                day.setfAmount(rs.getBigDecimal("f_amount"));
                                 day.setpValue(rs.getBigDecimal("p_value"));
+                                day.setpAmount(rs.getBigDecimal("p_amount"));
                                 day.setgValue(rs.getBigDecimal("g_value"));
+                                day.setgAmount(rs.getBigDecimal("g_amount"));
                                 day.setLastValue(rs.getBigDecimal("last_value"));
                                 return day;
                             }

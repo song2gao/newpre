@@ -396,6 +396,27 @@ public class PointDevice implements Serializable {
 
     private int mmpType;//测点类型  0 只读 1可写
 
+   /*
+     尖峰平谷  采集电量时有效
+    */
+    private BigDecimal jPrice;
+
+    private BigDecimal fPrice;
+
+    private BigDecimal pPrice;
+
+    private BigDecimal gPrice;
+
+    private BigDecimal normalPrice;
+
+    private String[] jHours;
+
+    private String[] fHours;
+
+    private String[] pHours;
+
+    private String[] gHours;
+
     public int getMmpType() {
         return mmpType;
     }
@@ -889,5 +910,77 @@ public class PointDevice implements Serializable {
 
     public void setAsstdCode(String asstdCode) {
         this.asstdCode = asstdCode;
+    }
+
+    public BigDecimal getjPrice() {
+        return jPrice;
+    }
+
+    public void setjPrice(BigDecimal jPrice) {
+        this.jPrice = jPrice;
+    }
+
+    public BigDecimal getfPrice() {
+        return fPrice;
+    }
+
+    public void setfPrice(BigDecimal fPrice) {
+        this.fPrice = fPrice;
+    }
+
+    public BigDecimal getpPrice() {
+        return pPrice;
+    }
+
+    public void setpPrice(BigDecimal pPrice) {
+        this.pPrice = pPrice;
+    }
+
+    public BigDecimal getgPrice() {
+        return gPrice;
+    }
+
+    public void setgPrice(BigDecimal gPrice) {
+        this.gPrice = gPrice;
+    }
+
+    public String[] getjHours() {
+        return jHours;
+    }
+
+    public void setjHours(String[] jHours) {
+        this.jHours = jHours;
+    }
+
+    public String[] getfHours() {
+        return fHours;
+    }
+
+    public void setfHours(String[] fHours) {
+        this.fHours = fHours;
+    }
+
+    public String[] getpHours() {
+        return pHours;
+    }
+
+    public void setpHours(String[] pHours) {
+        this.pHours = pHours;
+    }
+
+    public String[] getgHours() {
+        return gHours;
+    }
+
+    public void setgHours(String[] gHours) {
+        this.gHours = gHours;
+    }
+
+    public BigDecimal getNormalPrice() {
+        return normalPrice;
+    }
+
+    public void setNormalPrice(BigDecimal normalPrice) {
+        this.normalPrice = normalPrice;
     }
 }

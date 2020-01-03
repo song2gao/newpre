@@ -4,7 +4,6 @@ package com.cic.pas;
 import com.cic.pas.application.ChannelManageService;
 import com.cic.pas.application.manage.PChannelService;
 import com.cic.pas.application.manage.PDBManageService;
-import com.cic.pas.application.manage.PRunningStatusService;
 import com.cic.pas.application.manage.PSystemConfigService;
 import com.cic.pas.thread.DataInsertThread;
 

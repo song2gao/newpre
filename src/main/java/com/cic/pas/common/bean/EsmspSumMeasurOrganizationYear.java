@@ -60,13 +60,23 @@ public class EsmspSumMeasurOrganizationYear {
 
     private BigDecimal sumValue=new BigDecimal(0);
 
+    private BigDecimal sumAmount=new BigDecimal("0");
+
     private BigDecimal jValue=new BigDecimal(0);
+
+    private BigDecimal jAmount=new BigDecimal("0");
 
     private BigDecimal fValue=new BigDecimal(0);
 
+    private BigDecimal fAmount=new BigDecimal("0");
+
     private BigDecimal pValue=new BigDecimal(0);
 
+    private BigDecimal pAmount=new BigDecimal("0");
+
     private BigDecimal gValue=new BigDecimal(0);
+
+    private BigDecimal gAmount=new BigDecimal("0");
 
     public Integer getId() {
         return id;
@@ -366,5 +376,45 @@ public class EsmspSumMeasurOrganizationYear {
 
     public void setgValue(BigDecimal gValue) {
         this.gValue = gValue;
+    }
+
+    public BigDecimal getSumAmount() {
+        return sumAmount;
+    }
+
+    public void setSumAmount(BigDecimal sumAmount) {
+        this.sumAmount = sumAmount;
+    }
+
+    public BigDecimal getjAmount() {
+        return jAmount;
+    }
+
+    public void setjAmount(BigDecimal jAmount) {
+        this.jAmount = jAmount;
+    }
+
+    public BigDecimal getfAmount() {
+        return fAmount;
+    }
+
+    public void setfAmount(BigDecimal fAmount) {
+        this.fAmount = fAmount;
+    }
+
+    public BigDecimal getpAmount() {
+        return pAmount;
+    }
+
+    public void setpAmount(BigDecimal pAmount) {
+        this.pAmount = pAmount;
+    }
+
+    public BigDecimal getgAmount() {
+        return gAmount;
+    }
+
+    public void setgAmount(BigDecimal gAmount) {
+        this.gAmount = gAmount;
     }
 }
