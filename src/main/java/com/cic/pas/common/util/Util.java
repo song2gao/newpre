@@ -686,14 +686,62 @@ public class Util {
     public static int getFGP(int point) {// 3 谷 2 平 1 峰
         if (point <= 28) {// 0-7谷
             return 3;
-        } else if (point > 29 && point <= 32) {// 7-8平
+        } else if (point > 28 && point <= 40) {// 7-10平
             return 2;
-        } else if (point > 32 && point <= 44) {// 8-11峰
+        } else if (point > 40 && point <= 44) {// 10-11峰
             return 1;
-        } else if (point > 44 && point <= 72) {// 11-18平
+        } else if (point > 44 && point <= 52) {//11-13 尖
+            return 4;
+        } else if (point > 52 && point <= 60) {//13-15 峰
+            return 1;
+        } else if (point > 60 && point <= 64) {//15-16 平
             return 2;
-        } else if (point > 72 && point <= 92) {// 18-23峰
+        } else if (point > 64 && point <= 68) {// 16-17尖
+            return 4;
+        } else if (point > 68 && point <= 72) {// 17-18平
+            return 2;
+        } else if (point > 72 && point <= 84) {// 18-21峰
             return 1;
+        } else if (point > 84 && point <= 92) {// 21-23平
+            return 2;
+        } else { // 23-24谷
+            return 3;
+        }
+    }
+
+    public static int getFGP(int point, int month) {// 3 谷 2 平 1 峰
+        if (point <= 28) {// 0-7谷
+            return 3;
+        } else if (point > 28 && point <= 40) {// 7-10平
+            return 2;
+        } else if (point > 40 && point <= 60) {// 10-15峰
+            if (month == 7 || month == 8) {//夏季 7月  8月有尖峰时刻
+                if (point > 40 && point <= 44) {// 10-11峰
+                    return 1;
+                } else if (point > 44 && point <= 52) {//11-13 尖
+                    return 4;
+                } else{//13-15 峰
+                    return 1;
+                }
+            } else {
+                return 1;
+            }
+        } else if (point > 60 && point <= 72) {//15-18 平
+            if (month == 7 || month == 8) {//夏季 7月  8月有尖峰时刻
+                if (point > 60 && point <= 64) {//  15-16 平
+                    return 2;
+                } else if (point > 64 && point <= 68) {// 16-17尖
+                    return 4;
+                } else{// 17-18平
+                    return 2;
+                }
+            } else {
+                return 2;
+            }
+        } else if (point > 72 && point <= 84) {// 18-21峰
+            return 1;
+        } else if (point > 84 && point <= 92) {// 21-23平
+            return 2;
         } else { // 23-24谷
             return 3;
         }
@@ -746,8 +794,9 @@ public class Util {
      * create by: 高嵩
      * description: 根据数据类型得到真实数据
      * create time: 2019/8/29 12:16
-     * @params
+     *
      * @return
+     * @params
      */
     public static Object bytesToValueRealOffset(byte[] data, int offset, int dataType) {
         switch (dataType) {
@@ -762,10 +811,10 @@ public class Util {
             case DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED:
                 return new Short((short) (((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
             case DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED_NOT:
-                Short value=new Short((short) (((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
-                if(value==0){
+                Short value = new Short((short) (((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+                if (value == 0) {
                     return 1;
-                }else{
+                } else {
                     return 0;
                 }
             case DataType.TWO_BYTE_BCD:
@@ -873,12 +922,14 @@ public class Util {
         }
         throw new RuntimeException("Unsupported data type: " + dataType);
     }
+
     /**
      * create by: 高嵩
      * description: 根据数据类型 将真实数据转化为byte[]
      * create time: 2019/8/29 12:17
-     * @params
+     *
      * @return
+     * @params
      */
     public static byte[] realValueToBytes(Double value, int dataType) {
         byte[] result = null;
@@ -900,16 +951,16 @@ public class Util {
                 byte hh = (byte) (value.intValue() >> 24 & 0xff);
                 byte hl = (byte) (value.intValue() >> 16 & 0xff);
                 byte lh = (byte) (value.intValue() >> 8 & 0xff);
-                byte ll = (byte) (value.intValue()& 0xff);
-                result = new byte[]{hh, hl,lh,ll};
+                byte ll = (byte) (value.intValue() & 0xff);
+                result = new byte[]{hh, hl, lh, ll};
                 break;
             case DataType.FOUR_BYTE_INT_UNSIGNED:
-                BigDecimal writeValue=new BigDecimal(value);
+                BigDecimal writeValue = new BigDecimal(value);
                 hh = (byte) (writeValue.longValue() >> 24 & 0xff);
                 hl = (byte) (writeValue.longValue() >> 16 & 0xff);
                 lh = (byte) (writeValue.longValue() >> 8 & 0xff);
                 ll = (byte) (writeValue.longValue() & 0xff);
-                result = new byte[]{hh, hl,lh,ll};
+                result = new byte[]{hh, hl, lh, ll};
                 break;
             case DataType.FOUR_BYTE_FLOAT:
                 int re = Float.floatToIntBits(value.floatValue());
@@ -917,11 +968,11 @@ public class Util {
                 hl = (byte) (re >> 16 & 0xff);
                 lh = (byte) (re >> 8 & 0xff);
                 ll = (byte) (re & 0xff);
-                result = new byte[]{hh, hl,lh,ll};
+                result = new byte[]{hh, hl, lh, ll};
                 break;
             case DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED:
-                 high = (byte) (value.intValue() >> 8 & 0xff);
-                 low = (byte) (value.intValue() & 0xff);
+                high = (byte) (value.intValue() >> 8 & 0xff);
+                low = (byte) (value.intValue() & 0xff);
                 result = new byte[]{low, high};
                 break;
         }
@@ -1036,19 +1087,21 @@ public class Util {
 //        System.out.println(resultHigh+resultLow);
         byteToBinaryArray((byte) 99);
     }
+
     /**
      * create by: 高嵩
      * description: 查找字符串在是否存在于数组中
      * create time: 2019/8/29 12:18
-     * @params
+     *
      * @return
+     * @params
      */
-    public static boolean strInStrs(String[] strs,String str){
-        if(strs==null||strs.length==0){
+    public static boolean strInStrs(String[] strs, String str) {
+        if (strs == null || strs.length == 0) {
             return false;
         }
-        for(String s:strs){
-            if(s.equals(str)){
+        for (String s : strs) {
+            if (s.equals(str)) {
                 return true;
             }
         }

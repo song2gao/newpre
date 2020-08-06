@@ -3,6 +3,7 @@ package com.cic.pas.procotol;
 import com.cic.pas.common.bean.MeterDevice;
 import com.cic.pas.common.bean.Option;
 import com.cic.pas.common.bean.PointDevice;
+import com.cic.pas.common.bean.TerminalDevice;
 import com.cic.pas.common.util.CRC16M;
 import com.cic.pas.common.util.DataType;
 import com.cic.pas.common.util.Util;
@@ -46,8 +47,8 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                 byte[] bytes = new byte[size];
                 in.get(bytes, 0, size);
                 String terminal_id = session.getAttribute("terminal_id").toString();
-                int cotpFunction=0;
-                int function=0;
+                int cotpFunction = 0;
+                int function = 0;
                 try {
                     cotpFunction = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 5, DataType.ONE_BYTE).toString());
                     function = Integer.parseInt(Util.bytesToValueRealOffset(bytes, 19, DataType.ONE_BYTE).toString());
@@ -83,13 +84,13 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
         int readType = Integer.parseInt(session.getAttribute("readType").toString());
         int type = Integer.parseInt(session.getAttribute("type").toString());
         BigDecimal readAddress = new BigDecimal(session.getAttribute("readAddress").toString());
+        Double beginAddress=readAddress.doubleValue();
         S7Response response = new S7Response();
-        String sendMessage=session.getAttribute("sendMessage").toString();
-        String receiveMessage=CRC16M.getBufHexStr(message);
-        try
-        {
+        String sendMessage = session.getAttribute("sendMessage").toString();
+        String receiveMessage = CRC16M.getBufHexStr(message);
+        try {
             response.setResponseBytes(message);
-        }catch (Exception e){
+        } catch (Exception e) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             e.printStackTrace(new PrintStream(baos));
             String exception = baos.toString();
@@ -101,6 +102,7 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
             if (response.getFunction() == 0x04) {
                 byte[] data = response.getResponseData();
                 if (response.getFunction() == 0x04) {
+                    TerminalDevice td=BussinessConfig.getTerminalByCode(terminal_id);
                     MeterDevice md = BussinessConfig.getPointsByTerCodeAndMeterCode(terminal_id, ctdCode);
                     BigDecimal i = new BigDecimal("0");
                     BigDecimal lastlen = new BigDecimal(0);
@@ -116,7 +118,7 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                                     lastlen = readAddress.subtract(new BigDecimal(readAddress.intValue()));
                                 }
                                 i = i.add(lastlen);
-                                pointlen = setPointValues(data, readAddress, md, i, pd, readType, sendMessage, receiveMessage);
+                                pointlen = setPointValues(td,data,beginAddress, readAddress, md, i, pd, readType, sendMessage, receiveMessage);
                                 lastlen = pointlen;
                                 BigDecimal pointValue = pd.getModAddress().subtract(new BigDecimal(pd.getModAddress().intValue()));
                                 int flag = pointValue.compareTo(new BigDecimal("0.6"));
@@ -155,13 +157,20 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
         }
     }
 
-    private BigDecimal setPointValues(byte[] data, BigDecimal address, MeterDevice md, BigDecimal i, PointDevice pd, int readType,String send,String receive) {
+    private BigDecimal setPointValues(TerminalDevice td,byte[] data,Double beginAddress, BigDecimal address, MeterDevice md, BigDecimal i, PointDevice pd, int readType, String send, String receive) {
         BigDecimal pointlen;
         BigDecimal value = new BigDecimal(0);
         if (pd.getMmpType() == 1) {
             pointlen = new BigDecimal(pd.getPointLen()).divide(new BigDecimal("10"));
             if (readType == 1) {
-                value = new BigDecimal(data[i.intValue()]);
+                try {
+                    value = new BigDecimal(data[i.intValue()]);
+                } catch (Exception e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    e.printStackTrace(new PrintStream(baos));
+                    String exception = baos.toString();
+                    logger.error(exception);
+                }
             } else {
 //               Object obj=Util.bytesToValueRealOffset(data,i.intValue(),DataType.ONE_BYTE);
                 byte b = data[i.intValue()];
@@ -175,11 +184,14 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                 value = new BigDecimal(Util.bytesToValueRealOffset(data, i.intValue(),
                         pd.getMmpType()).toString());
             } catch (Exception e) {
-                System.out.println("TX:"+send);
-                System.out.println("RX:"+receive);
-                System.out.println("DATA:"+CRC16M.getBufHexStr(data));
-                System.out.println(pd.getName() + ":" + pd.getModAddress() + "[" + pd.getPointLen() + "]");
-                e.printStackTrace();
+               logger.info("TX:" + send);
+                logger.info("RX:" + receive);
+                logger.info("DATA:" + CRC16M.getBufHexStr(data));
+                logger.info(pd.getName() + ":" + pd.getModAddress() + "[" + pd.getPointLen() + "]");
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                e.printStackTrace(new PrintStream(baos));
+                String exception = baos.toString();
+                logger.error(exception);
             }
         }
         if (pd.getIsCt() == 1) {
@@ -202,20 +214,51 @@ public class ByteS7Decoder extends CumulativeProtocolDecoder {
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    e.printStackTrace(new PrintStream(baos));
+                    String exception = baos.toString();
+                    logger.error(exception);
                 }
             } else {
                 value = Util.manageData(value, pd
                         .getFormular());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
-        pd.setValue(value);
-        pd.setShowValue(showValue);
+//        if(value.compareTo(BigDecimal.ZERO)==0){
+////            if(pd.getValue().divide(value).compareTo(new BigDecimal("10"))>0){
+////                StringBuffer sb=new StringBuffer();
+////                sb.append("===============================采集器:" + td.getName() + "====>表计:" + md.getName() + pd.getName() + "======================================\n\r" +
+////                        "======上次采集值:" + pd.getValue() + "======\r\n" +
+////                        "======本次采集值:" + value + "======\r\n");
+////                logger.info(sb);
+////            }
+////        }else{
+//            if(pd.getValue().compareTo(BigDecimal.ZERO)!=0){
+//                String addressStr=send.substring(send.length()-6);
+//                byte[] addressbytes=CRC16M.HexString2Buf(addressStr);
+//                int addressInteger=(addressbytes[0]&0xff)<<16|(addressbytes[1]&0xff)<<8|(addressbytes[2]&0xff);
+//                addressInteger=addressInteger/8;
+//                StringBuffer sb=new StringBuffer();
+//                sb.append("===============================采集器:" + td.getName() + "====>表计:" + md.getName() +
+//                        "\r\n"+ pd.getName() + "(开始地址："+beginAddress+"[当前地址："+pd.getModAddress()+"])校验数据出错(变0)======================================\n\r" +
+//                        "======上次采集值:" + pd.getValue() + "======\r\n" +
+//                        "======本次采集值:" + value + "======\r\n"+
+//                        "报文地址："+addressInteger+"\n\r"
+//                        +"send:"+send+"\r\n"
+//                        +"receive:"+receive);
+//                logger.info(sb);
+//            }
+//        }
         String dateTime = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss").format(new Date());
         pd.setTime(dateTime);
+        pd.setValue(value);
+        pd.setShowValue(showValue);
 //        System.out.println(pd.getName()+":"+pd.getValue());
         if (pd.getCode().equals("10000")) {//PLC采集表计通讯状态
             if (pd.getValue().intValue() > 0) {

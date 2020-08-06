@@ -1,5 +1,7 @@
 package com.cic.pas.thread;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -20,7 +22,18 @@ public class DataInsertThread extends Thread {
 
     public void run() {
         logger.info("数据存储线程启动");
+//        Calendar ca=Calendar.getInstance();
+//        ca.set(Calendar.MONTH,2);
+//        ca.set(Calendar.DATE,22);
         while (true) {
+//            ca.add(Calendar.MINUTE,1);
+//            System.out.println(ca.getTime());
+//            buildAndSaveRealData(ca);
+//            try {
+//                Thread.sleep(2);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             Calendar ca = Calendar.getInstance();
             /**
              *存储周期  分钟
@@ -105,7 +118,7 @@ public class DataInsertThread extends Thread {
      * @return
      * @params
      */
-    private void toBulidDayData(Calendar ca, SimpleDateFormat format, String datetime, int point) throws Exception {
+    private void toBulidDayData(Calendar ca, SimpleDateFormat format, String datetime, int point){
         List<TerminalDevice> terminalDevices = BussinessConfig.config.terminalList;
         Class<EsmspSumMeasurOrganizationDay> dayClass = EsmspSumMeasurOrganizationDay.class;
         Class<EsmspSumMeasurOrganizationMonth> monthClass = EsmspSumMeasurOrganizationMonth.class;
@@ -115,9 +128,16 @@ public class DataInsertThread extends Thread {
                 String eusCode = md.getCode();
                 for (PointDevice pd : md.getPointDevice()) {
                     if (pd.getIssave() == 1) {
-                        BulidDayData(ca, format, datetime, point,
-                                dayClass, monthClass, yearClass,
-                                eusCode, pd);
+                        try {
+                            BulidDayData(ca, format, datetime, point,
+                                    dayClass, monthClass, yearClass,
+                                    eusCode, pd);
+                        }catch (Exception e){
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            e.printStackTrace(new PrintStream(baos));
+                            String exception = baos.toString();
+                            logger.error(exception);
+                        }
                     }
                 }
             }
@@ -138,8 +158,15 @@ public class DataInsertThread extends Thread {
             for (PomsEnergyUsingFacilities facility : system.getFacilitiyList()) {
                 for (PomsEnergyUsingFacilitiesModelPoint pd : facility.getPointList()) {
                     if (pd.getIsSave() == 1) {
-                        BulidSystemDayData(datetime, point,
-                                dayClass, pd);
+                        try {
+                            BulidSystemDayData(datetime, point,
+                                    dayClass, pd);
+                        }catch (Exception e){
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            e.printStackTrace(new PrintStream(baos));
+                            String exception = baos.toString();
+                            logger.error(exception);
+                        }
                     }
                 }
             }
@@ -183,8 +210,10 @@ public class DataInsertThread extends Thread {
                 }
             }
         } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
         organizationDay.setEuiCode(Util.euo_code);
         organizationDay.setSystemCode(pd.getSystemCode());
@@ -202,8 +231,10 @@ public class DataInsertThread extends Thread {
                 organizationDay.setMinDate(pd.getMinDate());
             }
         } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
         BigDecimal value = new BigDecimal(0);
         Method method = dayClass.getDeclaredMethod("setPoint" + point,
@@ -261,8 +292,10 @@ public class DataInsertThread extends Thread {
                 }
             }
         } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
         organizationDay.setEuoCode(Util.euo_code);
         organizationDay.setEusCode(eusCode);
@@ -330,7 +363,7 @@ public class DataInsertThread extends Thread {
             } else {
                 try {
                     value = pd.getValue().subtract(pd.getLastPointValue());
-                    int type = Util.getFGP(point);
+                    int type = Util.getFGP(point,month);
                     switch (type) {
                         case 1://
 
@@ -358,7 +391,7 @@ public class DataInsertThread extends Thread {
                             organizationDay.setjValue(organizationDay.getgValue()
                                     .add(value).setScale(2, BigDecimal.ROUND_HALF_UP));
                             if (organizationDay.getjPrice() != null && organizationDay.getjPrice() != BigDecimal.ZERO) {
-                                organizationDay.setfAmount(organizationDay.getjValue().multiply(organizationDay.getjPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                                organizationDay.setjAmount(organizationDay.getjValue().multiply(organizationDay.getjPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
                             }
                             break;
                     }
@@ -369,7 +402,10 @@ public class DataInsertThread extends Thread {
             }
             pd.setLastPointValue(pd.getValue().setScale(2, BigDecimal.ROUND_HALF_UP));
         } else {
-            value = pd.getValue();
+            // 根据项目实际需求改为周期内最大值
+//            value = pd.getValue();
+            value=pd.getMax_value_round();
+            pd.setMax_value_round(null);//赋值成功后 重置周期内最大值
         }
         organizationDay.setLastValue(pd.getValue().setScale(2, BigDecimal.ROUND_HALF_UP));
         method.invoke(organizationDay, value);
@@ -389,10 +425,16 @@ public class DataInsertThread extends Thread {
                 && pd.getIsCalculate() == 1) {
             BussinessConfig.config.daylist.add(organizationDay31);
         }
-        if (point == 96
-                && pd.getIsCalculate() == 1) {// 0点处理月数据
-            BulidMonthData(datetime, monthClass, yearClass, day,
-                    month, organizationDay, organizationDay31);
+        if (point == 96) {// 0点处理月数据
+            try {
+                BulidMonthData(datetime, monthClass, yearClass, day,
+                        month, organizationDay, organizationDay31, pd.getIsCalculate());
+            }catch (Exception e){
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                e.printStackTrace(new PrintStream(baos));
+                String exception = baos.toString();
+                logger.error(exception);
+            }
         }
     }
 
@@ -408,7 +450,7 @@ public class DataInsertThread extends Thread {
                                 Class<EsmspSumMeasurOrganizationMonth> monthClass,
                                 Class<EsmspSumMeasurOrganizationYear> yearClass,
                                 int day, int month,
-                                EsmspSumMeasurOrganizationDay organizationDay, EsmspSumMeasurOrganizationDay organizationDay31) throws Exception {
+                                EsmspSumMeasurOrganizationDay organizationDay, EsmspSumMeasurOrganizationDay organizationDay31, int isCalculate) throws Exception {
         boolean monthIsExi = false;
         boolean month31IsExi = false;
         Calendar currCal = Calendar.getInstance();
@@ -434,24 +476,8 @@ public class DataInsertThread extends Thread {
                 }
             }
         }
-        for (EsmspSumMeasurOrganizationMonth m : BussinessConfig.config.monthlist) {
-            if (m.getEusCode() != null && m.getMmpCode() != null) {
-                if (m.getEusCode().equals(organizationDay31.getEusCode()) && m.getMmpCode().equals(organizationDay31.getMmpCode())
-                        ) {
-                    if (day == 1) {
-                        for (EsmspSumMeasurOrganizationMonth item : BussinessConfig.config.monthlist) {
-                            if (item.equals(m)) {
-                                BussinessConfig.config.monthlist.remove(item);
-                                break;
-                            }
-                        }
-                    } else {
-                        organizationMonth31 = m;
-                        month31IsExi = true;
-                    }
-                    break;
-                }
-            }
+        if (day == 1) {// 新的一月 月累计重置
+            organizationMonth = new EsmspSumMeasurOrganizationMonth();
         }
         organizationMonth.setEuoCode(Util.euo_code);
         organizationMonth.setEusCode(organizationDay.getEusCode());
@@ -459,13 +485,18 @@ public class DataInsertThread extends Thread {
         organizationMonth.setDateCode(datetime.substring(0, 6));
         Method monthM = monthClass.getDeclaredMethod("setPoint" + day,
                 BigDecimal.class);
-        BigDecimal dayOfMonth = organizationDay.getSumValue();
+        BigDecimal dayOfMonth = BigDecimal.ZERO;
+        if (isCalculate == 1) {
+            dayOfMonth=organizationDay.getSumValue();
+        }else{
+            dayOfMonth=organizationDay.getAvgValue();
+        }
         monthM.invoke(organizationMonth, dayOfMonth);
         organizationMonth.setSumValue(organizationMonth.getSumValue()
                 .add(dayOfMonth));
         organizationMonth.setSumAmount(organizationMonth.getSumAmount()
                 .add(organizationDay.getSumAmount()));
-        organizationMonth.setAvgValue(organizationMonth.getSumValue().divide(new BigDecimal(day), 2));
+        organizationMonth.setAvgValue(organizationMonth.getSumValue().divide(new BigDecimal(day), 2,BigDecimal.ROUND_HALF_UP));
         organizationMonth.setjValue(organizationMonth.getjValue()
                 .add(organizationDay.getjValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
         organizationMonth.setjAmount(organizationMonth.getgAmount()
@@ -482,20 +513,51 @@ public class DataInsertThread extends Thread {
                 .add(organizationDay.getgValue()).setScale(2, BigDecimal.ROUND_HALF_UP));
         organizationMonth.setgAmount(organizationMonth.getgAmount()
                 .add(organizationDay.getgAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
-        organizationMonth31.setEuoCode(Util.euo_code);
-        organizationMonth31.setEusCode(organizationDay31.getEusCode());
-        organizationMonth31.setMmpCode(organizationDay31.getMmpCode());
-        organizationMonth31.setDateCode(datetime.substring(0, 6));
-        monthM.invoke(organizationMonth31, organizationDay31.getPoint96());
-        if (!month31IsExi) {
-            BussinessConfig.config.monthlist.add(organizationMonth31);
-        }
         if (!monthIsExi) {
             BussinessConfig.config.monthlist.add(organizationMonth);
         }
+        if (isCalculate == 1) {
+            for (EsmspSumMeasurOrganizationMonth m : BussinessConfig.config.monthlist) {
+                if (m.getEusCode() != null && m.getMmpCode() != null) {
+                    if (m.getEusCode().equals(organizationDay31.getEusCode()) && m.getMmpCode().equals(organizationDay31.getMmpCode())
+                            ) {
+                        if (day == 1) {
+                            for (EsmspSumMeasurOrganizationMonth item : BussinessConfig.config.monthlist) {
+                                if (item.equals(m)) {
+                                    BussinessConfig.config.monthlist.remove(item);
+                                    break;
+                                }
+                            }
+                        } else {
+                            organizationMonth31 = m;
+                            month31IsExi = true;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (day == 1) {// 新的一月 月累计重置
+                organizationMonth31 = new EsmspSumMeasurOrganizationMonth();
+            }
+            organizationMonth31.setEuoCode(Util.euo_code);
+            organizationMonth31.setEusCode(organizationDay31.getEusCode());
+            organizationMonth31.setMmpCode(organizationDay31.getMmpCode());
+            organizationMonth31.setDateCode(datetime.substring(0, 6));
+            monthM.invoke(organizationMonth31, organizationDay31.getPoint96());
+            if (!month31IsExi) {
+                BussinessConfig.config.monthlist.add(organizationMonth31);
+            }
+        }
         if (currDay == 1) {// 每月1日处理年数据
-            BulidYearData(datetime, monthClass, yearClass, day, month,
-                    organizationMonth, organizationMonth31);
+            try {
+                BulidYearData(datetime, monthClass, yearClass, day, month,
+                        organizationMonth, organizationMonth31, isCalculate);
+            }catch (Exception e){
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                e.printStackTrace(new PrintStream(baos));
+                String exception = baos.toString();
+                logger.error(exception);
+            }
         }
     }
 
@@ -512,7 +574,7 @@ public class DataInsertThread extends Thread {
                                Class<EsmspSumMeasurOrganizationYear> yearClass,
                                int day, int month,
                                EsmspSumMeasurOrganizationMonth organizationMonth,
-                               EsmspSumMeasurOrganizationMonth organizationMonth31)
+                               EsmspSumMeasurOrganizationMonth organizationMonth31,int isCalculate)
             throws Exception {
         boolean yearIsExi = false;
         boolean year31IsExi = false;
@@ -537,27 +599,11 @@ public class DataInsertThread extends Thread {
                 }
             }
         }
-        for (EsmspSumMeasurOrganizationYear y : BussinessConfig.config.yearlist) {
-            if (y.getEusCode() != null && y.getMmpCode() != null) {
-                if (y.getEusCode().equals(organizationMonth31.getEusCode()) && y.getMmpCode().equals(organizationMonth31.getMmpCode())) {
-                    if (month == 1) {
-                        for (EsmspSumMeasurOrganizationYear item : BussinessConfig.config.yearlist) {
-                            if (item.equals(y)) {
-                                BussinessConfig.config.yearlist.remove(item);
-                                break;
-                            }
-                        }
-                    } else {
-                        organizationYear31 = y;
-                        year31IsExi = true;
-                    }
-                    break;
-                }
-            }
-        }
-        if (month == 1) {// 新的一年 年累计重置
-            organizationYear = new EsmspSumMeasurOrganizationYear();
-            organizationYear31 = new EsmspSumMeasurOrganizationYear();
+        BigDecimal monthOfYear=BigDecimal.ZERO;
+        if(isCalculate==1){
+            monthOfYear=organizationMonth.getSumValue();
+        }else{
+            monthOfYear=organizationMonth.getAvgValue();
         }
         organizationYear.setEuoCode(Util.euo_code);
         organizationYear.setEusCode(organizationMonth.getEusCode());
@@ -565,12 +611,13 @@ public class DataInsertThread extends Thread {
         organizationYear.setDateCode(datetime.substring(0, 4));
         Method yearM = yearClass.getDeclaredMethod("setPoint" + month,
                 BigDecimal.class);
-        yearM.invoke(organizationYear, organizationMonth.getSumValue());
+        yearM.invoke(organizationYear, monthOfYear);
         organizationYear.setSumValue(organizationYear.getSumValue()
-                .add(organizationMonth.getSumValue()));
+                .add(monthOfYear));
         organizationYear.setSumAmount(organizationYear.getSumAmount()
                 .add(organizationMonth.getSumAmount()));
-        organizationYear.setAvgValue(organizationYear.getSumValue().divide(new BigDecimal(month)).setScale(2, BigDecimal.ROUND_HALF_UP));
+        BigDecimal avgValue=organizationYear.getSumValue().divide(new BigDecimal(month),2,BigDecimal.ROUND_HALF_UP);
+        organizationYear.setAvgValue(avgValue.setScale(2, BigDecimal.ROUND_HALF_UP));
         organizationYear.setjValue(organizationYear.getjValue()
                 .add(organizationMonth.getjValue()));
         organizationYear.setfAmount(organizationYear.getfAmount()
@@ -587,17 +634,43 @@ public class DataInsertThread extends Thread {
                 .add(organizationMonth.getgValue()));
         organizationYear.setgAmount(organizationYear.getgAmount()
                 .add(organizationMonth.getgAmount()));
-        organizationYear31.setEuoCode(Util.euo_code);
-        organizationYear31.setEusCode(organizationMonth31.getEusCode());
-        organizationYear31.setMmpCode(organizationMonth31.getMmpCode());
-        organizationYear31.setDateCode(datetime.substring(0, 4));
-        Method mMethod = monthClass.getDeclaredMethod("getPoint" + day);
-        yearM.invoke(organizationYear31, mMethod.invoke(organizationMonth31));
+        if (month == 1) {// 新的一年 年累计重置
+            organizationYear = new EsmspSumMeasurOrganizationYear();
+        }
         if (!yearIsExi) {
             BussinessConfig.config.yearlist.add(organizationYear);
         }
-        if (!year31IsExi) {
-            BussinessConfig.config.yearlist.add(organizationYear31);
+        if(isCalculate==1) {
+            for (EsmspSumMeasurOrganizationYear y : BussinessConfig.config.yearlist) {
+                if (y.getEusCode() != null && y.getMmpCode() != null) {
+                    if (y.getEusCode().equals(organizationMonth31.getEusCode()) && y.getMmpCode().equals(organizationMonth31.getMmpCode())) {
+                        if (month == 1) {
+                            for (EsmspSumMeasurOrganizationYear item : BussinessConfig.config.yearlist) {
+                                if (item.equals(y)) {
+                                    BussinessConfig.config.yearlist.remove(item);
+                                    break;
+                                }
+                            }
+                        } else {
+                            organizationYear31 = y;
+                            year31IsExi = true;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (month == 1) {// 新的一年 年累计重置
+                organizationYear31 = new EsmspSumMeasurOrganizationYear();
+            }
+            organizationYear31.setEuoCode(Util.euo_code);
+            organizationYear31.setEusCode(organizationMonth31.getEusCode());
+            organizationYear31.setMmpCode(organizationMonth31.getMmpCode());
+            organizationYear31.setDateCode(datetime.substring(0, 4));
+            Method mMethod = monthClass.getDeclaredMethod("getPoint" + day);
+            yearM.invoke(organizationYear31, mMethod.invoke(organizationMonth31));
+            if (!year31IsExi) {
+                BussinessConfig.config.yearlist.add(organizationYear31);
+            }
         }
     }
 
@@ -612,7 +685,7 @@ public class DataInsertThread extends Thread {
 
     private void buildAndSaveRealData(Calendar ca) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String date=format.format(ca.getTime());
+        String date = format.format(ca.getTime());
         List<EsmspSumMeasurSystemReal> list = new ArrayList<>();
         for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
             for (PomsEnergyUsingFacilities facility : system.getFacilitiyList()) {

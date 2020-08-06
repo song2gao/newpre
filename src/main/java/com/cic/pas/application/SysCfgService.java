@@ -82,7 +82,8 @@ public class SysCfgService {
 	public void operationMonitor(){
 		
 		try {
-			operation.publishServe();
+//			operation.publishServe();
+			operation.publishServer();
 			//operation.publishClient();
 		} catch (Exception e) {
 			e.printStackTrace();

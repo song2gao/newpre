@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 
 import com.cic.pas.service.ServerContext;
 import com.cic.pas.thread.OperaterThread;
+import com.cic.pas.thread.ServerOperaterAccept;
 
 public class Operation {
 
@@ -27,8 +28,8 @@ public class Operation {
                         OperationConnection connection = new OperationConnection(
                                 socket);
                         Thread thread = new OperaterThread(connection);
-//						thread.setName(connection.getSocket().getInetAddress()
-//								.toString());
+						thread.setName(connection.getSocket().getInetAddress()
+								.toString());
 //						executorService.execute(thread);
                         thread.start();
                     }
@@ -39,7 +40,14 @@ public class Operation {
         };
         startOPerServer.start();
     }
-
+    public void publishServer()throws  Exception{
+        ServerOperaterAccept accept = new ServerOperaterAccept(ServerContext
+                .getOpePort());
+        accept.setName("Operation_TCP");
+        accept.start();
+        System.out.println("Operation_TCP开始服务，监听端口:"
+                + ServerContext.getOpePort() + "\t[" + new Date() + "]");
+    }
     public void publishClient() throws Exception {
         Thread.sleep(10000);
         final ExecutorService executorService = Executors

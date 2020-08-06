@@ -1,6 +1,8 @@
 package com.cic.pas.process;
 
 import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.List;
@@ -30,7 +32,8 @@ public class Processer {
     @SuppressWarnings("static-access")
     public ReturnMessage executeSome(Object object) {
         ReturnMessage rm = new ReturnMessage();
-        Message message = (Message) object;
+//        Message message = (Message) object;
+        Message message =  JSONObject.parseObject(object.toString(),Message.class);
         logger.info("命令是：" + message.getC());
         switch (message.getC()) {
             case PreSystemStatus:
@@ -38,7 +41,10 @@ public class Processer {
                     try {
                         this.wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        e.printStackTrace(new PrintStream(baos));
+                        String exception = baos.toString();
+                        logger.error(exception);
                     }
                 }
                 break;
@@ -262,28 +268,28 @@ public class Processer {
 
     public ReturnMessage updateData(String[] ctdCode, String mmpCode, String value) {
         ReturnMessage rm = new ReturnMessage();
-        String result = "写入失败,未找到表计信息（"+ctdCode+"）";
+        String result = "写入失败,未找到表计信息（" + ctdCode + "）";
         boolean isFind = false;
         for (TerminalDevice td : BussinessConfig.terminalList) {
             for (MeterDevice md : td.getMeterList()) {
-                if (ArrayUtils.inArray(ctdCode,md.getCode())) {
-                    result="找到表计("+md.getName()+")，未找到测量点";
+                if (ArrayUtils.inArray(ctdCode, md.getCode())) {
+                    result = "找到表计(" + md.getName() + ")，未找到测量点";
                     for (PointDevice pd : md.getPointDevice()) {
                         if (pd.getCode().equals(mmpCode)) {
                             boolean res = false;
                             if (pd.getRwType() != 1) {
-                                result = "该参数不允许写入("+td.getName()+"-"+md.getName()+"["+pd.getName()+"]"+")";
+                                result = "该参数不允许写入(" + td.getName() + "-" + md.getName() + "[" + pd.getName() + "]" + ")";
                             } else {
                                 if (pd.getIsCollect() == 1) {
                                     GetDataThread thread = (GetDataThread) ServerContext.threadMap.get(td.getCode());
                                     res = thread.write(md, pd, Double.parseDouble(value));
                                 } else {
-                                    res=UpdateNoCollectValue.update(md, pd, value);
+                                    res = UpdateNoCollectValue.update(md, pd, value);
                                 }
                                 if (!res) {
-                                    result = "写入失败（"+td.getName()+"-"+md.getName()+"["+pd.getName()+"]）";
+                                    result = "写入失败（" + td.getName() + "-" + md.getName() + "[" + pd.getName() + "]）";
                                 } else {
-                                    result = "写入成功（"+td.getName()+"-"+md.getName()+"["+pd.getName()+"]）";
+                                    result = "写入成功（" + td.getName() + "-" + md.getName() + "[" + pd.getName() + "]）";
                                 }
                             }
                             isFind = true;
@@ -377,7 +383,7 @@ public class Processer {
         for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
             for (PomsEnergyUsingFacilities facilities : system.getFacilitiyList()) {
                 for (PomsEnergyUsingFacilitiesModelPoint pd : facilities.getPointList()) {
-                    if(pd.getFacilitiesModelCode()!=null) {
+                    if (pd.getFacilitiesModelCode() != null) {
                         if (pd.getFacilitiesModelCode().equals(modelCode) && mmpCode.equals(pd.getMmpCode())) {
                             pd.setUpValue(upValue);
                             pd.setDownValue(downValue);
@@ -428,7 +434,10 @@ public class Processer {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
         String json = JSON.toJSONString(meterDevices);
         rm.setObject(json);
@@ -490,7 +499,7 @@ public class Processer {
         String modelType = configMap.get("modelType").toString();
         List<FanOverView> result = new ArrayList<>();
         for (PomsEnergyUsingSystem system : BussinessConfig.systemList) {
-            if (system.getSystemModelCode().equals(modelType)&&system.getEulId().equals("2")) {
+            if (system.getSystemModelCode().equals(modelType) && system.getEulId().equals("2")) {
                 FanOverView fan = new FanOverView();
                 fan.setSystemCode(system.getSystemCode());
                 fan.setSystemName(system.getSystemName());
@@ -536,16 +545,18 @@ public class Processer {
         rm.setObject(obj);
         return rm;
     }
+
     /**
      * create by: 高嵩
      * description: 得到通讯状态 有一个通讯故障 均定义为故障
      * create time: 2019/8/29 16:17
-     * @params
+     *
      * @return
+     * @params
      */
-    public int getConnectionState(Map<String,Integer> states){
-        for(int value:states.values()){
-            if(value==0){
+    public int getConnectionState(Map<String, Integer> states) {
+        for (int value : states.values()) {
+            if (value == 0) {
                 return 0;
             }
         }

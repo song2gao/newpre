@@ -53,7 +53,6 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
             } else {
                 byte[] bytes = new byte[size];
                 in.get(bytes);
-                System.out.println("RX:"+CRC16M.getBufHexStr(bytes));
                 checkMessage(session,bytes);
                 BaseThread thread = ServerContext.threadMap
                         .get(session.getAttribute("terminal_id")+"");
@@ -154,7 +153,7 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
                     session.setAttribute("login",true);
                     ServerContext.addSession(session);
                     logger.info("采集设备 [ " + t.getName() + " ]正确接入系统");
-                    logger.info("[" + t.getName() + "登录帧]:[" + CRC16M.getBufHexStr(bytes) + "]");
+//                    logger.info("[" + t.getName() + "登录帧]:[" + CRC16M.getBufHexStr(bytes) + "]");
                     byte[] bytes0 = new byte[20];// = Util.getByte(temp0);
                     bytes0[0] = bytes0[5] = 0x68;
                     bytes0[1] = bytes0[3] = 0x32;
@@ -224,7 +223,7 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
                     bytes0[18] += bytes0[6 + i];
                 }//cs
                 bytes0[19] = 0x16;
-                logger.info("[" + name + "心跳响应帧]:[" + CRC16M.getBufHexStr(bytes0) + "]");
+//                logger.info("[" + name + "心跳响应帧]:[" + CRC16M.getBufHexStr(bytes0) + "]");
                 session.write(bytes0);
             }
         }
@@ -252,9 +251,9 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
             String terminalCode=session.getAttribute("terminal_id").toString();
             MeterDevice md=BussinessConfig.getMeterByTerminalCodeAndCtdCode(terminalCode,ctdCode);
             md.setStatus(0);
-            logger.info("["+session.getAttribute("terminal_Name")+"终端否定所发请求]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
+//            logger.info("["+session.getAttribute("terminal_Name")+"终端否定所发请求]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
         }else {
-            logger.info("["+session.getAttribute("terminal_Name")+"回复数据帧]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
+//            logger.info("["+session.getAttribute("terminal_Name")+"回复数据帧]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
             saveData(asstdCode + "", pn + "", Util.bytesHexStrToBIgDecimal(bytes, 24, 5));
         }
     }

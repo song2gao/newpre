@@ -12,12 +12,14 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 /**
  * @author Administrator 终端和server进行通讯过程的处理
  */
-public class  Client2ClientHandler extends IoHandlerAdapter {
+public class Client2ClientHandler extends IoHandlerAdapter {
     public static byte PFC = 0;
     private static final Logger logger = Logger.getLogger(ByteHandler.class);
     private static Map<String, Integer> map = new HashMap<String, Integer>();
@@ -25,7 +27,10 @@ public class  Client2ClientHandler extends IoHandlerAdapter {
     @Override
     public void exceptionCaught(IoSession session, Throwable cause)
             throws Exception {
-        cause.printStackTrace();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        cause.printStackTrace(new PrintStream(baos));
+        String exception = baos.toString();
+        logger.error(exception);
 //        sessionClosed(session);
     }
 
@@ -86,7 +91,10 @@ public class  Client2ClientHandler extends IoHandlerAdapter {
                 Exception e)
 
         {
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
 
     }
@@ -97,18 +105,18 @@ public class  Client2ClientHandler extends IoHandlerAdapter {
         socketConnector = ConnectorSocketFactory.getSocketConnector(ip1, port1, td.getProcotolCode(), td.getNoticeManner());
         for (; ; ) {
             try {
-                Thread.sleep(6000);
+                Thread.sleep(60000);
                 ConnectFuture future = socketConnector
                         .connect();
                 future.awaitUninterruptibly();// 等待连接创建成功
                 session = future.getSession();// 获取会话
                 session.setAttribute("terminal_id", td.getCode());
                 if (session.isConnected()) {
-                    if(ip2!=null){
-                        session.setAttribute("ip1",ip1);
-                        session.setAttribute("port1",port1);
-                        session.setAttribute("ip2",ip2);
-                        session.setAttribute("port2",port2);
+                    if (ip2 != null) {
+                        session.setAttribute("ip1", ip1);
+                        session.setAttribute("port1", port1);
+                        session.setAttribute("ip2", ip2);
+                        session.setAttribute("port2", port2);
                     }
                     String message = "断线重连[" + (td == null ? "" : td.getName()) + "("
                             + socketConnector
@@ -153,14 +161,17 @@ public class  Client2ClientHandler extends IoHandlerAdapter {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
         Object obj = session.getAttribute("ip1");
-        String terminal_id=session.getAttribute("terminal_id").toString();
+        String terminal_id = session.getAttribute("terminal_id").toString();
         TerminalDevice td = BussinessConfig.getTerminalByCode(terminal_id);
-        if (obj==null) {// client2 连接成功
+        if (obj == null) {// client2 连接成功
             if (td != null) {
-                session.setAttribute("terminal_name", td.getName()+"[client2]");
+                session.setAttribute("terminal_name", td.getName() + "[client2]");
                 session.setAttribute("terminal", td);
                 session.setAttribute("clientFlag", 2);
                 td.setIsOnline(1);
@@ -173,14 +184,14 @@ public class  Client2ClientHandler extends IoHandlerAdapter {
             }
         } else {// client1连接成功时去发起client2连接
             if (td != null) {
-                session.setAttribute("terminal_name", td.getName()+"[client1]");
+                session.setAttribute("terminal_name", td.getName() + "[client1]");
                 String ip2 = session.getAttribute("ip2").toString();
                 int port2 = Integer.parseInt(session.getAttribute("port2").toString());
                 session.setAttribute("clientFlag", 1);
                 Map<Long, IoSession> sessions = new LinkedHashMap<>();
                 sessions.put(session.getId(), session);
                 ServerContext.client2clientMap.put(td.getCode(), sessions);
-                ClientConnectThread thread = new ClientConnectThread(ip2,port2,td.getProcotolCode(),td);
+                ClientConnectThread thread = new ClientConnectThread(ip2, port2, td.getProcotolCode(), td);
                 thread.start();
             } else {
                 session.closeNow();

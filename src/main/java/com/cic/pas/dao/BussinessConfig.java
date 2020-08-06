@@ -1,7 +1,11 @@
 package com.cic.pas.dao;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
+import java.net.InetAddress;
 import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -11,6 +15,9 @@ import javax.annotation.Resource;
 import com.cic.domain.PomsCalculateAlterRecord;
 import com.cic.pas.common.bean.*;
 import com.cic.pas.common.util.DateUtils;
+import com.cic.pas.common.util.Util;
+import com.cic.pas.thread.InventedMeterDataThread;
+import org.apache.log4j.Logger;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,6 +31,8 @@ import com.sun.istack.internal.FinalArrayList;
  */
 @SuppressWarnings("unchecked")
 public final class BussinessConfig {
+
+    private static Logger logger = Logger.getLogger(BussinessConfig.class);
 
     public static JdbcTemplate jdbcTemplate = DBConfigDao.jdbcTemplate;
 
@@ -43,10 +52,9 @@ public final class BussinessConfig {
      */
     public static List<TerminalDevice> terminalList = new ArrayList<TerminalDevice>();
     public static List<PomsEnergyUsingSystem> systemList = new ArrayList<PomsEnergyUsingSystem>();
-
     public static List<TerminalDevice> terminalInfo = Collections
             .synchronizedList(new ArrayList<TerminalDevice>());
-    public static LinkedHashMap<String,PomsCalculateAlterRecord> alarmMap=new LinkedHashMap<String,PomsCalculateAlterRecord>();
+    public static LinkedHashMap<String, PomsCalculateAlterRecord> alarmMap = new LinkedHashMap<String, PomsCalculateAlterRecord>();
 
     public static List<EsmspSumMeasurOrganizationDay> daylist = Collections
             .synchronizedList(new ArrayList<EsmspSumMeasurOrganizationDay>());
@@ -85,6 +93,27 @@ public final class BussinessConfig {
          * 加载采集模型参数
          */
         preParams();
+        inventedMeterThreadCreate();
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 创建虚拟表数据生成线程
+     * create time: 2020/1/16 23:01
+     *
+     * @return
+     * @params
+     */
+    private static void inventedMeterThreadCreate() {
+        for (TerminalDevice td : terminalList) {
+            for (MeterDevice md : td.getMeterList()) {
+                if (md.getIsinvented() == 4) {
+                    InventedMeterDataThread thread = new InventedMeterDataThread(md, md.getProduction_code().split(","));
+                    thread.setName("虚拟表[" + md.getName() + "]数据生成线程");
+                    thread.start();
+                }
+            }
+        }
     }
 
     /**
@@ -137,6 +166,7 @@ public final class BussinessConfig {
                                     t.setProduction(rs
                                             .getString("asstd_production"));
                                     t.setMSA(rs.getString("asstd_assemble_ip"));
+                                    t.setMsaBackUp(rs.getString("asstd_ip_backup"));
                                     t.setRoundCycle(rs.getInt("ASSTD_ROUND_CYCLE"));
                                     t.setTimeOut(rs.getInt("ASSTD_TIMEOUT"));
                                     t.setCalculateCycle(rs.getInt("ASSTD_CALCULATE_CYCLE"));
@@ -236,12 +266,12 @@ public final class BussinessConfig {
                             "b.j_price as j_price,b.f_price as f_price," +
                             "b.p_price as p_price,b.g_price as g_price,b.normal_price as normal_price" +
                             " from poms_modle_measur_point m left join esmsp_point_price b on b.mmp_code=m.mmp_codes where ctm_id = ? and mmp_isuse=1 order by MMP_STORAGE_TYPE,";
-                    if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
-                        sql += "cast(MOD_ADDRESS as  integer) ";
-                    } else {
-                        sql += "cast(MOD_ADDRESS as signed integer) ";
-                    }
-                    sql += ",mmp_type";
+//                    if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
+//                        sql += "cast(MOD_ADDRESS as  integer) ";
+//                    } else {
+//                        sql += "cast(MOD_ADDRESS as signed integer) ";
+//                    }
+                    sql += "MOD_ADDRESS,mmp_type";
                     List<PointDevice> ls = jdbcTemplate
                             .query(
                                     sql,
@@ -284,39 +314,42 @@ public final class BussinessConfig {
                                             pd.setPreType(p.getType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
                                             pd.setSystemCode(rs.getString("MMP_BACKUPS"));
-                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(pd.getCtdCode(),pd.getCode()));
+                                            pd.setMmpDecimalDigit(rs.getInt("MMP_DECIMAL_DIGIT"));
+                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(pd.getCtdCode(), pd.getCode()));
+                                            EsmspSumMeasurOrganizationDay day = getLastValue(p.getCode(), pd.getCode());
+                                            if (day != null) {
+                                                pd.setLastPointValue(day.getLastValue());
+                                                pd.setValue(day.getLastValue());
+                                                pd.setMax_value(day.getMaxValue());
+                                                pd.setMax_time(day.getMaxDate());
+                                                pd.setMin_value(day.getMinValue());
+                                                pd.setMin_time(day.getMinDate());
+                                            }
+
                                             if (pd.getIsCalculate() == 1) {
-                                                BigDecimal lastValue = getLastValue(
-                                                        p.getCode(),
-                                                        pd.getCode());
-                                                if (lastValue != null && lastValue.compareTo(BigDecimal.ZERO) != 0) {
-                                                    pd.setLastPointValue(lastValue);
-                                                    pd.setValue(lastValue);
-                                                    pd.setShowValue(lastValue + "");
-                                                }
                                                 pd.setjPrice(rs.getBigDecimal("j_price"));
                                                 pd.setfPrice(rs.getBigDecimal("f_price"));
                                                 pd.setpPrice(rs.getBigDecimal("p_price"));
                                                 pd.setgPrice(rs.getBigDecimal("g_price"));
                                                 pd.setNormalPrice(rs.getBigDecimal("normal_price"));
-                                                String jHoursStr=rs.getString("j_hour");
-                                                if(jHoursStr!=null&&!jHoursStr.equals("")){
+                                                String jHoursStr = rs.getString("j_hour");
+                                                if (jHoursStr != null && !jHoursStr.equals("")) {
                                                     pd.setjHours(jHoursStr.split(","));
                                                 }
-                                                String fHoursStr=rs.getString("f_hour");
-                                                if(fHoursStr!=null&&!fHoursStr.equals("")){
+                                                String fHoursStr = rs.getString("f_hour");
+                                                if (fHoursStr != null && !fHoursStr.equals("")) {
                                                     pd.setfHours(fHoursStr.split(","));
                                                 }
-                                                String pHoursStr=rs.getString("p_hour");
-                                                if(pHoursStr!=null&&!pHoursStr.equals("")){
+                                                String pHoursStr = rs.getString("p_hour");
+                                                if (pHoursStr != null && !pHoursStr.equals("")) {
                                                     pd.setpHours(pHoursStr.split(","));
                                                 }
-                                                String gHoursStr=rs.getString("g_hour");
-                                                if(gHoursStr!=null&&!gHoursStr.equals("")){
+                                                String gHoursStr = rs.getString("g_hour");
+                                                if (gHoursStr != null && !gHoursStr.equals("")) {
                                                     pd.setgHours(gHoursStr.split(","));
                                                 }
-                                            }else{
-                                                if(pd.getIsCollect()==0) {
+                                            } else {
+                                                if (pd.getIsCollect() == 0) {
                                                     pd.setValue(rs.getBigDecimal("MMP_STANDARD_VAL"));
                                                 }
                                             }
@@ -324,12 +357,12 @@ public final class BussinessConfig {
                                         }
                                     });
                     sql = "select * from poms_device_measur_point where device_id = ?  order by MMP_STORAGE_TYPE,";
-                    if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
-                        sql += "cast(MOD_ADDRESS as  integer)";
-                    } else {
-                        sql += "cast(MOD_ADDRESS as signed integer)";
-                    }
-                    sql += ",mmp_type";
+//                    if (DBConfigDao.dbType.equals("Microsoft SQL Server")) {
+//                        sql += "cast(MOD_ADDRESS as  integer)";
+//                    } else {
+//                        sql += "cast(MOD_ADDRESS as signed integer)";
+//                    }
+                    sql += "MOD_ADDRESS,mmp_type";
                     List<PointDevice> devicePoints = jdbcTemplate
                             .query(
                                     sql,
@@ -367,26 +400,33 @@ public final class BussinessConfig {
                                             pd.setUp_line(rs.getDouble("mmp_up_value"));
                                             pd.setDown_line(rs.getDouble("mmp_down_value"));
                                             pd.setMmpIsAlarm(rs.getInt("MMP_IS_ALARM"));
-                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(p.getCode(),pd.getCode()));
+                                            pd.setMmpSystemRefCount(getPointCountOfSystemRef(p.getCode(), pd.getCode()));
                                             pd.setIsCollect(rs.getInt("MMP_ISCOLLECT"));
                                             pd.setCtmType(p.getPcpcEnergyType());
                                             pd.setPreType(p.getType());
                                             pd.setMmpType(rs.getInt("mmp_type"));
                                             pd.setSystemCode(rs.getString("MMP_BACKUPS"));
-                                            if (pd.getIsCalculate() == 1) {
-                                                BigDecimal lastValue = getLastValue(
-                                                        p.getCode(),
-                                                        pd.getCode());
-                                                if (lastValue != null && lastValue.compareTo(BigDecimal.ZERO) != 0) {
-                                                    pd.setLastPointValue(lastValue);
-                                                    pd.setValue(lastValue);
-                                                    pd.setShowValue(lastValue + "");
-                                                }
-                                            }else{
-                                                if(pd.getIsCollect()==0) {
-                                                    pd.setValue(rs.getBigDecimal("MMP_STANDARD_VAL"));
-                                                }
-                                            }
+                                            EsmspSumMeasurOrganizationDay day = getLastValue(p.getCode(), pd.getCode());
+                                            pd.setLastPointValue(day.getLastValue());
+                                            pd.setValue(day.getLastValue());
+                                            pd.setMax_value(day.getMaxValue());
+                                            pd.setMax_time(day.getMaxDate());
+                                            pd.setMin_value(day.getMinValue());
+                                            pd.setMin_time(day.getMinDate());
+//                                            if (pd.getIsCalculate() == 1) {
+//                                                BigDecimal lastValue = getLastValue(
+//                                                        p.getCode(),
+//                                                        pd.getCode());
+//                                                if (lastValue != null && lastValue.compareTo(BigDecimal.ZERO) != 0) {
+//                                                    pd.setLastPointValue(lastValue);
+//                                                    pd.setValue(lastValue);
+//                                                    pd.setShowValue(lastValue + "");
+//                                                }
+//                                            } else {
+//                                                if (pd.getIsCollect() == 0) {
+//                                                    pd.setValue(rs.getBigDecimal("MMP_STANDARD_VAL"));
+//                                                }
+//                                            }
                                             return pd;
                                         }
                                     });
@@ -415,8 +455,8 @@ public final class BussinessConfig {
                 system.setEuiId(rs.getString("eui_id"));
                 system.setEulId(rs.getString("eul_id"));
                 system.setEulName(rs.getString("eul_name"));
-                String asstdStr=rs.getString("ASSTD_CODE");
-                String[] asstdCodes=asstdStr==null?null:asstdStr.split(",");
+                String asstdStr = rs.getString("ASSTD_CODE");
+                String[] asstdCodes = asstdStr == null ? null : asstdStr.split(",");
                 system.setAsstdCodes(asstdCodes);
                 system.setSystemModelCode(rs.getString("SYSTEM_MODEL_CODE"));
                 system.setSystemModelName(rs.getString("SYSTEM_MODEL_NAME"));
@@ -939,6 +979,7 @@ public final class BussinessConfig {
     public static BussinessConfig getConfig() {
         return config;
     }
+
     /**
      * 将F转换0
      */
@@ -1001,19 +1042,17 @@ public final class BussinessConfig {
                 return termianl;
             }
         }
-       return  null;
+        return null;
     }
 
-    public static BigDecimal getLastValue(String meterCode, String mmpCode) {
-        BigDecimal lastValue = null;
+    public static EsmspSumMeasurOrganizationDay getLastValue(String meterCode, String mmpCode) {
         for (EsmspSumMeasurOrganizationDay day : daylist) {
             if (day.getEusCode().equals(meterCode)
                     && day.getMmpCode().equals(mmpCode)) {
-                lastValue = day.getLastValue();
-                break;
+                return day;
             }
         }
-        return lastValue;
+        return null;
     }
 
     public static MeterDevice getMeterByTerminalCodeAndCtdCode(String terminalCode, String ctdCode) {
@@ -1045,25 +1084,32 @@ public final class BussinessConfig {
         return meter;
     }
 
-    public static MeterDevice getMeterByTerIpAndAddress(String ip, int address) {
-        TerminalDevice t = BussinessConfig.getTerminalByIP(ip);
-        for (MeterDevice meter : t.getMeterList()) {
-            if (meter.getAddress() == address) {
-                return meter;
+    public static MeterDevice getMeterByTerIpAndAddress(String terminalCode, String ctdCode) {
+        for (TerminalDevice td : BussinessConfig.terminalList) {
+            if (td.getCode().equals(terminalCode)) {
+                for (MeterDevice md : td.getMeterList()) {
+                    if (md.getCode().equals(ctdCode)) {
+                        return md;
+                    }
+                }
+                break;
             }
         }
         return null;
     }
+
     /**
      * create by: 高嵩
      * description: 根据ip/port/ip:port得到采集器
      * create time: 2019/8/26 9:59
-     * @params
+     *
      * @return
+     * @params
      */
     public static TerminalDevice getTerminalByMSA(String msa) {
         for (TerminalDevice td : terminalList) {
-            if (td.getMSA().equals(msa)) {
+            String localMsa = td.getMSA();
+            if (localMsa.equals(msa) || (td.getMsaBackUp() != null && td.getMsaBackUp().equals(msa))) {
                 return td;
             }
         }
@@ -1091,68 +1137,84 @@ public final class BussinessConfig {
         }
         return null;
     }
+
     /**
      * create by: 高嵩
      * description: 查询测点关联设备个数
      * create time: 2019/8/12 22:15
-     * @params
+     *
      * @return
+     * @params
      */
-    public static int getPointCountOfSystemRef(String meterCode,String mmpCode){
-        String sql="select count(FACILITIES_CODE) as newCode " +
+    public static int getPointCountOfSystemRef(String meterCode, String mmpCode) {
+        String sql = "select count(FACILITIES_CODE) as newCode " +
                 " from poms_energy_using_facilities_model_point a,poms_energy_using_facilities b " +
                 "where b.FACILITIES_MODEL_CODE=a.FACILITIES_MODEL_CODE and (b.PRE_MODEL_CODE=? or b.PRE_MODEL_CODE like ? or b.PRE_MODEL_CODE like ?) and cast(MEASUR_MMP_CODE as signed integer)+cast(b.FACILITIES_OFFSET as signed integer)+cast(MMP_OFFSET as signed integer)=?";
-        int modelCount=jdbcTemplate.queryForObject(sql,new Object[]{meterCode,"%,"+meterCode,meterCode+",%",mmpCode},Integer.class);
-        sql="select count(FACILITIES_CODE) from poms_energy_using_facilities_point where  (PRE_DEVICE_CODE=? or PRE_DEVICE_CODE like ? or PRE_DEVICE_CODE like ?) and MEASUR_MMP_CODE=? ";
-        int deviceCount=jdbcTemplate.queryForObject(sql,new Object[]{meterCode,"%,"+meterCode,meterCode+",%",mmpCode},Integer.class);
-        return modelCount+deviceCount;
+        int modelCount = jdbcTemplate.queryForObject(sql, new Object[]{meterCode, "%," + meterCode, meterCode + ",%", mmpCode}, Integer.class);
+        sql = "select count(FACILITIES_CODE) from poms_energy_using_facilities_point where  (PRE_DEVICE_CODE=? or PRE_DEVICE_CODE like ? or PRE_DEVICE_CODE like ?) and MEASUR_MMP_CODE=? ";
+        int deviceCount = jdbcTemplate.queryForObject(sql, new Object[]{meterCode, "%," + meterCode, meterCode + ",%", mmpCode}, Integer.class);
+        return modelCount + deviceCount;
     }
 
     /**
      * create by: 高嵩
      * description: 得到该连接的远程IP地址端口号
      * create time: 2019/8/26 9:57
-     * @params
+     *
      * @return
+     * @params
      */
     public static String getRemoteIpPort(IoSession session) {
         String ipPort = session.getRemoteAddress().toString();
-        return ipPort.substring(ipPort.indexOf("/")+1);
+        int index = ipPort.indexOf("/");
+        if (index == 0) {
+            return ipPort.substring(+1);
+        } else {
+            int i = ipPort.indexOf(":");
+            return ipPort.substring(0, index) + ipPort.substring(i);
+        }
+
     }
+
     /**
      * create by: 高嵩
      * description: 得到该连接的本地IP地址端口号
      * create time: 2019/8/26 9:58
-     * @params
+     *
      * @return
+     * @params
      */
     public static String getLoclPort(IoSession session) {
         String ipPort = session.getLocalAddress().toString();
         int index = ipPort.indexOf(":");
         return ipPort.substring(index + 1);
     }
+
     /**
      * create by: 高嵩
      * description: 得到该连接的远程IP地址
      * create time: 2019/8/26 9:58
-     * @params
+     *
      * @return
+     * @params
      */
     public static String getRemoteIp(IoSession session) {
         String ipPort = session.getRemoteAddress().toString();
         int index = ipPort.indexOf(":");
         return ipPort.substring(1, index);
     }
+
     /**
      * create by: 高嵩
      * description: 得到该连接的远程port
      * create time: 2019/8/26 9:58
-     * @params
+     *
      * @return
+     * @params
      */
     public static int getRemotePort(IoSession session) {
         String ipPort = session.getRemoteAddress().toString();
         int index = ipPort.indexOf(":");
-        return Integer.parseInt(ipPort.substring(index+1));
+        return Integer.parseInt(ipPort.substring(index + 1));
     }
 }

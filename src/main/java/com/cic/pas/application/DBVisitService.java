@@ -1,5 +1,7 @@
 package com.cic.pas.application;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -235,7 +237,10 @@ public class DBVisitService {
             // 日冻结数据存储
             // forDaysFreezing(myTerminal);
         } catch (Exception e) {
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
             LogFactory.getInstance().saveLog("曲线冻结执行存储异常", LogDao.exception);
         }
 
@@ -309,7 +314,10 @@ public class DBVisitService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
             LogFactory.getInstance().saveLog("日冻结执行存储异常", LogDao.exception);
         }
     }
@@ -338,7 +346,10 @@ public class DBVisitService {
                     ps.setObject(4, obj[3], Types.TIMESTAMP);
                     ps.setObject(5, obj[4], Types.DOUBLE);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    e.printStackTrace(new PrintStream(baos));
+                    String exception = baos.toString();
+                    logger.error(exception);
                 }
             }
         };
@@ -371,7 +382,10 @@ public class DBVisitService {
                     ps.setObject(5, obj[2], Types.VARCHAR);
                     ps.setObject(6, obj[3], Types.TIMESTAMP);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    e.printStackTrace(new PrintStream(baos));
+                    String exception = baos.toString();
+                    logger.error(exception);
                 }
             }
         };
@@ -398,7 +412,10 @@ public class DBVisitService {
                     ps.setObject(3, obj[2], Types.VARCHAR);
                     ps.setObject(4, obj[3], Types.VARCHAR);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    e.printStackTrace(new PrintStream(baos));
+                    String exception = baos.toString();
+                    logger.error(exception);
                 }
             }
         };
@@ -433,8 +450,9 @@ public class DBVisitService {
      * create by: 高嵩
      * description: 批量插入临时数据 计量部分
      * create time: 2019/8/8 11:39
-     * @params
+     *
      * @return
+     * @params
      */
     public static void batchInsertTemp(List<EsmspSumMeasurOrganizationDay> list)
             throws Exception {
@@ -473,12 +491,14 @@ public class DBVisitService {
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
     }
+
     /**
      * create by: 高嵩
      * description: 批量插入临时数据 用能系统
      * create time: 2019/8/8 11:40
-     * @params
+     *
      * @return
+     * @params
      */
     public static void batchInsertSystemTemp(List<EsmspSumMeasurSystemDay> list)
             throws Exception {
@@ -513,19 +533,24 @@ public class DBVisitService {
                     DBConfigDao.jdbcTemplate.update(buffer.toString());
                     logger.info("批量执行插入[用能系统]临时数据" + key + "成功,共" + list.size()
                             + "条数据<SQL>......");
-                }catch (Exception e){
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    e.printStackTrace(new PrintStream(baos));
+                    String exception = baos.toString();
+                    logger.error(exception);
                 }
             }
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
     }
+
     /**
      * create by: 高嵩
      * description: 批量插入临时数据 用能系统
      * create time: 2019/8/8 11:40
-     * @params
+     *
      * @return
+     * @params
      */
     public static void batchInsertSystem(List<EsmspSumMeasurSystemDay> list)
             throws Exception {
@@ -558,8 +583,11 @@ public class DBVisitService {
                     DBConfigDao.jdbcTemplate.update(buffer.toString());
                     logger.info("批量执行插入[用能系统]日数据" + key + "成功,共" + list.size()
                             + "条数据<SQL>......");
-                }catch (Exception e){
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    e.printStackTrace(new PrintStream(baos));
+                    String exception = baos.toString();
+                    logger.error(exception);
                 }
             }
             DBConfigDao.jdbcTemplate
@@ -567,6 +595,7 @@ public class DBVisitService {
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
     }
+
     public static boolean updatePointValue(PointDevice pd) {
         String sql = "update poms_modle_measur_point set MMP_STANDARD_VAL='" + pd.getValue() + "' where ID='" + pd.getId() + "'";
         int result = jdbcTemplate.update(sql);
@@ -639,11 +668,11 @@ public class DBVisitService {
                     + day.getMaxValue() + ",'" + day.getMaxDate() + "',"
                     + day.getMinValue() + ",'" + day.getMinDate() + "',"
                     + day.getAvgValue() + "," + day.getSumValue() + ","
-                    +day.getSumAmount()+","+day.getjValue()+","
-                    +day.getjAmount()+","+day.getfValue()+","
+                    + day.getSumAmount() + "," + day.getjValue() + ","
+                    + day.getjAmount() + "," + day.getfValue() + ","
                     + day.getfAmount() + "," + day.getpValue() + ","
-                    +day.getpAmount()+"," + day.getgValue() + ","
-                    +day.getgAmount()+","+ day.getLastValue() + ")");
+                    + day.getpAmount() + "," + day.getgValue() + ","
+                    + day.getgAmount() + "," + day.getLastValue() + ")");
             if (i != list.size() - 1) {
                 buffer.append(",");
             }
@@ -651,11 +680,13 @@ public class DBVisitService {
         }
         return buffer;
     }
+
     /**
      * create by: 高嵩
      * description: 生成批量插入SQL  计量部分
      * create time: 2019/8/8 11:32
-     *  [list, dateCode, buffer]
+     * [list, dateCode, buffer]
+     *
      * @return java.lang.StringBuffer
      */
     private static StringBuffer getBuffByDayList(
@@ -720,11 +751,11 @@ public class DBVisitService {
                     + day.getMaxValue() + ",'" + day.getMaxDate() + "',"
                     + day.getMinValue() + ",'" + day.getMinDate() + "',"
                     + day.getAvgValue() + "," + day.getSumValue() + ","
-                    +day.getSumAmount()+","+day.getjValue()+","
-                    +day.getjAmount()+","+day.getfValue()+","
+                    + day.getSumAmount() + "," + day.getjValue() + ","
+                    + day.getjAmount() + "," + day.getfValue() + ","
                     + day.getfAmount() + "," + day.getpValue() + ","
-                    +day.getpAmount()+"," + day.getgValue() + ","
-                    +day.getgAmount() + ")");
+                    + day.getpAmount() + "," + day.getgValue() + ","
+                    + day.getgAmount() + ")");
             if (i != list.size() - 1) {
                 buffer.append(",");
             }
@@ -732,11 +763,13 @@ public class DBVisitService {
         // }
         return buffer;
     }
+
     /**
      * create by: 高嵩
      * description: 生成批量插入SQL  用能设备
      * create time: 2019/8/8 11:34
-     *  [list, dateCode, buffer]
+     * [list, dateCode, buffer]
+     *
      * @return java.lang.StringBuffer
      */
     private static StringBuffer getSystemBuffByDayList(
@@ -748,7 +781,7 @@ public class DBVisitService {
             if (dateCode.equals("")) {
                 dateCode = day.getDateCode();
             }
-            buffer.append(" ( '" + day.getEuiCode() + "','" + day.getSystemCode()+"','"+day.getFacilityCode()
+            buffer.append(" ( '" + day.getEuiCode() + "','" + day.getSystemCode() + "','" + day.getFacilityCode()
                     + "','" + day.getMmpCode() + "','" + day.getDateCode()
                     + "'," + day.getPoint1() + "," + day.getPoint2() + ","
                     + day.getPoint3() + "," + day.getPoint4() + ","
@@ -813,8 +846,9 @@ public class DBVisitService {
      * create by: 高嵩
      * description: 批量插入日数据  计量部分
      * create time: 2019/8/8 11:36
-     * @params
+     *
      * @return
+     * @params
      */
     public static void batchInsertDay(List<EsmspSumMeasurOrganizationDay> list)
             throws Exception {
@@ -853,12 +887,14 @@ public class DBVisitService {
             LogFactory.getInstance().saveLog("曲线记录存储成功", LogDao.operation);
         }
     }
+
     /**
      * create by: 高嵩
      * description: 批量插入日数据  用能设备
      * create time: 2019/8/8 11:37
-     * @params
+     *
      * @return
+     * @params
      */
     public static void batchInsertSystemDay(List<EsmspSumMeasurSystemDay> list)
             throws Exception {
@@ -934,10 +970,10 @@ public class DBVisitService {
                     + month.getPoint27() + "," + month.getPoint28() + ","
                     + month.getPoint29() + "," + month.getPoint30() + ","
                     + month.getPoint31() + "," + month.getAvgValue() + ","
-                    + month.getSumValue() + "," +month.getSumAmount()+","
-                    +month.getjValue()+","+month.getjAmount()+","
-                    +month.getfValue()+ month.getfAmount() + ","
-                    +month.getpValue()+month.getpAmount()
+                    + month.getSumValue() + "," + month.getSumAmount() + ","
+                    + month.getjValue() + "," + month.getjAmount() + ","
+                    + month.getfValue()+ "," + month.getfAmount() + ","
+                    + month.getpValue() + ","+ month.getpAmount()+ ","
                     + month.getgValue() + "," + month.getpAmount() + ")";
             if (i != list.size() - 1) {
                 sql += ",";
@@ -977,10 +1013,10 @@ public class DBVisitService {
                     + year.getPoint9() + "," + year.getPoint10() + ","
                     + year.getPoint11() + "," + year.getPoint12() + ","
                     + year.getAvgValue() + "," + year.getSumValue() + ","
-                    +year.getSumAmount()+","+year.getjValue()+","
-                    +year.getjAmount()+","+year.getfValue()+","
+                    + year.getSumAmount() + "," + year.getjValue() + ","
+                    + year.getjAmount() + "," + year.getfValue() + ","
                     + year.getfAmount() + "," + year.getpValue() + ","
-                    +year.getpAmount()+","+year.getgValue()
+                    + year.getpAmount() + "," + year.getgValue()+","
                     + year.getgAmount() + ")";
             if (i != list.size() - 1) {
                 sql += ",";
@@ -1210,6 +1246,7 @@ public class DBVisitService {
 
         return map;
     }
+
     /**
      * 为了提高效率{批量插入实时数据}
      */
@@ -1219,12 +1256,12 @@ public class DBVisitService {
             EsmspSumMeasurSystemReal real = list.get(i);
             sql += "( '" + real.getEuiCode() + "','" + real.getSystemCode()
                     + "','" + real.getFacilityCode() + "','" + real.getMmpCode()
-                    + "','" +real.getDateCode() + "'," + real.getValue() + ")";
+                    + "','" + real.getDateCode() + "'," + real.getValue() + ")";
             if (i != list.size() - 1) {
                 sql += ",";
             }
         }
-        if(list.size()>0){
+        if (list.size() > 0) {
             DBConfigDao.jdbcTemplate.execute(sql);
             System.out.println("批量插入实时数据成功SQL>......");
         }

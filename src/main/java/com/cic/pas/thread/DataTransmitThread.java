@@ -69,7 +69,7 @@ public class DataTransmitThread extends BaseThread {
                     }else{
                         lastValue=readPd.getValue();
                     }
-                    if ((lastValue.compareTo(readPd.getValue()) != 0)) {
+                    if ((writePd.getValue().compareTo(readPd.getValue()) != 0)) {
                         if (readPd.getValue().compareTo(BigDecimal.ZERO) != 0) {
                             boolean result = thread.write(writeMd, writePd, readPd.getValue().doubleValue());
                             String info = result == true ? "成功" : "失败";

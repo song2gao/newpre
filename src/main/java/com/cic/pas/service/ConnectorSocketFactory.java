@@ -47,7 +47,7 @@ public class ConnectorSocketFactory {
                             try {
                                 Thread.sleep(3000);
                                 ConnectFuture future = socketConnector
-                                        .connect();
+                                        .connect(new InetSocketAddress(address,port));
                                 future.awaitUninterruptibly();// 等待连接创建成功
                                 session = future.getSession();// 获取会话
                                 if (session.isConnected()) {

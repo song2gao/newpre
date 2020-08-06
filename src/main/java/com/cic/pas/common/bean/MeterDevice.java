@@ -284,7 +284,7 @@ public class MeterDevice implements Serializable {
 	}
     /**
      * create by: 高嵩
-     * description: 是否为虚拟表  0 实表需采集  1 实表非直接采集 2 虚拟表需采集
+     * description: 是否为虚拟表  0 实表需采集  1 实表非直接采集 2 虚拟表需采集  4 虚拟表需要其它表计做累加
      * create time: 2019/12/12 14:13
      * @params
      * @return

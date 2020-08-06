@@ -71,7 +71,7 @@
 //			else
 //				System.out.println("Success");
 //		} catch (ModbusTransportException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //	}
 //
@@ -97,13 +97,13 @@
 //		try {
 //			modbusRequest = new ReadHoldingRegistersRequest(1, start, readLenth);// 功能码03
 //		} catch (ModbusTransportException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		ModbusResponse modbusResponse = null;
 //		try {
 //			modbusResponse = tcpMaster.send(modbusRequest);
 //		} catch (ModbusTransportException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		ByteQueue byteQueue = new ByteQueue(12);
 //		modbusResponse.write(byteQueue);
@@ -137,20 +137,20 @@
 //			rtuMaster.init();
 //			System.out.println("===============" + 1111111);
 //		} catch (ModbusInitException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		ModbusRequest modbusRequest = null;
 //		try {
 //			modbusRequest = new ReadHoldingRegistersRequest(1, start, readLenth);// 功能码03
 //		} catch (ModbusTransportException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		ReadHoldingRegistersResponse modbusResponse = null;
 //		try {
 //			modbusResponse = (ReadHoldingRegistersResponse) rtuMaster
 //					.send(modbusRequest);
 //		} catch (ModbusTransportException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		System.out.println(Arrays.toString(modbusResponse.getShortData()));
 //		return null;
@@ -175,7 +175,7 @@
 //				return response.getBooleanData();
 //			}
 //		} catch (ModbusTransportException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		return null;
 //	}
@@ -194,7 +194,7 @@
 //				return response.getBooleanData();
 //			}
 //		} catch (ModbusTransportException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		return null;
 //
@@ -214,7 +214,7 @@
 //				return response.getData();
 //			}
 //		} catch (ModbusTransportException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		return null;
 //	}
@@ -233,7 +233,7 @@
 //				return response.getData();
 //			}
 //		} catch (ModbusTransportException e) {
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		return null;
 //	}

@@ -1,5 +1,7 @@
 package com.cic.pas.thread;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -9,10 +11,7 @@ import java.util.List;
 import com.cic.pas.common.bean.MeterDevice;
 import com.cic.pas.common.bean.PointDevice;
 import com.cic.pas.common.bean.TerminalDevice;
-import com.cic.pas.common.util.CRC16M;
-import com.cic.pas.common.util.ModBusReadAndWrite;
-import com.cic.pas.common.util.ModBusUtil;
-import com.cic.pas.common.util.Util;
+import com.cic.pas.common.util.*;
 import com.cic.pas.procotol.s7.S7ReadRequest;
 import com.cic.pas.procotol.s7.S7WriteRequest;
 import com.cic.pas.service.ServerContext;
@@ -157,6 +156,14 @@ public class GetDataThread extends BaseThread {
                         getSendBuffS7(meter);
                     }
                 }
+            } else if (td.getNoticeAccord().equals("Byte645")) {
+                session.write(CRC16M.HexString2Buf("55aa550025801bc0"));
+                for (MeterDevice meter : td.getMeterList()) {
+                    if (meter.getIsinvented() == 0 || meter.getIsinvented() == 2) {
+                        get645SendBuff(meter);
+                    }
+                }
+                handFlag = true;
             } else {
                 for (MeterDevice meter : td.getMeterList()) {
                     if (meter.getIsinvented() == 0 || meter.getIsinvented() == 2) {
@@ -194,8 +201,10 @@ public class GetDataThread extends BaseThread {
                     }
                 }
             } catch (InterruptedException e) {
-                System.out.println("Thread " + td.getName() + " interrupted.");
-                e.printStackTrace();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                e.printStackTrace(new PrintStream(baos));
+                String exception = baos.toString();
+                logger.error(exception);
             }
             byte[] oldValues = map.get(key);
             byte[] values = new byte[oldValues.length];
@@ -255,11 +264,17 @@ public class GetDataThread extends BaseThread {
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         Thread.currentThread().interrupt();
-                        e.printStackTrace();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        e.printStackTrace(new PrintStream(baos));
+                        String exception = baos.toString();
+                        logger.error(exception);
                         logger.info("[" + this.getName() + "]数据采集线程关闭");
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        e.printStackTrace(new PrintStream(baos));
+                        String exception = baos.toString();
+                        logger.error(exception);
                         logger.info("[" + this.getName() + "]数据采集线程关闭");
                     }
                 }
@@ -268,7 +283,10 @@ public class GetDataThread extends BaseThread {
                 Thread.sleep(td.getCalculateCycle());
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                e.printStackTrace(new PrintStream(baos));
+                String exception = baos.toString();
+                logger.error(exception);
                 logger.info("[" + this.getName() + "]数据采集线程关闭");
 
             }
@@ -277,7 +295,10 @@ public class GetDataThread extends BaseThread {
             Thread.sleep(td.getRoundCycle());
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
     }
 
@@ -340,10 +361,16 @@ public class GetDataThread extends BaseThread {
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     Thread.currentThread().interrupt();
-                    e.printStackTrace();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    e.printStackTrace(new PrintStream(baos));
+                    String exception = baos.toString();
+                    logger.error(exception);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    e.printStackTrace(new PrintStream(baos));
+                    String exception = baos.toString();
+                    logger.error(exception);
                 }
             }
         }
@@ -365,7 +392,10 @@ public class GetDataThread extends BaseThread {
             session.setAttribute("len", len);
             session.write(data);
         } catch (Exception e) {
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
             logger.info(e);
         }
     }
@@ -426,7 +456,7 @@ public class GetDataThread extends BaseThread {
         if (prePoints.size() == 1) {
             PointDevice p = prePoints.get(0);
             start = p.getModAddress().intValue() + meter.getIncrease();
-            key = meter.getCode() + ":" + p.getStorageType() + ":" + p.getModAddress() + "-" + p.getMmpType();
+            key = meter.getCode() + ":" + p.getStorageType() + ":" + start + "-" + p.getMmpType();
             byte[] values = ModBusUtil.getProtocol(meterAddress, start, p.getPointLen(), p.getIsPlcAddress(), p.getStorageType());
             map.put(key, values);
         } else {
@@ -792,5 +822,30 @@ public class GetDataThread extends BaseThread {
         request.setAddress(new byte[]{(byte) (address >> 16 & 0xff), (byte) (address >> 8 & 0xff), (byte) (address & 0xff)});
         request.setWriteData(data);
         return request.getSendBytes();
+    }
+
+    /**
+     * create by: 高嵩
+     * description: 645-2007协议读取数据指令
+     * create time: 2020/1/13 15:12
+     *
+     * @return
+     * @params
+     */
+    public void get645SendBuff(MeterDevice md) {
+        String head = "FE FE FE FE";
+        String headCmd = "68";
+        String meterAddress = StringUtils.toSwapStr(StringUtils.leftPad(String.valueOf(md.getAddress()), 12, '0'));
+        String cmd = "68 11 04";
+        for (PointDevice pd : md.getPointDevice()) {
+//            String pointAddStr = StringUtils.leftPad(String.format("%08x",pdAddress.intValue()), 8, '0');
+            String pointAddStr = StringUtils.leftPad(String.valueOf(pd.getModAddress().intValue()), 8, '0');
+            String pointAddress = StringUtils.toSwapStr(StringUtils.toPlus645(pointAddStr));
+            String checkStr = headCmd + meterAddress + cmd + pointAddress;
+            String checkSum = StringUtils.checkCs(checkStr.replaceAll(" ", ""));
+            String fStr = head + checkStr + checkSum + "16";
+            String key = md.getCode() + ":" + meterAddress + ":" + pointAddress;
+            map.put(key, CRC16M.HexString2Buf(fStr.replaceAll(" ", "")));
+        }
     }
 }

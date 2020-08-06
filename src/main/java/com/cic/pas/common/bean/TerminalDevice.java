@@ -24,6 +24,17 @@ public class TerminalDevice implements Serializable{
 	private String location;
 	/**采集终端内网ip地址                --备注 外网没用*/    
 	private String MSA;
+	/**备用IP**/
+	private String msaBackUp;
+
+	public String getMsaBackUp() {
+		return msaBackUp;
+	}
+
+	public void setMsaBackUp(String msaBackUp) {
+		this.msaBackUp = msaBackUp;
+	}
+
 	/**采集终端的下行报文*/
 	private String code;
 	/**采集终端的下行报文 一个PnFn*/

@@ -1,5 +1,7 @@
 package com.cic.pas.procotol;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,14 +89,17 @@ public class ByteModBusDecoder {
                                                     .getFormular());
                                         }
                                     } catch (Exception e) {
-                                        e.printStackTrace();
+                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                        e.printStackTrace(new PrintStream(baos));
+                                        String exception = baos.toString();
+                                        logger.error(exception);
                                     }
                                     if (checkData(td, pd, value, md.getName(), sendStr, receivedStr)) {
-                                        pd.setValue(value);
-                                        pd.setShowValue(showValue);
                                         String dateTime = new SimpleDateFormat(
                                                 "yyyy-MM-dd HH:mm:ss").format(new Date());
                                         pd.setTime(dateTime);
+                                        pd.setValue(value);
+                                        pd.setShowValue(showValue);
                                         if (pd.getCode().equals("10000")) {//PLC采集表计通讯状态
                                             if (pd.getValue().intValue() > 0) {
                                                 md.setStatus(0);
@@ -111,7 +116,7 @@ public class ByteModBusDecoder {
                                         if (md.getIsinvented() == 2) {
                                             setInventedMeterData(td, pd);
                                         }
-                                        setSystemParams(ctdCode, pd.getCode(), value);
+//                                        setSystemParams(ctdCode, pd.getCode(), value);
                                     }
                                     lastlen = currentlen;
                                     lastMMpType = pd.getMmpType();
@@ -134,7 +139,7 @@ public class ByteModBusDecoder {
     public void setSystemParams(String ctdCode, String mmpCode, BigDecimal value) {
         for (SystemParams param : BussinessConfig.systemParams) {
             if (param.getCalCode().equals(ctdCode) && param.getMmpCode().equals(mmpCode)) {
-                param.setParamValue(value.setScale(4, BigDecimal.ROUND_HALF_UP));
+                param.setParamValue(value);
                 param.setTime(new SimpleDateFormat(
                         "yyyy-MM-dd HH:mm:ss").format(new Date()));
             }
@@ -151,7 +156,10 @@ public class ByteModBusDecoder {
                 BigDecimal b = new BigDecimal(Math.pow(10, point));
                 result = value.divide(b);
             } catch (Exception e) {
-                e.printStackTrace();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                e.printStackTrace(new PrintStream(baos));
+                String exception = baos.toString();
+                logger.error(exception);
                 logger.info("取小数点出错" + "value:" + value + "point:" + point);
             }
             return result;
@@ -213,27 +221,29 @@ public class ByteModBusDecoder {
         }
         return true;
     }
+
     /**
      * create by: 高嵩
      * description: 给虚拟表进行赋值
      * create time: 2019/12/11 16:11
-     * @params
+     *
      * @return
+     * @params
      */
-    public static void setInventedMeterData(TerminalDevice td,PointDevice pd){
-        boolean isFind=false;
-        for(MeterDevice md:td.getMeterList()){
-            if(md.getIsinvented()==1){
-                if(md.getIncrease()==pd.getModAddress().intValue()){
-                    for(PointDevice p:md.getPointDevice()){
+    public static void setInventedMeterData(TerminalDevice td, PointDevice pd) {
+        boolean isFind = false;
+        for (MeterDevice md : td.getMeterList()) {
+            if (md.getIsinvented() == 1) {
+                if (md.getIncrease() == pd.getModAddress().intValue()) {
+                    for (PointDevice p : md.getPointDevice()) {
                         p.setValue(pd.getValue());
                         p.setTime(pd.getTime());
                         md.setStatus(1);
-                        isFind=true;
+                        isFind = true;
                         break;
                     }
                 }
-                if(isFind){
+                if (isFind) {
                     break;
                 }
             }

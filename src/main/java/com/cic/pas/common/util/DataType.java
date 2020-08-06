@@ -20,6 +20,8 @@
  */
 package com.cic.pas.common.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.math.BigInteger;
 
 /**
@@ -133,12 +135,161 @@ public class DataType {
     }
 
     public static void main(String[] args) {
-        Double test=24.2;
-        int a=Float.floatToIntBits(test.floatValue());
-        System.out.println((int)a/65536);
+        byte[] bytes=HexString2Buf(" 43 6d c5 49".replaceAll(" ",""));
+        System.out.println(bytesToValueRealOffset(bytes,0,FOUR_BYTE_FLOAT));
 
     }
+    public static byte[] HexString2Buf(String src) {
+        src = src.replaceAll(" ", "");
+        int len = src.length();
+        byte[] ret = new byte[len / 2];
+        byte[] tmp = src.getBytes();
+        for (int i = 0; i < len; i += 2) {
+            ret[i / 2] = uniteBytes(tmp[i], tmp[i + 1]);
+        }
+        return ret;
+    }
+    public static byte uniteBytes(byte src0, byte src1) {
+        byte _b0 = Byte.decode("0x" + new String(new byte[]{src0}))
+                .byteValue();
+        _b0 = (byte) (_b0 << 4);
+        byte _b1 = Byte.decode("0x" + new String(new byte[]{src1}))
+                .byteValue();
+        byte ret = (byte) (_b0 ^ _b1);
+        return ret;
+    }
+    /**
+     * create by: 高嵩
+     * description: 根据数据类型得到真实数据
+     * create time: 2019/8/29 12:16
+     *
+     * @return
+     * @params
+     */
+    public static Object bytesToValueRealOffset(byte[] data, int offset, int dataType) {
+        switch (dataType) {
+            case DataType.BINARY:
+                return data[data.length - 1 - offset] & 0xff;
+            case DataType.ONE_BYTE:
+                return new Integer(data[offset] & 0xff);
+            case DataType.TWO_BYTE_INT_UNSIGNED:
+                return new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+            case DataType.TWO_BYTE_INT_SIGNED:
+                return new Short((short) (((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff)));
+            case DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED:
+                return new Short((short) (((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+            case DataType.TWO_BYTE_INT_UNSIGNED_SWAPPED_NOT:
+                Short value = new Short((short) (((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+                if (value == 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            case DataType.TWO_BYTE_BCD:
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < 2; i++) {
+                    sb.append(bcdNibbleToInt(data[offset + i], true));
+                    sb.append(bcdNibbleToInt(data[offset + i], false));
+                }
+                return new Short(Short.parseShort(sb.toString()));
+            case DataType.FOUR_BYTE_INT_UNSIGNED:
+                return new Long(((long) ((data[offset] & 0xff)) << 24) | ((long) ((data[offset + 1] & 0xff)) << 16)
+                        | ((long) ((data[offset + 2] & 0xff)) << 8) | ((data[offset + 3] & 0xff)));
+            case DataType.FOUR_BYTE_INT_SIGNED:
+                return new Integer(((data[offset] & 0xff) << 24) | ((data[offset + 1] & 0xff) << 16)
+                        | ((data[offset + 2] & 0xff) << 8) | (data[offset + 3] & 0xff));
+            case DataType.FOUR_BYTE_INT_UNSIGNED_SWAPPED:
+                return new Long(((long) ((data[offset + 2] & 0xff)) << 24) | ((long) ((data[offset + 3] & 0xff)) << 16)
+                        | ((long) ((data[offset] & 0xff)) << 8) | ((data[offset + 1] & 0xff)));
+            case DataType.FOUR_BYTE_INT_SIGNED_SWAPPED:
+                return new Integer(((data[offset + 2] & 0xff) << 24) | ((data[offset + 3] & 0xff) << 16)
+                        | ((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+            case DataType.FOUR_BYTE_FLOAT:
+                return new Float(Float.intBitsToFloat(((data[offset] & 0xff) << 24) | ((data[offset + 1] & 0xff) << 16)
+                        | ((data[offset + 2] & 0xff) << 8) | (data[offset + 3] & 0xff)));
+            case DataType.FOUR_BYTE_FLOAT_SWAPPED:
+                return new Float(Float.intBitsToFloat(((data[offset + 2] & 0xff) << 24) | ((data[offset + 3] & 0xff) << 16)
+                        | ((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff)));
+            case DataType.FOUR_BYTE_FLOAT_SWAPPED_ALL:
+                return new Float(Float.intBitsToFloat(((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
+                        | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+            case DataType.FOUR_BYTE_BCD:
+                sb = new StringBuffer();
+                for (int i = 0; i < 4; i++) {
+                    sb.append(bcdNibbleToInt(data[offset + i], true));
+                    sb.append(bcdNibbleToInt(data[offset + i], false));
+                }
+                return new Integer(Integer.parseInt(sb.toString()));
+            case DataType.EIGHT_BYTE_INT_UNSIGNED:
+                byte[] b9 = new byte[9];
+                System.arraycopy(data, offset, b9, 1, 8);
+                return new BigInteger(b9);
+            case DataType.EIGHT_BYTE_INT_SIGNED:
+                return new Long(((long) ((data[offset] & 0xff)) << 56) | ((long) ((data[offset + 1] & 0xff)) << 48)
+                        | ((long) ((data[offset + 2] & 0xff)) << 40) | ((long) ((data[offset + 3] & 0xff)) << 32)
+                        | ((long) ((data[offset + 4] & 0xff)) << 24) | ((long) ((data[offset + 5] & 0xff)) << 16)
+                        | ((long) ((data[offset + 6] & 0xff)) << 8) | ((data[offset + 7] & 0xff)));
+            case DataType.EIGHT_BYTE_INT_UNSIGNED_SWAPPED:
+                b9 = new byte[9];
+                b9[1] = data[offset + 6];
+                b9[2] = data[offset + 7];
+                b9[3] = data[offset + 4];
+                b9[4] = data[offset + 5];
+                b9[5] = data[offset + 2];
+                b9[6] = data[offset + 3];
+                b9[7] = data[offset];
+                b9[8] = data[offset + 1];
+                return new BigInteger(b9);
+            case DataType.EIGHT_BYTE_INT_SIGNED_SWAPPED:
+                return new Long(((long) ((data[offset + 6] & 0xff)) << 56) | ((long) ((data[offset + 7] & 0xff)) << 48)
+                        | ((long) ((data[offset + 4] & 0xff)) << 40) | ((long) ((data[offset + 5] & 0xff)) << 32)
+                        | ((long) ((data[offset + 2] & 0xff)) << 24) | ((long) ((data[offset + 3] & 0xff)) << 16)
+                        | ((long) ((data[offset] & 0xff)) << 8) | ((data[offset + 1] & 0xff)));
+            case DataType.EIGHT_BYTE_FLOAT:
+                return new Double(Double.longBitsToDouble(((long) ((data[offset] & 0xff)) << 56)
+                        | ((long) ((data[offset + 1] & 0xff)) << 48) | ((long) ((data[offset + 2] & 0xff)) << 40)
+                        | ((long) ((data[offset + 3] & 0xff)) << 32) | ((long) ((data[offset + 4] & 0xff)) << 24)
+                        | ((long) ((data[offset + 5] & 0xff)) << 16) | ((long) ((data[offset + 6] & 0xff)) << 8)
+                        | ((data[offset + 7] & 0xff))));
+            case DataType.EIGHT_BYTE_FLOAT_SWAPPED:
+                return new Double(Double.longBitsToDouble(((long) ((data[offset + 6] & 0xff)) << 56)
+                        | ((long) ((data[offset + 7] & 0xff)) << 48) | ((long) ((data[offset + 4] & 0xff)) << 40)
+                        | ((long) ((data[offset + 5] & 0xff)) << 32) | ((long) ((data[offset + 2] & 0xff)) << 24)
+                        | ((long) ((data[offset + 3] & 0xff)) << 16) | ((long) ((data[offset] & 0xff)) << 8)
+                        | ((data[offset + 1] & 0xff))));
+            case DataType.EIGHT_BYTE_FLOAT_SWAPPED_ALL:
+                float h = new Float(Float.intBitsToFloat(((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
+                        | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+                float l = new Float(Float.intBitsToFloat(((data[offset + 7] & 0xff) << 24) | ((data[offset + 6] & 0xff) << 16)
+                        | ((data[offset + 5] & 0xff) << 8) | (data[4] & 0xff)));
+                return h * 10000 + l;
+            case DataType.EIGHT_BYTE_FLOAT_SWAPPED_ALL_HIGHT_65536:
+                h = new Float(Float.intBitsToFloat(((data[offset + 3] & 0xff) << 24) | ((data[offset + 2] & 0xff) << 16)
+                        | ((data[offset + 1] & 0xff) << 8) | (data[offset] & 0xff)));
+                l = new Float(Float.intBitsToFloat(((data[offset + 7] & 0xff) << 24) | ((data[offset + 6] & 0xff) << 16)
+                        | ((data[offset + 5] & 0xff) << 8) | (data[4] & 0xff)));
+                return h * 65536 + l;
+            case DataType.SIX_BYTE_DATETIME:
+                int hour = new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+                int min = new Integer(((data[offset + 2] & 0xff) << 8) | (data[offset + 3] & 0xff));
+                int sec = new Integer(((data[offset + 4] & 0xff) << 8) | (data[offset + 5] & 0xff));
+                return hour + org.apache.commons.lang.StringUtils.leftPad(min + "", 2, '0') + StringUtils.leftPad(sec + "", 2, '0');
 
+            case DataType.TWO_BYTE_INT_UNSIGNED_240_15:
+                int a = new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+                if (a == 15) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            case DataType.SIX_BYTE_LONG:
+                Long high = new Long(((long) ((data[offset] & 0xff)) << 24) | ((long) ((data[offset + 1] & 0xff)) << 16)
+                        | ((long) ((data[offset + 2] & 0xff)) << 8) | ((data[offset + 3] & 0xff)));
+                Integer low = new Integer(((data[offset] & 0xff) << 8) | (data[offset + 1] & 0xff));
+                return (high + low / 1000);
+        }
+        throw new RuntimeException("Unsupported data type: " + dataType);
+    }
     /**
      * @函数功能: 10进制串转为BCD码
      * @输入参数: 10进制串
@@ -184,5 +335,16 @@ public class DataType {
             bbt[p] = b;
         }
         return bbt;
+    }
+
+    private static int bcdNibbleToInt(byte b, boolean high) {
+        int n;
+        if (high)
+            n = (b >> 4) & 0xf;
+        else
+            n = b & 0xf;
+        if (n > 9)
+            n = 0;
+        return n;
     }
 }

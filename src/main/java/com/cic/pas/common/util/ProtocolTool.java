@@ -1,51 +1,58 @@
 package com.cic.pas.common.util;
 
-import java.lang.reflect.InvocationTargetException;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.mina.filter.codec.ProtocolEncoder;
+import org.apache.log4j.Logger;
 
-import testGson.Person;
 
-import com.cic.pas.common.bean.MeterDevice;
 import com.cic.pas.common.bean.TerminalDevice;
 
-@SuppressWarnings(value = { "all" })
+@SuppressWarnings(value = {"all"})
 public class ProtocolTool {
-	
-	public static Class obj;
-	
-	static {
-		obj=ClassUtils.getClass("com.cic.pas.procotol.GetCodeUtils");
-	}
 
-	/**
-	 * 从协议中获取实时数据code码
-	 * @param list
-	 * @return
-	 */
-	public static List<TerminalDevice> getTerminalList(List<TerminalDevice> tlist){
-		
-		//String str= gson.toJson(tlist);
-		//System.out.println(tlist);
-		Method methodFromClass = ClassUtils.getMethodFromClass(obj, "makeCodecByMeter",List.class);
-		
-		Object invokeMethod = null;
-		try {
-			invokeMethod = ClassUtils.invokeMethod(obj.newInstance(), methodFromClass, tlist);
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println("组成的报文返回完毕："+invokeMethod.toString());
-		
-		List<TerminalDevice> list = new ArrayList<TerminalDevice>();//gson.fromJson(invokeMethod.toString(), new TypeToken<List<TerminalDevice>>(){}.getType());
+    public static Class obj;
+    private static Logger logger = Logger.getLogger(ProtocolTool.class);
+
+    static {
+        obj = ClassUtils.getClass("com.cic.pas.procotol.GetCodeUtils");
+    }
+
+    /**
+     * 从协议中获取实时数据code码
+     *
+     * @param list
+     * @return
+     */
+    public static List<TerminalDevice> getTerminalList(List<TerminalDevice> tlist) {
+
+        //String str= gson.toJson(tlist);
+        //System.out.println(tlist);
+        Method methodFromClass = ClassUtils.getMethodFromClass(obj, "makeCodecByMeter", List.class);
+
+        Object invokeMethod = null;
+        try {
+            invokeMethod = ClassUtils.invokeMethod(obj.newInstance(), methodFromClass, tlist);
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
+        }
+
+        System.out.println("组成的报文返回完毕：" + invokeMethod.toString());
+
+        List<TerminalDevice> list = new ArrayList<TerminalDevice>();//gson.fromJson(invokeMethod.toString(), new TypeToken<List<TerminalDevice>>(){}.getType());
 		
 	/*	for (int i = 0; i < list.size(); i++) {
 			TerminalDevice t = list.get(i);
@@ -56,20 +63,21 @@ public class ProtocolTool {
 			}
 			
 		}*/
-		
-		return list;
-	}
-	
-	/**
-	 * 从协议中获取曲线历史日冻结报文
-	 * @param list
-	 * @param time
-	 * @param a
-	 * @param b
-	 * @return
-	 */
-	public static List<TerminalDevice> getTerminalList(List<TerminalDevice> list ,long time, Integer a, Integer b){
-		
+
+        return list;
+    }
+
+    /**
+     * 从协议中获取曲线历史日冻结报文
+     *
+     * @param list
+     * @param time
+     * @param a
+     * @param b
+     * @return
+     */
+    public static List<TerminalDevice> getTerminalList(List<TerminalDevice> list, long time, Integer a, Integer b) {
+
 //		String listForGson =gson.toJson(list);
 //		Method methodFromClass = ClassUtils.getMethodFromClass(obj, "makeCodecHistory",String.class,long.class,Integer.class,Integer.class);
 //		
@@ -82,23 +90,25 @@ public class ProtocolTool {
 //			
 //		} catch (InstantiationException e) {
 //			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		} catch (IllegalAccessException e) {
 //			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		
 //		return returnlist;
-		return new ArrayList<TerminalDevice>();
-	}
-	/**
-	 * 从协议中获取历史日冻结报文
-	 * @param list
-	 * @param time
-	 * @return
-	 */
-	public static List<TerminalDevice> getCodeForDay(List<TerminalDevice> list,long time){
-		
+        return new ArrayList<TerminalDevice>();
+    }
+
+    /**
+     * 从协议中获取历史日冻结报文
+     *
+     * @param list
+     * @param time
+     * @return
+     */
+    public static List<TerminalDevice> getCodeForDay(List<TerminalDevice> list, long time) {
+
 //		String listForJson= gson.toJson(list);
 //		
 //		Method methodFromClass = ClassUtils.getMethodFromClass(obj, "makeCodecHistoryForDaysFreezing",String.class,long.class);
@@ -111,24 +121,25 @@ public class ProtocolTool {
 //			returnList = gson.fromJson(invokeMethod.toString(), new TypeToken<List<TerminalDevice>>(){}.getType());
 //		} catch (InstantiationException e) {
 //			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		} catch (IllegalAccessException e) {
 //			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		
 //		return returnList;
-		return new ArrayList<TerminalDevice>();
-	}
+        return new ArrayList<TerminalDevice>();
+    }
 
-	/**
-	 * 从协议中获取历史月冻结报文
-	 * @param list
-	 * @param time
-	 * @return
-	 */
-	public static List<TerminalDevice> getCodeForMonth(List<TerminalDevice> list,long time){
-		
+    /**
+     * 从协议中获取历史月冻结报文
+     *
+     * @param list
+     * @param time
+     * @return
+     */
+    public static List<TerminalDevice> getCodeForMonth(List<TerminalDevice> list, long time) {
+
 //		String listForGson= gson.toJson(list);
 //		
 //		Method methodFromClass = ClassUtils.getMethodFromClass(obj, "makeCodecHistoryForMonthsFreezing",String.class,long.class);
@@ -141,15 +152,15 @@ public class ProtocolTool {
 //			returnList = gson.fromJson(invokeMethod.toString(), new TypeToken<List<TerminalDevice>>(){}.getType());
 //		} catch (InstantiationException e) {
 //			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		} catch (IllegalAccessException e) {
 //			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 //		}
 //		
 //		return returnList;
-		return new ArrayList<TerminalDevice>();
-	}
+        return new ArrayList<TerminalDevice>();
+    }
 	
 	
 
@@ -169,16 +180,14 @@ public class ProtocolTool {
 			invokeMethod = ClassUtils.invokeMethod(obj.newInstance(), methodFromClass,str);
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();                 e.printStackTrace(new PrintStream(baos));                 String exception = baos.toString();                 logger.error(exception);
 		}
 		System.out.println("返回："+invokeMethod.toString());
 		
 	}*/
-	
-	
-	
-	
+
+
 }

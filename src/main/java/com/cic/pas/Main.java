@@ -6,9 +6,15 @@ import com.cic.pas.application.manage.PChannelService;
 import com.cic.pas.application.manage.PDBManageService;
 import com.cic.pas.application.manage.PSystemConfigService;
 import com.cic.pas.thread.DataInsertThread;
+import org.apache.log4j.Logger;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 
 public class Main {
+
+    private static Logger logger=Logger.getLogger(Main.class);
 
     /**
      * @param args
@@ -23,7 +29,10 @@ public class Main {
             PChannelService pChannelService = new ChannelManageService();
             pChannelService.openChannel();
         } catch (Exception e) {
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
         //new PTaskManageService();
         Thread datainsert = new DataInsertThread();

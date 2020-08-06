@@ -3,6 +3,9 @@
  */
 package com.cic.pas.procotol;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +33,10 @@ public class ByteHandler extends IoHandlerAdapter {
     @Override
     public void exceptionCaught(IoSession session, Throwable cause)
             throws Exception {
-        cause.printStackTrace();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        cause.printStackTrace(new PrintStream(baos));
+        String exception = baos.toString();
+        logger.error(exception);
 //        sessionClosed(session);
     }
 
@@ -48,8 +54,8 @@ public class ByteHandler extends IoHandlerAdapter {
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         try {
-            Object obj=session.getAttribute("terminal_id");
-            if(obj!=null) {
+            Object obj = session.getAttribute("terminal_id");
+            if (obj != null) {
                 logger.info(session.getAttribute("terminal_name") + "断开连接!");
                 String terminal_id = obj.toString();
                 ServerContext.remove(session.getId());
@@ -71,11 +77,34 @@ public class ByteHandler extends IoHandlerAdapter {
                     String ip = ipPort.substring(0, index);
                     int port = Integer.parseInt(ipPort.substring(index + 1));
                     socketConnector = ConnectorSocketFactory.getSocketConnector(ip, port, td.getProcotolCode(), td.getNoticeManner());
+                    boolean currentBackup = false;
+                    String backupIp = td.getMsaBackUp();
+                    String adressBackUp = null;
+                    int portBackUp = 0;
+                    if (backupIp != null && !backupIp.equals("")) {
+                        int indexBackUp = backupIp.indexOf(":");
+                        adressBackUp = backupIp.substring(0, indexBackUp);
+                        portBackUp = Integer.parseInt(backupIp.substring(indexBackUp + 1));
+                    }
                     for (; ; ) {
                         try {
-                            Thread.sleep(6000);
+                            String toReconnectIp=ip;
+                            int toReconnectPort=port;
+                            if (adressBackUp != null) {
+                                if (currentBackup) {
+                                    socketConnector = ConnectorSocketFactory.getSocketConnector(ip, port, td.getProcotolCode(), td.getNoticeManner());
+                                    currentBackup = false;
+                                    toReconnectIp=ip;
+                                    toReconnectPort=port;
+                                } else {
+                                    socketConnector = ConnectorSocketFactory.getSocketConnector(adressBackUp, portBackUp, td.getProcotolCode(), td.getNoticeManner());
+                                    currentBackup = true;
+                                    toReconnectIp=adressBackUp;
+                                    toReconnectPort=portBackUp;
+                                }
+                            }
                             ConnectFuture future = socketConnector
-                                    .connect();
+                                    .connect(new InetSocketAddress(toReconnectIp,toReconnectPort));
                             future.awaitUninterruptibly();// 等待连接创建成功
                             session = future.getSession();// 获取会话
                             if (session.isConnected()) {
@@ -101,15 +130,20 @@ public class ByteHandler extends IoHandlerAdapter {
                                     + socketConnector
                                     .getDefaultRemoteAddress()
                                     .getPort() + ")]失败，一分钟后再次发起连接");
+                            try {
+                                Thread.sleep(60000);
+                            } catch (Exception e) {
+                                logger.info("断线重连等待失败，直接再次发起连接");
+                            }
                         }
                     }
                 }
             }
-        } catch (
-                Exception e)
-
-        {
-            e.printStackTrace();
+        } catch (Exception e) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
 
     }
@@ -130,9 +164,9 @@ public class ByteHandler extends IoHandlerAdapter {
     public void sessionOpened(IoSession session) {
         TerminalDevice td = getTerminalBySession(session);
         if (td != null) {
-            if(td.getNoticeAccord().equals("Byte3761")){
+            if (td.getNoticeAccord().equals("Byte3761")) {
 
-            }else {
+            } else {
                 ServerContext.addSession(session);
                 td.setIsOnline(1);
                 session.setAttribute("terminal_id", td.getCode());
@@ -151,7 +185,7 @@ public class ByteHandler extends IoHandlerAdapter {
                 ServerContext.addThread(td.getCode(), thread);
             }
         } else {
-           logger.info("未找到采集器,关闭连接");
+            logger.info("未找到采集器,关闭连接");
             session.closeNow();
         }
     }

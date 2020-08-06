@@ -1,22 +1,18 @@
 package com.cic.pas.thread;
 
+import com.cic.pas.service.ServerSocketFactory;
+import org.apache.log4j.Logger;
+import org.apache.mina.transport.socket.SocketAcceptor;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import com.cic.pas.service.ServerSocketFactory;
-import org.apache.log4j.Logger;
-
-import com.cic.pas.common.bean.TerminalDevice;
-import org.apache.mina.transport.socket.SocketAcceptor;
-
-public class ServerAccept extends BaseThread {
-    private Logger logger = Logger.getLogger(ServerAccept.class);
-    private String procotolType;
+public class ServerOperaterAccept extends BaseThread {
+    private Logger logger = Logger.getLogger(ServerOperaterAccept.class);
     private int port;
 
-    public ServerAccept(int port, String procotolType) {
-        this.procotolType = procotolType;
+    public ServerOperaterAccept(int port) {
         this.port = port;
     }
 
@@ -24,7 +20,7 @@ public class ServerAccept extends BaseThread {
         if (port != 0) {
             ServerSocketFactory serverSocketFactory = new ServerSocketFactory();
             //1、创建服务端口监听
-            SocketAcceptor channel = serverSocketFactory.createServerSocket(port, procotolType);
+            SocketAcceptor channel = serverSocketFactory.createOperaterServerSocket(port);
             try {
                 channel.bind();
             } catch (IOException e) {

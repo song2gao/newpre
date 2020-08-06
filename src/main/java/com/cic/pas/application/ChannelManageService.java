@@ -1,6 +1,8 @@
 package com.cic.pas.application;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 
 import com.cic.pas.dao.LogDao;
@@ -57,7 +59,10 @@ public class ChannelManageService extends PChannelService {
                 server.dispose();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            logger.error(exception);
         }
         logger.info("通道关闭。。。");
     }
@@ -96,7 +101,10 @@ public class ChannelManageService extends PChannelService {
                         }
                     } catch (Exception e) {
                         // TODO: handle exception
-                        e.printStackTrace();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        e.printStackTrace(new PrintStream(baos));
+                        String exception = baos.toString();
+                        logger.error(exception);
                     }
                 } else {
                     logger.info("端口号未标识启用");
@@ -178,6 +186,7 @@ public class ChannelManageService extends PChannelService {
             String ip = tdAddressPort.substring(0, index);
             int port = Integer.parseInt(tdAddressPort.substring(index + 1));
             ClientConnectThread thread = new ClientConnectThread(ip, port, c.getCha_protocolCode(), td);
+            thread.setName(td.getName());
             thread.start();
         }
     }
@@ -209,11 +218,11 @@ public class ChannelManageService extends PChannelService {
      **/
     private void tcpServerInternet(Channel c) {
         for (TerminalDevice td : c.getTerminalList()) {
-            try{
-                int port=Integer.parseInt(td.getMSA());
+            try {
+                int port = Integer.parseInt(td.getMSA());
                 ServerAccept accept = new ServerAccept(port, c.getCha_protocolCode());
                 accept.start();
-            }catch (Exception e){
+            } catch (Exception e) {
                 logger.info(e);
             }
         }
@@ -228,11 +237,11 @@ public class ChannelManageService extends PChannelService {
      * 创建时间: 2019/9/3 21:04
      **/
     private void tcpServer(Channel c) {
-        try{
-            int port=Integer.parseInt(c.getCha_addressPort());
+        try {
+            int port = Integer.parseInt(c.getCha_addressPort());
             ServerAccept accept = new ServerAccept(port, c.getCha_protocolCode());
             accept.start();
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e);
         }
 

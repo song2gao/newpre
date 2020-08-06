@@ -1,22 +1,28 @@
 package com.cic.pas.common.bean;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.cic.domain.PomsCalculateAlterRecord;
 import com.cic.pas.application.DBVisitService;
 import com.cic.pas.common.util.ArrayUtils;
+import com.cic.pas.common.util.DateUtils;
 import com.cic.pas.common.util.StringUtils;
 import com.cic.pas.common.util.Util;
 import com.cic.pas.dao.BussinessConfig;
+import org.apache.log4j.Logger;
 
 /**
  * @author wz
  * 测量点
  */
 public class PointDevice implements Serializable {
+    private Logger logger=Logger.getLogger(PointDevice.class);
     /**
      *
      */
@@ -170,6 +176,8 @@ public class PointDevice implements Serializable {
      * 测点最大值
      */
     private BigDecimal max_value;
+    //存储周期内最大值
+    private BigDecimal max_value_round;
     /**
      * 最大值时间
      */
@@ -216,6 +224,19 @@ public class PointDevice implements Serializable {
     private String dayTime;
     private String monthTime;
 
+    public int getMmpDecimalDigit() {
+        return mmpDecimalDigit;
+    }
+
+    public void setMmpDecimalDigit(int mmpDecimalDigit) {
+        this.mmpDecimalDigit = mmpDecimalDigit;
+    }
+
+    /**
+     * 保留小数位数 默认为2
+
+     */
+    private int mmpDecimalDigit;
     /**
      * 测点变化时间
      */
@@ -396,9 +417,9 @@ public class PointDevice implements Serializable {
 
     private int mmpType;//测点类型  0 只读 1可写
 
-   /*
-     尖峰平谷  采集电量时有效
-    */
+    /*
+      尖峰平谷  采集电量时有效
+     */
     private BigDecimal jPrice;
 
     private BigDecimal fPrice;
@@ -477,12 +498,22 @@ public class PointDevice implements Serializable {
         return value;
     }
 
+    public BigDecimal getMax_value_round() {
+        return max_value_round;
+    }
+
+    public void setMax_value_round(BigDecimal max_value_round) {
+        this.max_value_round = max_value_round;
+    }
+
     public void setValue(BigDecimal value) {
+        value=value.setScale(mmpDecimalDigit,BigDecimal.ROUND_HALF_UP);
         if (previousValue == null) {
             try {
                 previousValue = value;
                 setMax_value(value);
                 setMin_value(value);
+                setMax_value_round(value);
                 setIncreval(value);
                 if (time != null) {
                     setMax_time(time);
@@ -490,23 +521,49 @@ public class PointDevice implements Serializable {
                 }
             } catch (Exception e) {
                 // TODO: handle exception
-                e.printStackTrace();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                e.printStackTrace(new PrintStream(baos));
+                String exception = baos.toString();
+                logger.error(exception);
             }
             this.value = value;
         } else {
             try {
-                if (value.compareTo(getMax_value()) == 1 && time != null) {
+                if(getMax_time()==null||getMax_time().equals("null")){
                     setMax_value(value);
                     setMax_time(time);
+                }else {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date maxDate = format.parse(getMax_time());
+                    Date firstDay = format.parse(DateUtils.getFirstDayTimeOfMonth());
+                    if (maxDate.before(firstDay)) {
+                        setMax_value(value);
+                        setMax_time(time);
+                    } else {
+                        if (value.compareTo(getMax_value()) == 1 && time != null) {
+                            setMax_value(value);
+                            setMax_time(time);
+                        }
+                    }
                 }
                 if (value.compareTo(getMin_value()) == -1 && time != null) {
                     setMin_value(value);
                     setMin_time(time);
                 }
+                if(getMax_value_round()==null){
+                    setMax_value_round(value);
+                }else{
+                    if(value.compareTo(getMax_value()) == 1){
+                        setMax_value_round(value);
+                    }
+                }
                 setIncreval(value.subtract(previousValue));
             } catch (Exception e) {
                 // TODO: handle exception
-                e.printStackTrace();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                e.printStackTrace(new PrintStream(baos));
+                String exception = baos.toString();
+                logger.error(exception);
             }
             previousValue = this.value;
             this.value = value;
@@ -525,7 +582,7 @@ public class PointDevice implements Serializable {
                     break;
                 }
                 for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
-                    if (point.getMeasurMmpCode().equals(getCode()) &&ArrayUtils.inArray(point.getMeterCode(),getCtdCode())) {
+                    if (point.getMeasurMmpCode().equals(getCode()) && ArrayUtils.inArray(point.getMeterCode(), getCtdCode())) {
                         point.setValue(getValue());
                         point.setMmpUnit(getUnits());
                         point.setIsBit(getIsBit());

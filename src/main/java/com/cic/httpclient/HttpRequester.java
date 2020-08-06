@@ -1,9 +1,6 @@
 package com.cic.httpclient;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -12,9 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+
 import com.alibaba.fastjson.JSONObject;
 import com.cic.pas.common.bean.Data;
 import com.cic.pas.common.bean.DeviceData;
+import com.cic.pas.thread.DataInsertThread;
+import org.apache.log4j.Logger;
 
 /**
  * 用来主动发起HTTP请求的类
@@ -22,6 +23,7 @@ import com.cic.pas.common.bean.DeviceData;
  * @author Ajita
  */
 public class HttpRequester {
+	private Logger logger = Logger.getLogger(HttpRequester.class);
 	/**
 	 * 请求的默认字符编码方式
 	 */
@@ -187,7 +189,10 @@ public class HttpRequester {
 			System.out.println(respons.getMessage());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			e.printStackTrace(new PrintStream(baos));
+			String exception = baos.toString();
+//			logger.error(exception);
 		}
 	}
 }
