@@ -10,10 +10,7 @@ import java.util.*;
 
 import com.cic.domain.PomsCalculateAlterRecord;
 import com.cic.pas.application.DBVisitService;
-import com.cic.pas.common.util.ArrayUtils;
-import com.cic.pas.common.util.DateUtils;
-import com.cic.pas.common.util.StringUtils;
-import com.cic.pas.common.util.Util;
+import com.cic.pas.common.util.*;
 import com.cic.pas.dao.BussinessConfig;
 import org.apache.log4j.Logger;
 
@@ -22,7 +19,7 @@ import org.apache.log4j.Logger;
  * 测量点
  */
 public class PointDevice implements Serializable {
-    private Logger logger=Logger.getLogger(PointDevice.class);
+    private Logger logger = Logger.getLogger(PointDevice.class);
     /**
      *
      */
@@ -234,9 +231,8 @@ public class PointDevice implements Serializable {
 
     /**
      * 保留小数位数 默认为2
-
      */
-    private int mmpDecimalDigit;
+    private int mmpDecimalDigit = 2;
     /**
      * 测点变化时间
      */
@@ -507,7 +503,13 @@ public class PointDevice implements Serializable {
     }
 
     public void setValue(BigDecimal value) {
-        value=value.setScale(mmpDecimalDigit,BigDecimal.ROUND_HALF_UP);
+//        if(value.compareTo(new BigDecimal(value.intValue()))==0){
+//            value=value.setScale(0);
+//        }else{
+        value = value.setScale(mmpDecimalDigit, BigDecimal.ROUND_HALF_UP);
+        value=NumberUnits.clearNoUseZeroForBigDecimal(value);
+//        }
+//        value=value.setScale(mmpDecimalDigit,BigDecimal.ROUND_HALF_UP);
         if (previousValue == null) {
             try {
                 previousValue = value;
@@ -529,10 +531,10 @@ public class PointDevice implements Serializable {
             this.value = value;
         } else {
             try {
-                if(getMax_time()==null||getMax_time().equals("null")){
+                if (getMax_time() == null || getMax_time().equals("null")) {
                     setMax_value(value);
                     setMax_time(time);
-                }else {
+                } else {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date maxDate = format.parse(getMax_time());
                     Date firstDay = format.parse(DateUtils.getFirstDayTimeOfMonth());
@@ -550,10 +552,10 @@ public class PointDevice implements Serializable {
                     setMin_value(value);
                     setMin_time(time);
                 }
-                if(getMax_value_round()==null){
+                if (getMax_value_round() == null) {
                     setMax_value_round(value);
-                }else{
-                    if(value.compareTo(getMax_value()) == 1){
+                } else {
+                    if (value.compareTo(getMax_value()) == 1) {
                         setMax_value_round(value);
                     }
                 }

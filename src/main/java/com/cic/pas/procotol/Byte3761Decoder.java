@@ -223,7 +223,7 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
                     bytes0[18] += bytes0[6 + i];
                 }//cs
                 bytes0[19] = 0x16;
-//                logger.info("[" + name + "心跳响应帧]:[" + CRC16M.getBufHexStr(bytes0) + "]");
+                logger.info("[" + name + "心跳响应帧]:[" + CRC16M.getBufHexStr(bytes0) + "]");
                 session.write(bytes0);
             }
         }
@@ -251,9 +251,9 @@ public class Byte3761Decoder extends CumulativeProtocolDecoder {
             String terminalCode=session.getAttribute("terminal_id").toString();
             MeterDevice md=BussinessConfig.getMeterByTerminalCodeAndCtdCode(terminalCode,ctdCode);
             md.setStatus(0);
-//            logger.info("["+session.getAttribute("terminal_Name")+"终端否定所发请求]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
+            logger.info("["+session.getAttribute("terminal_Name")+"终端否定所发请求]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
         }else {
-//            logger.info("["+session.getAttribute("terminal_Name")+"回复数据帧]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
+            logger.info("["+session.getAttribute("terminal_Name")+"回复数据帧]:[pn=" + pn + "][" + CRC16M.getBufHexStr(bytes) + "]");
             saveData(asstdCode + "", pn + "", Util.bytesHexStrToBIgDecimal(bytes, 24, 5));
         }
     }

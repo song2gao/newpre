@@ -22,7 +22,7 @@ public class ByteOperaterDecoder extends CumulativeProtocolDecoder {
             byte[] headBytes = new byte[5];
             in.get(headBytes);
             int length = Util.bytesToInt(headBytes, 1, 5);
-            if (in.remaining() < headBytes.length) {// 如果消息内容不够，则重置，相当于不读取size
+            if (in.remaining() < length) {// 如果消息内容不够，则重置，相当于不读取size
                 return false;// 父类接收新数据，以拼凑成完整数据
             } else {
                 byte[] bytes = new byte[length];

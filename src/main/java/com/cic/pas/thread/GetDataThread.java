@@ -101,12 +101,7 @@ public class GetDataThread extends BaseThread {
     private void s7HandBuff() {
         pduLength = 0;
         if (td.getDeviceModel().toLowerCase().equals("s7-200smart")) {
-            if (td.getCode().equals("49") || td.getCode().equals("31") || td.getCode().equals("76")) {//这两个设备问题  通讯级无法连接 只能用编程级连接
-                firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 04 00 c1 02 01 01 c2 02 01 01 c0 01 0a");
-            } else {
-                firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
-            }
-
+            firstHand = CRC16M.HexString2Buf("03 00 00 16 11 E0 00 00 00 01 00 C1 02 10 00 C2 02 03 00 C0 01 0A");
         } else if (td.getDeviceModel().toLowerCase().equals("s7-200")) {
             firstHand = CRC16M.HexString2Buf("03 00 00 16 11 e0 00 00 00 01 00 c1 02 4d 57 c2 02 4d 57 c0 01 00");
         } else if (td.getDeviceModel().toLowerCase().equals("s7-300")) {

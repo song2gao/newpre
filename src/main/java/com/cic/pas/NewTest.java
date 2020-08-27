@@ -19,12 +19,8 @@ import java.net.InetSocketAddress;
 
 public class NewTest {
     public static void main(String[] args) {
-//        String send="0300001F02F080320100000001000E00000401120A1002 00 0C 00 01 84 00 76 C0".replaceAll(" ","");
-//        String addressStr=send.substring(send.length()-6);
-        String addressStr="ac ed 00 05 ";
-        byte[] addressbytes=CRC16M.HexString2Buf(addressStr);
-//        int addressInteger=(addressbytes[0]&0xff)<<16|(addressbytes[1]&0xff)<<8|(addressbytes[2]&0xff);
-        System.out.println(CRC16M.getBufHexStr(addressbytes));
+        BigDecimal value=new BigDecimal("0.00");
+        System.out.println(value.compareTo(new BigDecimal(value.intValue()))==0);
 
     }
 

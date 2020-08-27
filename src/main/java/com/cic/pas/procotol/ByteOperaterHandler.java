@@ -78,12 +78,9 @@ public class ByteOperaterHandler extends IoHandlerAdapter {
     public void sessionOpened(IoSession session) {
         logger.info(session.getRemoteAddress() + "连接上来了");
         try {
-            byte[] bytes = CRC16M.HexString2Buf("ac ed 00 05".replaceAll(" ",""));
-//            session.write(bytes);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 }

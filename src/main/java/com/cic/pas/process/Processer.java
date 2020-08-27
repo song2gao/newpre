@@ -157,7 +157,12 @@ public class Processer {
             for (TerminalDevice td : BussinessConfig.terminalList) {
                 for (MeterDevice md : td.getMeterList()) {
                     if (md.getCode().equals(meterCode)) {
-                        if (mmpCodes != null) {
+                        if (mmpCodes == null || mmpCodes[0].equals("0")) {
+                            for (PointDevice pd : md.getPointDevice()) {
+                                pd.setCtdName(md.getName());
+                                pointlist.add(pd);
+                            }
+                        } else {
                             for (String mmpCode : mmpCodes) {
                                 for (PointDevice pd : md.getPointDevice()) {
                                     if (pd.getCode().equals(mmpCode)) {
@@ -166,11 +171,6 @@ public class Processer {
                                         break;
                                     }
                                 }
-                            }
-                        } else {
-                            for (PointDevice pd : md.getPointDevice()) {
-                                pd.setCtdName(md.getName());
-                                pointlist.add(pd);
                             }
                         }
                         isFind = true;

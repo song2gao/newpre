@@ -39,7 +39,7 @@ public class DataInsertThread extends Thread {
              *存储周期  分钟
              * 默认 15分钟
              */
-            int saveCycle = 1;
+            int saveCycle = 15;
             int m = ca.get(Calendar.MINUTE);
             int h = ca.get(Calendar.HOUR_OF_DAY);
             int day = ca.get(Calendar.DAY_OF_MONTH);
@@ -47,8 +47,8 @@ public class DataInsertThread extends Thread {
             if (m % saveCycle == 0) {
                 long start = System.currentTimeMillis();
                 logger.info("准备生成插入数据" + new Date());
-//                saveData(day, h, m, ca);
-                buildAndSaveRealData(ca);
+                saveData(day, h, m, ca);
+//                buildAndSaveRealData(ca);
                 long end = System.currentTimeMillis();
                 logger.info("插入数据完成" + new Date() + ",用时:" + (end - start));
                 Calendar current = Calendar.getInstance();

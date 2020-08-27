@@ -15,6 +15,8 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     private String facilitiesModelCode;
 
+    private String facilityTypeCode;
+
     private String systemCode;
 
     private String systemName;
@@ -424,5 +426,13 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     public void setIsOverViewData(int isOverViewData) {
         this.isOverViewData = isOverViewData;
+    }
+
+    public String getFacilityTypeCode() {
+        return facilityTypeCode;
+    }
+
+    public void setFacilityTypeCode(String facilityTypeCode) {
+        this.facilityTypeCode = facilityTypeCode;
     }
 }

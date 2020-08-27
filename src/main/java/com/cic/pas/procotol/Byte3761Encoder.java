@@ -82,6 +82,7 @@ public class Byte3761Encoder extends ProtocolEncoderAdapter {
 		}
 //        logger.info("TX:"+CRC16M.getBufHexStr(a));
 		buff.flip();
+		logger.info("TX:["+CRC16M.getBufHexStr(a)+"]");
 		out.write(buff);
 		out.flush();
 	}

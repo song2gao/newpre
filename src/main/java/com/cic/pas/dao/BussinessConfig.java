@@ -468,7 +468,7 @@ public final class BussinessConfig {
         });
         for (PomsEnergyUsingSystem system : systemList) {
             List<PomsEnergyUsingFacilities> facilities = jdbcTemplate.query("select a.*,b.FACILITIES_TYPE_IMG from poms_energy_using_facilities a, poms_energy_using_facilities_type b\n" +
-                    "where b.FACILITIES_TYPE_CODE=a.FACILITIES_TYPE_CODE and system_code=?", new Object[]{system.getSystemCode()}, new RowMapper<PomsEnergyUsingFacilities>() {
+                    "where b.FACILITIES_TYPE_CODE=a.FACILITIES_TYPE_CODE and a.system_code=?", new Object[]{system.getSystemCode()}, new RowMapper<PomsEnergyUsingFacilities>() {
                 @Override
                 public PomsEnergyUsingFacilities mapRow(ResultSet rs, int i) throws SQLException {
                     PomsEnergyUsingFacilities facility = new PomsEnergyUsingFacilities();
@@ -496,6 +496,7 @@ public final class BussinessConfig {
                         modelPoint.setSystemName(system.getSystemName());
                         modelPoint.setFacilityCode(facility.getFacilitiesCode());
                         modelPoint.setFacilityName(facility.getFacilitiesName());
+                        modelPoint.setFacilityTypeCode(facility.getFacilitiesTypeCode());
                         modelPoint.setMeterCode(facility.getPreModelCode());
                         modelPoint.setMmpCode(rs.getString("MMP_CODE"));
                         modelPoint.setMmpName(rs.getString("MMP_NAME"));
@@ -526,6 +527,7 @@ public final class BussinessConfig {
                         modelPoint.setSystemName(system.getSystemName());
                         modelPoint.setFacilityCode(rs.getString("FACILITIES_CODE"));
                         modelPoint.setFacilityName(facility.getFacilitiesName());
+                        modelPoint.setFacilityTypeCode(facility.getFacilitiesTypeCode());
                         modelPoint.setMmpCode(rs.getString("MMP_CODE"));
                         modelPoint.setMmpName(rs.getString("MMP_NAME"));
                         modelPoint.setMmpUnit(rs.getString("MMP_UNIT"));
