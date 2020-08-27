@@ -94,14 +94,6 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
         int function = bytes[1];
         int length = Util.bytesToInt(bytes, 2, 3);
         if (id == slaveId) {
-            BaseThread thread = ServerContext.threadMap.get(terminalCode);
-            if (thread == null) {
-                return;
-            }
-            synchronized (thread) {
-                thread.isReviced = true;
-                thread.notify();
-            }
             switch (function) {
                 case 1:
                 case 2:
@@ -126,6 +118,14 @@ public class ByteModBusRtuDecoder extends CumulativeProtocolDecoder {
                     session.setAttribute("writeResult", true);
                     break;
 
+            }
+            BaseThread thread = ServerContext.threadMap.get(terminalCode);
+            if (thread == null) {
+                return;
+            }
+            synchronized (thread) {
+                thread.isReviced = true;
+                thread.notify();
             }
         } else {
             System.out.println("无效消息[" + recStr + "]");

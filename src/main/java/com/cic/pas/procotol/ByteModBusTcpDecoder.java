@@ -84,11 +84,6 @@ public class ByteModBusTcpDecoder extends CumulativeProtocolDecoder {
         int function = bytes[7];
         int length = Util.bytesToInt(bytes, 8, 9);
         if (id == slaveId) {
-            BaseThread thread = ServerContext.threadMap.get(terminalCode);
-            synchronized (thread) {
-                thread.isReviced = true;
-                thread.notify();
-            }
             switch (function) {
                 case 3:
                 case 4:
@@ -101,6 +96,11 @@ public class ByteModBusTcpDecoder extends CumulativeProtocolDecoder {
                 case 16:
                     session.setAttribute("writeResult", true);
                     break;
+            }
+            BaseThread thread = ServerContext.threadMap.get(terminalCode);
+            synchronized (thread) {
+                thread.isReviced = true;
+                thread.notify();
             }
         } else {
             System.out.println("无效消息");

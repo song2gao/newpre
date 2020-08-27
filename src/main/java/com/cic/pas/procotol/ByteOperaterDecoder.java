@@ -19,15 +19,19 @@ public class ByteOperaterDecoder extends CumulativeProtocolDecoder {
     public boolean doDecode(IoSession session, IoBuffer in,
                             ProtocolDecoderOutput out) throws Exception {
         if (in.remaining() > 5) {
+            in.mark();
             byte[] headBytes = new byte[5];
             in.get(headBytes);
             int length = Util.bytesToInt(headBytes, 1, 5);
-            if (in.remaining() < length) {// 如果消息内容不够，则重置，相当于不读取size
+            in.reset();
+            if (in.remaining() < length+5) {// 如果消息内容不够，则重置，相当于不读取size
                 return false;// 父类接收新数据，以拼凑成完整数据
             } else {
-                byte[] bytes = new byte[length];
+                byte[] bytes = new byte[length+5];
                 in.get(bytes);
-                String json = new String(bytes,"UTF-8");
+                byte[] data=new byte[length];
+                System.arraycopy(bytes,5,data,0,length);
+                String json = new String(data,"UTF-8");
                 ReturnMessage response = processer.executeSome(json);
                 String resStr = JSONObject.toJSONString(response);
                 session.write(resStr.getBytes("UTF-8"));
