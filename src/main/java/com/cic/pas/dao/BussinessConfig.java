@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 
 import com.cic.domain.PomsCalculateAlterRecord;
 import com.cic.pas.common.bean.*;
+import com.cic.pas.common.util.ArrayUtils;
 import com.cic.pas.common.util.DateUtils;
 import com.cic.pas.common.util.Util;
 import com.cic.pas.thread.InventedMeterDataThread;
@@ -193,6 +194,7 @@ public final class BussinessConfig {
                                                               int index) throws SQLException {
                                         MeterDevice p = new MeterDevice();
                                         p.setId(rs.getString("id"));
+                                        p.setAsstdCode(t.getPrimaryKey());
                                         p.setType(rs.getString("ctm_id"));
                                         p.setAddress(rs.getInt("CTD_ADDR"));
                                         p.setCode(rs.getString("CTD_CODES"));
@@ -447,7 +449,7 @@ public final class BussinessConfig {
      * 加载用能系统及设备模型参数
      */
     private static void systemParams() {
-        systemList = jdbcTemplate.query("select * from poms_energy_using_system", new RowMapper<PomsEnergyUsingSystem>() {
+        systemList = jdbcTemplate.query("select * from poms_energy_using_system where ASSTD_CODE !=''", new RowMapper<PomsEnergyUsingSystem>() {
             @Override
             public PomsEnergyUsingSystem mapRow(ResultSet rs, int i) throws SQLException {
                 PomsEnergyUsingSystem system = new PomsEnergyUsingSystem();
@@ -481,6 +483,9 @@ public final class BussinessConfig {
                     facility.setFacilitiesName(rs.getString("FACILITIES_NAME"));
                     facility.setFacilitiesOffset(rs.getInt("FACILITIES_OFFSET"));
                     facility.setFacilitiesImg(rs.getString("FACILITIES_TYPE_IMG"));
+                    facility.setIsFocus(rs.getInt("isFocus"));
+                    facility.setStateFormat(rs.getString("state_format"));
+                    facility.setState(rs.getInt("state"));
                     facility.setFacilitiesBackups(rs.getString("FACILITIES_BACKUPS"));
                     return facility;
                 }
@@ -499,6 +504,18 @@ public final class BussinessConfig {
                         modelPoint.setFacilityTypeCode(facility.getFacilitiesTypeCode());
                         modelPoint.setMeterCode(facility.getPreModelCode());
                         modelPoint.setMmpCode(rs.getString("MMP_CODE"));
+                        int isBit=rs.getInt("isBit");
+                        modelPoint.setIsBit(isBit);
+                        if(isBit==1){
+                            String formatStr=rs.getString("format");
+                            String[] formatStrs=formatStr.split(",");
+                            Map<String,String> formatMap=new HashMap<>();
+                            for(String str:formatStrs){
+                                int index=str.indexOf("=");
+                                formatMap.put(str.substring(0,index),str.substring(index+1));
+                            }
+                            modelPoint.setFormatMap(formatMap);
+                        }
                         modelPoint.setMmpName(rs.getString("MMP_NAME"));
                         modelPoint.setMmpUnit(rs.getString("MMP_UNIT"));
                         modelPoint.setMmpOrder(rs.getInt("MMP_ORDER"));
@@ -518,7 +535,7 @@ public final class BussinessConfig {
                         return modelPoint;
                     }
                 });
-                List<PomsEnergyUsingFacilitiesModelPoint> devicePoints = jdbcTemplate.query("select * from poms_energy_using_facilities_point where IS_USE=1 AND FACILITIES_CODE=?", new Object[]{facility.getFacilitiesCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
+                List<PomsEnergyUsingFacilitiesModelPoint> devicePoints = jdbcTemplate.query("select * from poms_energy_using_facilities_point where IS_USE=1 AND FACILITIES_CODE=? order by MMP_ORDER", new Object[]{facility.getFacilitiesCode()}, new RowMapper<PomsEnergyUsingFacilitiesModelPoint>() {
                     @Override
                     public PomsEnergyUsingFacilitiesModelPoint mapRow(ResultSet rs, int i) throws SQLException {
                         PomsEnergyUsingFacilitiesModelPoint modelPoint = new PomsEnergyUsingFacilitiesModelPoint();
@@ -548,7 +565,7 @@ public final class BussinessConfig {
                 points.addAll(devicePoints);
                 facility.setPointList(points);
             }
-            system.setFacilitiyList(facilities);
+            system.setFacilityList(facilities);
         }
     }
 
@@ -1218,5 +1235,25 @@ public final class BussinessConfig {
         String ipPort = session.getRemoteAddress().toString();
         int index = ipPort.indexOf(":");
         return Integer.parseInt(ipPort.substring(index + 1));
+    }
+    public static PomsEnergyUsingFacilities getFacilityByMeterCode(String terminalCode,String meterCode){
+        for(PomsEnergyUsingSystem system:systemList){
+            if( ArrayUtils.inArray(system.getAsstdCodes(),terminalCode)){
+                for(PomsEnergyUsingFacilities facility:system.getFacilitiyList()){
+                    if(ArrayUtils.inArray(facility.getPreModelCode(),meterCode)){
+                        return facility;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    public static boolean strInStrs(String[] strs,String str){
+        for(String s:strs){
+            if(str.equals(s)){
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -3,6 +3,8 @@
  */
 package com.cic.pas.common.bean;
 
+import com.cic.pas.dao.BussinessConfig;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,10 @@ public class MeterDevice implements Serializable {
 	private static final long serialVersionUID = 6528019442861692363L;
 	/** 表计主键 */
 	private String id;
+	/**
+	 * 采集器编码
+	 */
+	private String asstdCode;
 	/** 表计编码 */
 	private String code;
 	/** 表计类型 */
@@ -233,6 +239,14 @@ public class MeterDevice implements Serializable {
 
 	public void setStatus(int status) {
 		this.status = status;
+		PomsEnergyUsingFacilities facility=BussinessConfig.getFacilityByMeterCode(asstdCode,code);
+		if(facility!=null){
+			if(status==0) {
+				facility.setState(4);
+			}else{
+				facility.setState(1);
+			}
+		}
 	}
 
 	public String getMeasure_loop() {
@@ -418,4 +432,11 @@ public class MeterDevice implements Serializable {
 		this.isTrial = isTrial;
 	}
 
+	public String getAsstdCode() {
+		return asstdCode;
+	}
+
+	public void setAsstdCode(String asstdCode) {
+		this.asstdCode = asstdCode;
+	}
 }

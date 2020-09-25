@@ -51,6 +51,8 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     private BigDecimal value;
 
+    private String showValue;
+
     private BigDecimal upValue;
 
     private BigDecimal downValue;
@@ -156,8 +158,16 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     public void setValue(BigDecimal value) {
         this.value = value;
+        if(isBit==1){
+            if(formatMap!=null){
+                setShowValue(formatMap.get(value.intValue()+""));
+            }
+        }else{
+            setShowValue(value.toString());
+        }
+
     }
-    public void setAlarmData(PomsEnergyUsingSystem system,PomsEnergyUsingFacilities facilities, PomsEnergyUsingFacilitiesModelPoint point) {
+    public boolean setAlarmData(PomsEnergyUsingSystem system,PomsEnergyUsingFacilities facilities, PomsEnergyUsingFacilitiesModelPoint point) {
         boolean isAlarmFlag = false;
         BigDecimal setAlarmValue = null;
         if (point.getIsAlarm() == 1) {
@@ -239,6 +249,7 @@ public class PomsEnergyUsingFacilitiesModelPoint {
             DBVisitService.batchInsertAlarm(record);
             isAlarmFlag = false;
         }
+        return isAlarmFlag;
     }
     public BigDecimal getUpValue() {
         return upValue;
@@ -434,5 +445,12 @@ public class PomsEnergyUsingFacilitiesModelPoint {
 
     public void setFacilityTypeCode(String facilityTypeCode) {
         this.facilityTypeCode = facilityTypeCode;
+    }
+
+    public String getShowValue() {
+        return showValue;
+    }
+    public void setShowValue(String showValue) {
+        this.showValue = showValue;
     }
 }

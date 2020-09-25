@@ -30,6 +30,8 @@ public class PomsEnergyUsingSystem {
 
     private List<PomsEnergyUsingFacilities> facilitiyList;
 
+    private int drawingMonitor=1;
+
     private String systemBackups;
 
     public int getId() {
@@ -108,7 +110,7 @@ public class PomsEnergyUsingSystem {
         return facilitiyList;
     }
 
-    public void setFacilitiyList(List<PomsEnergyUsingFacilities> facilitiyList) {
+    public void setFacilityList(List<PomsEnergyUsingFacilities> facilitiyList) {
         this.facilitiyList = facilitiyList;
     }
 
@@ -134,5 +136,13 @@ public class PomsEnergyUsingSystem {
 
     public void setAsstdStates(Map<String, Integer> asstdStates) {
         this.asstdStates = asstdStates;
+    }
+
+    public int getDrawingMonitor() {
+        return drawingMonitor;
+    }
+
+    public void setDrawingMonitor(int drawingMonitor) {
+        this.drawingMonitor = drawingMonitor;
     }
 }

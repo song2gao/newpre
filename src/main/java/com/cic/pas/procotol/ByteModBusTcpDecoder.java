@@ -45,6 +45,11 @@ public class ByteModBusTcpDecoder extends CumulativeProtocolDecoder {
     public boolean doDecode(IoSession session, IoBuffer in,
                             ProtocolDecoderOutput out) throws Exception {
         if (in.remaining() > 0) {//
+            if(in.remaining()==1){
+                byte[] test=new byte[1];
+                in.get(test);
+                return false;
+            }
             in.mark();// 标记当前位置，以便reset
             // 因为我的前数据包的长度是保存在第6字节中，
             int headSize = 6;

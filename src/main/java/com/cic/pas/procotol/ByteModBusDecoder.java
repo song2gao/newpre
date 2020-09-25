@@ -27,6 +27,12 @@ public class ByteModBusDecoder {
                         int lastlen = 0;
                         int lastMMpType = 0;
                         int currentlen = 0;
+                        String dateTime = new SimpleDateFormat(
+                                "yyyy-MM-dd HH:mm:ss").format(new Date());
+                        if (getOnlineStatus(md)) {
+                            md.setStatus(1);
+                        }
+                        md.setLastCollectDate(dateTime);
                         for (PointDevice pd : md.getPointDevice()) {
                             if (pd.getIsCollect() == 1) {
                                 if (lastMMpType == 1) {
@@ -95,8 +101,6 @@ public class ByteModBusDecoder {
                                         logger.error(exception);
                                     }
                                     if (checkData(td, pd, value, md.getName(), sendStr, receivedStr)) {
-                                        String dateTime = new SimpleDateFormat(
-                                                "yyyy-MM-dd HH:mm:ss").format(new Date());
                                         pd.setTime(dateTime);
                                         pd.setValue(value);
                                         pd.setShowValue(showValue);
@@ -107,11 +111,6 @@ public class ByteModBusDecoder {
                                                 md.setStatus(1);
                                                 md.setLastCollectDate(dateTime);
                                             }
-                                        } else {
-                                            if (getOnlineStatus(md)) {
-                                                md.setStatus(1);
-                                            }
-                                            md.setLastCollectDate(dateTime);
                                         }
                                         if (md.getIsinvented() == 2) {
                                             setInventedMeterData(td, pd);

@@ -91,9 +91,9 @@ public class ConnectorSocketFactory {
             // 并进行异常发生后的操作
             e.printStackTrace();
         }
-        socketConnector.getSessionConfig().setIdleTime(IdleStatus.READER_IDLE, 60);
-        socketConnector.getSessionConfig().setIdleTime(IdleStatus.WRITER_IDLE, 60);
-        socketConnector.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);
+        socketConnector.getSessionConfig().setIdleTime(IdleStatus.READER_IDLE, 900);
+        socketConnector.getSessionConfig().setIdleTime(IdleStatus.WRITER_IDLE, 900);
+        socketConnector.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 900);
         socketConnector.setHandler(new ByteHandler());
         socketConnector.setDefaultRemoteAddress(new InetSocketAddress(
                 address, port));

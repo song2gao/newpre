@@ -35,7 +35,7 @@ public class Util {
 
     public static Map<String, PointData> pointMap = new HashMap<String, PointData>();
 
-    public final static String euo_code = "bcjt";
+    public final static String euo_code = "1";
 
     public static String mmp_code = "";
 

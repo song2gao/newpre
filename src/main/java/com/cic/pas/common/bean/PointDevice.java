@@ -507,7 +507,7 @@ public class PointDevice implements Serializable {
 //            value=value.setScale(0);
 //        }else{
         value = value.setScale(mmpDecimalDigit, BigDecimal.ROUND_HALF_UP);
-        value=NumberUnits.clearNoUseZeroForBigDecimal(value);
+        value = NumberUnits.clearNoUseZeroForBigDecimal(value);
 //        }
 //        value=value.setScale(mmpDecimalDigit,BigDecimal.ROUND_HALF_UP);
         if (previousValue == null) {
@@ -583,8 +583,18 @@ public class PointDevice implements Serializable {
                 if (findCount >= mmpSystemRefCount) {
                     break;
                 }
+                int runState=0;
                 for (PomsEnergyUsingFacilitiesModelPoint point : facilities.getPointList()) {
                     if (point.getMeasurMmpCode().equals(getCode()) && ArrayUtils.inArray(point.getMeterCode(), getCtdCode())) {
+                        if(point.getMmpCode().equals("311")){
+                            if(getValue().intValue()==1){
+                                facilities.setState(1);
+                                runState=1;
+                            }else{
+                                facilities.setState(2);
+                                runState=2;
+                            }
+                        }
                         point.setValue(getValue());
                         point.setMmpUnit(getUnits());
                         point.setIsBit(getIsBit());
@@ -597,6 +607,7 @@ public class PointDevice implements Serializable {
                             point.setFormatMap(map);
                         }
                         point.setRwType(getRwType());
+//                        point.setShowValue(formatMap.get(value));
 //                        point.setMeterCode(getCtdCode());
                         if (point.getFormatStr() == null && getFormular() != null) {
                             point.setFormatStr(getFormular());
@@ -605,7 +616,14 @@ public class PointDevice implements Serializable {
                         point.setMaxValue(max_value);
                         point.setMinDate(min_time);
                         point.setMinValue(min_value);
-                        point.setAlarmData(system, facilities, point);
+                        boolean isAlarm=point.setAlarmData(system, facilities, point);
+                        if(isAlarm){
+                            facilities.setState(5);
+                        }else{
+                            if(runState!=0) {
+                                facilities.setState(runState);
+                            }
+                        }
                         findCount++;
                         break;
                     }

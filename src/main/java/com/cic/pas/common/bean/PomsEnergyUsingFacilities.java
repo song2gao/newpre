@@ -1,6 +1,8 @@
 package com.cic.pas.common.bean;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PomsEnergyUsingFacilities {
     private Integer id;
@@ -22,6 +24,14 @@ public class PomsEnergyUsingFacilities {
     private List<PomsEnergyUsingFacilitiesModelPoint> pointList;
 
     private String facilitiesImg;
+
+    private String value;
+
+    private int state=4;
+
+    private String stateFormat;
+
+    private int isFocus;
 
     private String facilitiesBackups;
 
@@ -111,5 +121,46 @@ public class PomsEnergyUsingFacilities {
 
     public void setFacilitiesImg(String facilitiesImg) {
         this.facilitiesImg = facilitiesImg;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+        if(stateFormat!=null){
+            String[] format=stateFormat.split(",");
+            Map<String,String> map=new HashMap<>();
+            for(String s:format){
+                String[] value=s.split("=");
+                map.put(value[0],value[1]);
+            }
+            setValue(map.get(state+""));
+        }
+    }
+
+    public String getStateFormat() {
+        return stateFormat;
+    }
+
+    public void setStateFormat(String stateFormat) {
+        this.stateFormat = stateFormat;
+    }
+
+    public int getIsFocus() {
+        return isFocus;
+    }
+
+    public void setIsFocus(int isFocus) {
+        this.isFocus = isFocus;
     }
 }

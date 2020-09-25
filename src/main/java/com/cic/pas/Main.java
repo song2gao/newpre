@@ -5,6 +5,7 @@ import com.cic.pas.application.ChannelManageService;
 import com.cic.pas.application.manage.PChannelService;
 import com.cic.pas.application.manage.PDBManageService;
 import com.cic.pas.application.manage.PSystemConfigService;
+import com.cic.pas.thread.DataCenterThread;
 import com.cic.pas.thread.DataInsertThread;
 import org.apache.log4j.Logger;
 
@@ -38,9 +39,9 @@ public class Main {
         Thread datainsert = new DataInsertThread();
         datainsert.setName("datainsert");
         datainsert.start();
-//		DataCenterThread centerThread=new DataCenterThread();
-//		centerThread.setName("DataCenter");
-//		centerThread.start();
+		DataCenterThread centerThread=new DataCenterThread();
+		centerThread.setName("DataCenter");
+		centerThread.start();
 //		Thread coolData=new GetCoolDataThread();
 //		coolData.setName("cooldata");
 //		coolData.start();
