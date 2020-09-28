@@ -39,9 +39,9 @@ public class Main {
         Thread datainsert = new DataInsertThread();
         datainsert.setName("datainsert");
         datainsert.start();
-		DataCenterThread centerThread=new DataCenterThread();
-		centerThread.setName("DataCenter");
-		centerThread.start();
+//		DataCenterThread centerThread=new DataCenterThread();
+//		centerThread.setName("DataCenter");
+//		centerThread.start();
 //		Thread coolData=new GetCoolDataThread();
 //		coolData.setName("cooldata");
 //		coolData.start();
