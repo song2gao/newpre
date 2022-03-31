@@ -14,7 +14,7 @@
         <mybatis.spring.boot.version>1.3.0</mybatis.spring.boot.version>
         <mina.version>2.1.3</mina.version>
         <log4j.version>1.2.17</log4j.version>
-        <spring.version>4.0.2.RELEASE</spring.version>
+        <spring.version>5.3.18</spring.version>
         <mysql.version>5.1.38</mysql.version>
         <commons.lang.version>2.6</commons.lang.version>
         <commons.fileupload.version>1.3.1</commons.fileupload.version>
